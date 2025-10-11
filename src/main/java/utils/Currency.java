@@ -41,7 +41,18 @@ public enum Currency {
 
     }
 
-    public String getDuplicateSymbol() {
-        return symbol;
+    public boolean getDuplicateSymbol() {
+        return duplicateSymbol;
+    }
+
+    public static Currency toCurrency(String str){
+        return switch (str) {
+            case "USD", "usd" -> USD;
+            case "EUR", "eur" -> EUR;
+            case "JPY", "jpy" -> JPY;
+            case "GBP", "gbp" -> GBP;
+            case "CNY", "cny" -> CNY;
+            default -> null;
+        };
     }
 }

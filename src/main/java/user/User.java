@@ -36,7 +36,7 @@ public class User {
     /**
      * Adds a transaction to the user's record
      */
-    private static void addTransaction(Transaction transaction){
+    public static void addTransaction(Transaction transaction){
         transactions.add(transaction);
     }
 
