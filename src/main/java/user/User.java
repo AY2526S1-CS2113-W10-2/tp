@@ -11,7 +11,11 @@ import java.util.Scanner;
 
 import static ui.OutputManager.printMessage;
 import static ui.Parser.parseCommand;
-import static utils.Currency.*;
+import static utils.Currency.USD;
+import static utils.Currency.EUR;
+import static utils.Currency.JPY;
+import static utils.Currency.GBP;
+import static utils.Currency.CNY;
 
 public class User {
     public static ArrayList<Transaction> transactions = new ArrayList<>();
@@ -36,7 +40,7 @@ public class User {
     /**
      * Adds a transaction to the user's record
      */
-    private static void addTransaction(Transaction transaction){
+    public static void addTransaction(Transaction transaction){
         transactions.add(transaction);
     }
 

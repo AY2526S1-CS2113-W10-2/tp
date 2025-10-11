@@ -31,4 +31,9 @@ public class Date {
     public String getLongDate() {
         return day + "th of " + month.getLongName() + ", " + year;      // todo: fix for 1st, 2nd, etc.
     }
+
+    public static Date toDate(String str){
+        // todo: parse String to date object
+        return null;
+    }
 }
