@@ -32,13 +32,21 @@ public enum Currency {
      *
      * @return string of the currency symbol
      */
-    public String getSymbolVerbose() {
+    public String getSymbolSemiVerbose() {
         if(this.duplicateSymbol){
             return this + this.symbol;
         }else{
             return symbol;
         }
+    }
 
+    /**
+     * Gets the symbol for this currency. For all currencies, add the prefix to clarify.
+     *
+     * @return string of the currency symbol
+     */
+    public String getSymbolVerbose() {
+        return this + this.symbol;
     }
 
     public boolean getDuplicateSymbol() {
@@ -47,12 +55,12 @@ public enum Currency {
 
     public static Currency toCurrency(String str){
         return switch (str) {
-            case "USD", "usd" -> USD;
-            case "EUR", "eur" -> EUR;
-            case "JPY", "jpy" -> JPY;
-            case "GBP", "gbp" -> GBP;
-            case "CNY", "cny" -> CNY;
-            default -> null;
+        case "USD", "usd" -> USD;
+        case "EUR", "eur" -> EUR;
+        case "JPY", "jpy" -> JPY;
+        case "GBP", "gbp" -> GBP;
+        case "CNY", "cny" -> CNY;
+        default -> null;
         };
     }
 }

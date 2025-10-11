@@ -3,11 +3,13 @@ package bank;
 import utils.Currency;
 
 public class Bank {
+    private final int id;
     private final Currency currency;        // The currency this bank trades in
     private float balance;                  // This user's balance in this bank account
     private float exchangeRate;             // The current exchange rate from this currency to USD
 
-    public Bank(Currency currency, float balance, float exchangeRate) {
+    public Bank(int id, Currency currency, float balance, float exchangeRate) {
+        this.id = id;
         this.currency = currency;
         this.balance = balance;
         this.exchangeRate = exchangeRate;
@@ -31,5 +33,13 @@ public class Bank {
 
     public void setExchangeRate(float exchangeRate) {
         this.exchangeRate = exchangeRate;
+    }
+
+    @Override
+    public String toString() {
+        return "Bank Account " + id +
+                " in " + currency.getSymbolVerbose() +
+                " with balance " + balance +
+                " and exchangeRate " + exchangeRate;
     }
 }
