@@ -1,5 +1,6 @@
 package ui;
 
+import bank.Bank;
 import transaction.Transaction;
 import user.User;
 import utils.Category;
@@ -9,8 +10,7 @@ import utils.Month;
 
 import java.util.ArrayList;
 
-import static ui.OutputManager.listRecentTransactions;
-import static ui.OutputManager.printMessage;
+import static ui.OutputManager.*;
 
 public class Parser {
     /**
@@ -27,21 +27,26 @@ public class Parser {
         case "that":
             printMessage("DO THAT");
             break;
-        case "what?":
-            printMessage("DO WHAT?");
+        case "addBank":
+        case "addbank":
+            addBankToUser(commandList);
             break;
         case "add":
-            addTransaction(commandList);
+            addTransactionToUser(commandList);
             break;
         case "list":
             printMessage(listRecentTransactions(User.getTransactions(), 10));
+            break;
+        case "listBanks":
+        case "listbanks":
+            printMessage(listBanks(User.getBanks(), 10));
             break;
         default:
             printMessage("Does not match known command.");
         }
     }
 
-    private static void addTransaction(ArrayList<String> commandList){
+    private static void addTransactionToUser(ArrayList<String> commandList){
         try{
             Category category = Category.toCategory(commandList.get(1));
             float value = Float.parseFloat(commandList.get(2));
@@ -51,7 +56,23 @@ public class Parser {
             User.addTransaction(trans);
             printMessage("  Added Transaction: " + trans.toString());
         }catch (Exception e) {
-            printMessage("  Sorry! Wrong format. Try 'add <category> <value> <date> <currency>' \n  e.g. 'add food 4.50 10/4/2024 JPY'\n  " + e);
+            printMessage("  Sorry! Wrong format. Try 'add <category> <value> <date> <currency>' \n" +
+                    "  e.g. 'add food 4.50 10/4/2024 JPY'\n  " + e);
+        }
+
+    }
+
+    private static void addBankToUser(ArrayList<String> commandList){
+        try{
+            float balance       = Float.parseFloat(commandList.get(1));
+            Currency currency   = Currency.toCurrency(commandList.get(2));
+            float exchangeRate  = Float.parseFloat(commandList.get(3));
+            Bank bank = new Bank(User.getBanks().size(), currency, balance, exchangeRate);
+            User.addBank(bank);
+            printMessage("  Added " + bank.toString());
+        }catch (Exception e) {
+            printMessage("  Sorry! Wrong format. Try 'addBank <balance> <currency> <exchangerate>' \n" +
+                    "  e.g. 'addBank 1000.00 JPY 0.01'\n  " + e);
         }
 
     }

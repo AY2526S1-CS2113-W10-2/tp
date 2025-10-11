@@ -31,6 +31,11 @@ public class User {
         addTransaction(new Transaction(0.00F, Category.FOOD, new Date(35, Month.JUL, 10), GBP));
         addTransaction(new Transaction(10F, Category.RECREATION, new Date(10, Month.JAN, 2024), CNY));
 
+        addBank(new Bank(0, JPY, 1000.0f, 0.01f));
+        addBank(new Bank(1, USD, 846, 1));      // All exchange rates are compared to USD
+        addBank(new Bank(2, CNY, 124, 0.14f));
+        addBank(new Bank(2, EUR, 50, 0.6f));
+
         while(true){
             String str = scanner.nextLine();
             parseCommand(str);
@@ -42,6 +47,13 @@ public class User {
      */
     public static void addTransaction(Transaction transaction){
         transactions.add(transaction);
+    }
+
+    /**
+     * Adds a bank balance to the user's record
+     */
+    public static void addBank(Bank bank){
+        banks.add(bank);
     }
 
     /**
@@ -61,5 +73,10 @@ public class User {
 
     public static ArrayList<Transaction> getTransactions() {
         return transactions;
+    }
+
+
+    public static ArrayList<Bank> getBanks() {
+        return banks;
     }
 }
