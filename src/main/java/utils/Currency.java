@@ -1,18 +1,21 @@
 package utils;
 
 public enum Currency {
-    USD("United States Dollar", "$"),
-    EUR("European Euro", "€"),
-    JPY("Japanese Yen", "¥"),
-    GBP("British Pound", "£"),
-    CNY("Chinese Yuan", "¥");
+    USD("United States Dollar", "$", false),
+    EUR("European Euro", "€", false),
+    JPY("Japanese Yen", "¥", true),
+    GBP("British Pound", "£", false),
+    CNY("Chinese Yuan", "¥", true);
 
     private final String longName;
     private final String symbol;
+    // Whether there exists another currency using this same symbol that may cause confusion
+    private final boolean duplicateSymbol;
 
-    Currency(String longName, String symbol) {
+    Currency(String longName, String symbol, boolean duplicateSymbol) {
         this.longName = longName;
         this.symbol = symbol;
+        this.duplicateSymbol = duplicateSymbol;
     }
 
     public String getLongName() {
@@ -20,6 +23,25 @@ public enum Currency {
     }
 
     public String getSymbol() {
+        return symbol;
+    }
+
+    /**
+     * Gets the symbol for this currency. For currencies that have the same symbol (e.g. JPY, CNY),
+     * add the prefix to clarify.
+     *
+     * @return string of the currency symbol
+     */
+    public String getSymbolVerbose() {
+        if(this.duplicateSymbol){
+            return this + this.symbol;
+        }else{
+            return symbol;
+        }
+
+    }
+
+    public String getDuplicateSymbol() {
         return symbol;
     }
 }
