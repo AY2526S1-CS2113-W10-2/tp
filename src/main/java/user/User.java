@@ -11,7 +11,11 @@ import java.util.Scanner;
 
 import static ui.OutputManager.printMessage;
 import static ui.Parser.parseCommand;
-import static utils.Currency.*;
+import static utils.Currency.USD;
+import static utils.Currency.EUR;
+import static utils.Currency.JPY;
+import static utils.Currency.GBP;
+import static utils.Currency.CNY;
 
 public class User {
     public static ArrayList<Transaction> transactions = new ArrayList<>();
