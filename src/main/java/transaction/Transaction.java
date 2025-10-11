@@ -31,7 +31,7 @@ public class Transaction {
 
     @Override
     public String toString() {
-        return this.currency.getSymbol() + value +
+        return this.currency.getSymbolVerbose() + value +
                 " spent on " + category +
                 " on " + date.getLongDate();
     }
