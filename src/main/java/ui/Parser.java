@@ -10,7 +10,9 @@ import utils.Month;
 
 import java.util.ArrayList;
 
-import static ui.OutputManager.*;
+import static ui.OutputManager.listBanks;
+import static ui.OutputManager.listRecentTransactions;
+import static ui.OutputManager.printMessage;
 
 public class Parser {
     /**
@@ -41,8 +43,29 @@ public class Parser {
         case "listbanks":
             printMessage(listBanks(User.getBanks(), 10));
             break;
+        case "delete":
+            deleteTransactionFromUser(commandList);
+            break;
         default:
             printMessage("Does not match known command.");
+        }
+    }
+
+    private static void deleteTransactionFromUser(ArrayList<String> commandList) {
+        try {
+            if (commandList.size() < 2) {
+                System.out.println("Usage: delete <transaction_index>");
+                return;
+            }
+
+            int index = Integer.parseInt(commandList.get(1));
+
+            User.deleteTransaction(index);
+
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter a numeric transaction index.");
+        } catch (Exception e) {
+            System.out.println("Error deleting transaction: " + e.getMessage());
         }
     }
 
