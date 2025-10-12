@@ -60,8 +60,17 @@ public class User {
      * Deletes a transaction from the user's record
      *
      */
-    private static void deleteTransaction(){
+    public static void deleteTransaction(int index){
+        ArrayList<Transaction> transactions = getTransactions();
 
+        int realIndex = index - 1;
+
+        if (realIndex < 0 || realIndex >= transactions.size()) {
+            System.out.println("Invalid transaction index. Please enter a number between 1 and " + transactions.size());
+            return;
+        }
+        Transaction removedTransaction = transactions.remove(realIndex);
+        System.out.println("Deleted transaction: " + removedTransaction);
     }
 
     /**
