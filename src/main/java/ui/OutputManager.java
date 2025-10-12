@@ -2,8 +2,12 @@ package ui;
 
 import bank.Bank;
 import transaction.Transaction;
+import utils.Category;
+
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class OutputManager {
 
@@ -12,9 +16,33 @@ public class OutputManager {
      *
      * @return String representing the user's activity
      */
-    public static String printSummary(){
-        // todo
-        return null;
+    public static String printSummary(String month, List<Transaction> transactions,
+                                      Map<Category, Float> spendingByCategory,
+                                      Map<Category, Float> budgetByCategory) {
+        StringBuilder strb = new StringBuilder();
+        strb.append("===== Summary for ").append(month).append(" =====\n");
+
+        if (transactions.isEmpty()) {
+            strb.append("No transactions found for this month.\n");
+        } else {
+            strb.append("\n--- Transactions ---\n");
+            for (int i = 0; i < transactions.size(); i++) {
+                strb.append("[").append(i).append("] ").append(transactions.get(i).toString()).append("\n");
+            }
+        }
+
+        strb.append("\n--- Category Totals ---\n");
+        for (Category cat : spendingByCategory.keySet()) {
+            float spent = spendingByCategory.get(cat);
+            float budget = budgetByCategory.getOrDefault(cat, 0f);
+            strb.append(String.format("%-15s : $%.2f / $%.2f", cat, spent, budget));
+            if (budget > 0 && spent > budget) {
+                strb.append(" (Over budget!)");
+            }
+            strb.append("\n");
+        }
+
+        return strb.toString();
     }
 
     /**
