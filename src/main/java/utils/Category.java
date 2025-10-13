@@ -3,7 +3,8 @@ package utils;
 public enum Category {
     FOOD,
     TRANSPORT,
-    RECREATION;
+    RECREATION,
+    ENTERTAINMENT;
 
     private Budget budget;
 
@@ -32,6 +33,7 @@ public enum Category {
         case "food" -> FOOD;
         case "transport" -> TRANSPORT;
         case "recreation" -> RECREATION;
+        case "entertainment" -> ENTERTAINMENT;
         default -> throw new IllegalArgumentException("Unknown category: " + str);
         };
     }

@@ -2,6 +2,7 @@ package ui;
 
 import bank.Bank;
 import transaction.Transaction;
+import utils.Budget;
 import utils.Category;
 
 
@@ -111,6 +112,25 @@ public class OutputManager {
         strb.append("  Your Bank Accounts are:");
         for (int i = 0; i < banks.size(); i++){
             strb.append("\n  ").append(banks.get(i).toString());
+        }
+        return strb.toString();
+    }
+
+    public static String listBudget() {
+        StringBuilder strb = new StringBuilder();
+        strb.append("Current budget: ");
+        for (Category category : Category.values()) {
+            Budget budget = category.getBudget();
+            if (budget != null) {
+                strb.append("\n  ")
+                    .append(category.name().toLowerCase())
+                    .append(": ")
+                    .append(budget.getBudget());
+            } else {
+                strb.append("\n  ")
+                    .append(category.name().toLowerCase())
+                    .append(": no budget set yet");
+            }
         }
         return strb.toString();
     }

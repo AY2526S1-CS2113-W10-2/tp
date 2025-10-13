@@ -3,6 +3,7 @@ package ui;
 import bank.Bank;
 import transaction.Transaction;
 import user.User;
+import utils.Budget;
 import utils.Category;
 import utils.Currency;
 import utils.Date;
@@ -12,6 +13,7 @@ import summary.Summary;
 import java.util.ArrayList;
 
 import static ui.OutputManager.listBanks;
+import static ui.OutputManager.listBudget;
 import static ui.OutputManager.listRecentTransactions;
 import static ui.OutputManager.printMessage;
 
@@ -54,7 +56,7 @@ public class Parser {
             addMonthlyBudget(commandList);
             break;
         case "listBudget":
-            listBudget(commandList);
+            printMessage(listBudget());
             break;
         default:
             printMessage("Does not match known command.");
@@ -62,14 +64,6 @@ public class Parser {
         return false;
     }
 
-    private static void listBudget(ArrayList<String> commandList) {
-        System.out.println("food:");
-        System.out.println(Category.FOOD.getBudget().getBudget());
-        System.out.println("transport:");
-        System.out.println(Category.TRANSPORT.getBudget().getBudget());
-        System.out.println("recreation:");
-        System.out.println(Category.RECREATION.getBudget().getBudget());
-    }
 
     private static void deleteTransactionFromUser(ArrayList<String> commandList) {
         try {
