@@ -2,7 +2,7 @@ package utils;
 
 public class Budget {
     private final Category category;
-    public float balance = 0.0F;
+    private float balance = 0.0F;
     private float initialAmount = 0.0F;
     private final Currency currency;
     private final Month month;
