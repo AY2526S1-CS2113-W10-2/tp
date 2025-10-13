@@ -29,4 +29,13 @@ public enum Month {
     public String getNumber() {
         return number;
     }
+
+    public static Month fromNumber(String number) {
+        for (Month month : Month.values()) {
+            if (month.number.equals(number)) {
+                return month;
+            }
+        }
+        return null; // or throw an exception
+    }
 }

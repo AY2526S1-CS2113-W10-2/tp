@@ -10,9 +10,7 @@ import utils.Month;
 
 import java.util.ArrayList;
 
-import static ui.OutputManager.listBanks;
-import static ui.OutputManager.listRecentTransactions;
-import static ui.OutputManager.printMessage;
+import static ui.OutputManager.*;
 
 public class Parser {
     /**
@@ -48,8 +46,13 @@ public class Parser {
             break;
         case "addBudget":
             addBudgetToUser(commandList);
+            break;
         case "listBudget":
             listBudget(commandList);
+            break;
+        case "summary":
+            printSummary("january", User.transactions, User.spendingByCategory(), User.budgetByCategory());
+            break;
         default:
             printMessage("Does not match known command.");
         }
@@ -86,7 +89,8 @@ public class Parser {
         try{
             Category category = Category.toCategory(commandList.get(1));
             float value = Float.parseFloat(commandList.get(2));
-            Date date = new Date(0, Month.JAN,0);       // todo: parse date from string
+            String[] parsed_date = commandList.get(3).split("/");
+            Date date = new Date(Integer.parseInt(parsed_date[0]), Month.fromNumber(parsed_date[1]),Integer.parseInt(parsed_date[2]));       // todo: parse date from string
             Currency currency = Currency.toCurrency(commandList.get(4));
             Transaction trans = new Transaction(value, category, date, currency);
             User.addTransaction(trans);
@@ -119,11 +123,14 @@ public class Parser {
             Currency currency   = Currency.toCurrency(commandList.get(2));
             String category = commandList.get(3);
             User.addBudget(category, budget, currency);
+            printMessage("Added budget for" + category);
         }catch (Exception e) {
             printMessage("  Sorry! Wrong format. Try 'addBudget <budget> <currency> <category>' \n" +
                     "  e.g. 'addBudget 1000.00 JPY transport'\n  " + e);
         }
     }
+
+
 
     /**
      * Takes a String, splits into arrayList of substring
