@@ -3,7 +3,6 @@ package ui;
 import bank.Bank;
 import transaction.Transaction;
 import user.User;
-import utils.Budget;
 import utils.Category;
 import utils.Currency;
 import utils.Date;
