@@ -2,8 +2,8 @@ package utils;
 
 public class Budget {
     Category category;
-    float balance;
-    float initialAmount;
+    public float balance = 0.0F;
+    float initialAmount = 0.0F;
 
     /**
      * Gets the amount remaining in the user's budget for this category

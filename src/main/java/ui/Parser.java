@@ -46,9 +46,22 @@ public class Parser {
         case "delete":
             deleteTransactionFromUser(commandList);
             break;
+        case "addBudget":
+            addBudgetToUser(commandList);
+        case "listBudget":
+            listBudget(commandList);
         default:
             printMessage("Does not match known command.");
         }
+    }
+
+    private static void listBudget(ArrayList<String> commandList) {
+        System.out.println("food:");
+        System.out.println(Category.FOOD.getBudget().getBudget());
+        System.out.println("transport:");
+        System.out.println(Category.TRANSPORT.getBudget().getBudget());
+        System.out.println("recreation:");
+        System.out.println(Category.RECREATION.getBudget().getBudget());
     }
 
     private static void deleteTransactionFromUser(ArrayList<String> commandList) {
@@ -98,6 +111,18 @@ public class Parser {
                     "  e.g. 'addBank 1000.00 JPY 0.01'\n  " + e);
         }
 
+    }
+
+    public static void addBudgetToUser(ArrayList<String> commandList){
+        try{
+            float budget       = Float.parseFloat(commandList.get(1));
+            Currency currency   = Currency.toCurrency(commandList.get(2));
+            String category = commandList.get(3);
+            User.addBudget(category, budget, currency);
+        }catch (Exception e) {
+            printMessage("  Sorry! Wrong format. Try 'addBudget <budget> <currency> <category>' \n" +
+                    "  e.g. 'addBudget 1000.00 JPY transport'\n  " + e);
+        }
     }
 
     /**

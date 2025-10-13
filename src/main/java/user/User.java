@@ -2,9 +2,7 @@ package user;
 
 import bank.Bank;
 import transaction.Transaction;
-import utils.Category;
-import utils.Date;
-import utils.Month;
+import utils.*;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -70,13 +68,20 @@ public class User {
             return;
         }
         Transaction removedTransaction = transactions.remove(realIndex);
-        System.out.println("Deleted transaction: " + removedTransaction);
+        System.out.println("Deleted transaction: " + removedTransaction.toString());
     }
 
     /**
      * Adds a budget to the user's record
      */
-    private static void addBudget(){
+    public static void addBudget(String category, float budget, Currency currency){
+        Category temp = Category.toCategory(category);
+        try {
+
+            temp.setBudget(budget);
+        } catch (NullPointerException e) {
+            System.out.println(e.getMessage());
+        }
 
     }
 
