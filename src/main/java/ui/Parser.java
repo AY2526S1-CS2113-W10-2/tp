@@ -12,9 +12,7 @@ import summary.Summary;
 
 import java.util.ArrayList;
 
-import static ui.OutputManager.listBanks;
-import static ui.OutputManager.listRecentTransactions;
-import static ui.OutputManager.printMessage;
+import static ui.OutputManager.*;
 
 public class Parser {
     /**

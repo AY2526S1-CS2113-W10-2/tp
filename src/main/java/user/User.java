@@ -6,6 +6,8 @@ import utils.*;
 import saveData.Storage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 import static ui.OutputManager.printMessage;
@@ -94,6 +96,30 @@ public class User {
 
     public static Storage getStorage() {
         return storage;
+    }
+
+    public static Map<Category, Float> spendingByCategory() {
+        Map<Category, Float> spendingMap = new HashMap<>();
+
+        // Initialize all categories with 0 spending
+        for (Category category : Category.values()) {
+            float budget_spent = category.getBudget().getBudget() - category.getBudget().balance;
+            spendingMap.put(category, budget_spent);
+        }
+
+        return spendingMap;
+    }
+
+    public static Map<Category, Float> budgetByCategory(){
+        Map<Category, Float> budgetMap = new HashMap<>();
+
+        // Initialize all categories with 0 spending
+        for (Category category : Category.values()) {
+            float budget = category.getBudget().getBudget();
+            budgetMap.put(category, budget);
+        }
+
+        return budgetMap;
     }
 
     public static ArrayList<Transaction> getTransactions() {

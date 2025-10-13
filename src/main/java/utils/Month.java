@@ -35,4 +35,13 @@ public enum Month {
         }
         throw new IllegalArgumentException("Invalid month: " + input);
     }
+
+    public static Month fromNumber(String number) {
+        for (Month month : Month.values()) {
+            if (month.number.equals(number)) {
+                return month;
+            }
+        }
+        return null; // or throw an exception
+    }
 }
