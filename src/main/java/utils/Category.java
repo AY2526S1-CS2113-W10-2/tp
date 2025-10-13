@@ -1,31 +1,36 @@
 package utils;
 
 public enum Category {
-    FOOD(new Budget()),
-    TRANSPORT(new Budget()),
-    RECREATION(new Budget());
+    FOOD,
+    TRANSPORT,
+    RECREATION;
 
     private Budget budget;
 
-    private Category(Budget budget) {
-        this.budget = budget;
+    // call this after all enums are created
+    public void initBudget(float amount, Currency currency, Month month) {
+        this.budget = new Budget(this, amount, currency, month);
     }
 
     public Budget getBudget() {
         return budget;
     }
 
-    public void setBudget(float budget) {
-        this.budget.initialAmount = budget;
-        this.budget.balance = budget;
+    public void setBudget(float amount) {
+        if (budget == null) {
+            throw new IllegalStateException("Budget not initialized for " + this);
+        }
+        budget.setBudget(amount);
     }
-
     public static Category toCategory(String str) {
+        if (str == null) throw new IllegalArgumentException("Category cannot be null");
+        str = str.trim().toLowerCase();
+
         return switch (str) {
-            case "f", "food" -> FOOD;
-            case "t", "transport" -> TRANSPORT;
-            case "r", "recreation" -> RECREATION;
-            default -> null;
+            case "food" -> FOOD;
+            case "transport" -> TRANSPORT;
+            case "recreation" -> RECREATION;
+            default -> throw new IllegalArgumentException("Unknown category: " + str);
         };
     }
 }

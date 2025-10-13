@@ -25,6 +25,10 @@ public class Transaction {
         return category;
     }
 
+    public Currency getCurrency(){
+        return currency;
+    }
+
     public Date getDate() {
         return date;
     }

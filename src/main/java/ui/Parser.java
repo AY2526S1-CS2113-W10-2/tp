@@ -7,6 +7,8 @@ import utils.Category;
 import utils.Currency;
 import utils.Date;
 import utils.Month;
+import saveData.Storage;
+import summary.Summary;
 
 import java.util.ArrayList;
 
@@ -23,13 +25,13 @@ public class Parser {
         ArrayList<String> commandList = splitCommand(command);
         String comm = commandList.get(0);
         switch (comm){
-        case "this":
-            printMessage("DO THIS");
+        case "exit":
+            printMessage("Exiting program. Goodbye!");
+            System.exit(0);
             break;
-        case "that":
-            printMessage("DO THAT");
+        case "summary":
+            handleSummary(commandList);
             break;
-        case "addBank":
         case "addbank":
             addBankToUser(commandList);
             break;
@@ -39,7 +41,6 @@ public class Parser {
         case "list":
             printMessage(listRecentTransactions(User.getTransactions(), 10));
             break;
-        case "listBanks":
         case "listbanks":
             printMessage(listBanks(User.getBanks(), 10));
             break;
@@ -48,8 +49,13 @@ public class Parser {
             break;
         case "addBudget":
             addBudgetToUser(commandList);
+            break;
+        case "budget":
+            addMonthlyBudget(commandList);
+            break;
         case "listBudget":
             listBudget(commandList);
+            break;
         default:
             printMessage("Does not match known command.");
         }
@@ -82,21 +88,38 @@ public class Parser {
         }
     }
 
-    private static void addTransactionToUser(ArrayList<String> commandList){
-        try{
+    private static void addTransactionToUser(ArrayList<String> commandList) {
+        try {
             Category category = Category.toCategory(commandList.get(1));
             float value = Float.parseFloat(commandList.get(2));
-            Date date = new Date(0, Month.JAN,0);       // todo: parse date from string
+
+            // Parse date (format: DD/MM/YYYY)
+            String[] dateParts = commandList.get(3).split("/");
+            if (dateParts.length != 3) {
+                throw new IllegalArgumentException("Date format must be DD/MM/YYYY");
+            }
+
+            int day = Integer.parseInt(dateParts[0]);
+            int monthNum = Integer.parseInt(dateParts[1]);
+            int year = Integer.parseInt(dateParts[2]);
+
+            // Convert numeric month to enum (1 = JAN, 2 = FEB, ...)
+            Month month = Month.values()[monthNum - 1];
+
+            Date date = new Date(day, month, year);
+
             Currency currency = Currency.toCurrency(commandList.get(4));
+
             Transaction trans = new Transaction(value, category, date, currency);
             User.addTransaction(trans);
             printMessage("  Added Transaction: " + trans.toString());
-        }catch (Exception e) {
+
+        } catch (Exception e) {
             printMessage("  Sorry! Wrong format. Try 'add <category> <value> <date> <currency>' \n" +
                     "  e.g. 'add food 4.50 10/4/2024 JPY'\n  " + e);
         }
-
     }
+
 
     private static void addBankToUser(ArrayList<String> commandList){
         try{
@@ -115,15 +138,33 @@ public class Parser {
 
     public static void addBudgetToUser(ArrayList<String> commandList){
         try{
-            float budget       = Float.parseFloat(commandList.get(1));
-            Currency currency   = Currency.toCurrency(commandList.get(2));
-            String category = commandList.get(3);
-            User.addBudget(category, budget, currency);
+            String category = commandList.get(1);
+            float amount = Float.parseFloat(commandList.get(2));
+            Currency currency = Currency.toCurrency(commandList.get(3));
+            Month month = Month.valueOf(commandList.get(4).toUpperCase());
+
+            User.addBudget(category, amount, currency, month);  // now matches the method signature
+
+            printMessage("Added budget of " + amount + " " + currency + " for " + category + " in " + month);
         }catch (Exception e) {
-            printMessage("  Sorry! Wrong format. Try 'addBudget <budget> <currency> <category>' \n" +
-                    "  e.g. 'addBudget 1000.00 JPY transport'\n  " + e);
+            printMessage("  Sorry! Wrong format. Try 'addBudget <category> <amount> <currency> <month>' \n" +
+                    "  e.g. 'addBudget food 200 SGD JAN'\n  " + e);
         }
     }
+
+    private static void addMonthlyBudget(ArrayList<String> commandList) {
+        try {
+            String category = commandList.get(1);
+            float amount = Float.parseFloat(commandList.get(2));
+            Month month = Month.valueOf(commandList.get(3).toUpperCase());
+            User.addBudget(category, amount, Currency.SGD, month); // assuming default currency or pass as arg
+            printMessage("Added budget of $" + amount + " for " + category + " in " + month);
+        } catch (Exception e) {
+            printMessage("Usage: budget <category> <amount> <month> \n" +
+                    "e.g. budget food 200 JAN\n" + e);
+        }
+    }
+
 
     /**
      * Takes a String, splits into arrayList of substring
@@ -165,4 +206,22 @@ public class Parser {
         }
         return retVal;
     }
+    private static void handleSummary(ArrayList<String> commandList) {
+        try {
+            if (commandList.size() < 2) {
+                printMessage("Please provide a month! \n Usage: summary <month>" );
+                return;
+            }
+
+            String monthInput = commandList.get(1);
+            Summary summary = new Summary(User.getStorage());
+            summary.showMonthlySummary(monthInput);
+
+        } catch (IllegalArgumentException e) {
+            printMessage("Invalid month name. Please try again (e.g., summary JAN).");
+        } catch (Exception e) {
+            printMessage("Error generating summary: " + e.getMessage());
+        }
+    }
+
 }

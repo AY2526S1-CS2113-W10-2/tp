@@ -1,17 +1,36 @@
 package saveData;
+
+import bank.Bank;
 import transaction.Transaction;
 import utils.Budget;
 import utils.Category;
+import utils.Currency;
+import utils.Date;
+import utils.Month;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Storage {
     private final List<Transaction> transactions = new ArrayList<>();
     private final List<Budget> budgets = new ArrayList<>();
+    private final List<Bank> banks = new ArrayList<>();
 
+    private static final String TRANSACTION_FILE = "transactions.txt";
+    private static final String BUDGET_FILE = "budgets.txt";
+    private static final String BANK_FILE = "banks.txt";
+
+    public Storage() {
+        loadTransactions();
+        loadBudgets();
+        loadBanks();
+    }
+
+    // -------------------- Transactions --------------------
     public void addTransaction(Transaction t) {
         transactions.add(t);
+        saveTransactions();
     }
 
     public List<Transaction> getTransactions() {
@@ -21,34 +40,161 @@ public class Storage {
     public void deleteTransaction(int index) {
         if (index >= 0 && index < transactions.size()) {
             transactions.remove(index);
+            saveTransactions();
         } else {
             System.out.println("Invalid transaction index.");
         }
     }
 
+    private void saveTransactions() {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(TRANSACTION_FILE))) {
+            for (Transaction t : transactions) {
+                pw.println(t.getCategory().name() + "|" +
+                        t.getValue() + "|" +
+                        t.getDate().getDay() + "|" +
+                        t.getDate().getMonth().name() + "|" +
+                        t.getDate().getYear() + "|" +
+                        t.getCurrency().name());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadTransactions() {
+        transactions.clear();
+        File file = new File(TRANSACTION_FILE);
+        if (!file.exists()) return;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split("\\|");
+                if (parts.length != 6) continue;
+
+                Category category = Category.toCategory(parts[0]);
+                float value = Float.parseFloat(parts[1]);
+                int day = Integer.parseInt(parts[2]);
+                Month month = Month.valueOf(parts[3]);
+                int year = Integer.parseInt(parts[4]);
+                Currency currency = Currency.valueOf(parts[5]);
+
+                transactions.add(new Transaction(value, category, new Date(day, month, year), currency));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // -------------------- Budgets --------------------
     public void addBudget(Budget b) {
+        // If a budget already exists for the same category and month, replace it
+        budgets.removeIf(existing ->
+                existing.getCategory() == b.getCategory() &&
+                        existing.getMonth() == b.getMonth()
+        );
         budgets.add(b);
+        saveBudgets();
     }
 
-    public List<Budget> getBudgets() {
-        return budgets;
-    }
-
-    public double getBudgetForCategory(Category category) {
+    public float getBudgetAmount(Category category, Month month) {
         for (Budget b : budgets) {
-            if (b.getCategory() == category) {
+            if (b.getCategory() == category && b.getMonth() == month) {
                 return b.getBudget();
             }
         }
-        return 0.0;
-    }
-    public float getBudget(Category category) {
-        for (Budget b : budgets) {
-            if (b.getCategory().equals(category)) {
-                return b.getBudget();  // Budget.amount
-            }
-        }
-        return 0f; // default if no budget set
+        return 0f;
     }
 
+    public Currency getBudgetCurrency(Category category, Month month) {
+        for (Budget b : budgets) {
+            if (b.getCategory() == category && b.getMonth() == month) {
+                return b.getCurrency();
+            }
+        }
+        return null;
+    }
+
+    private void saveBudgets() {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(BUDGET_FILE))) {
+            for (Budget b : budgets) {
+                pw.println(b.getCategory().name() + "|" +
+                        b.getMonth().name() + "|" +
+                        b.getBudget() + "|" +
+                        b.getCurrency().name());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadBudgets() {
+        budgets.clear();
+        File file = new File(BUDGET_FILE);
+        if (!file.exists()) return;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split("\\|");
+                if (parts.length != 4) continue;
+
+                Category category = Category.toCategory(parts[0]);
+                Month month = Month.valueOf(parts[1]);
+                float amount = Float.parseFloat(parts[2]);
+                Currency currency = Currency.valueOf(parts[3]);
+
+                budgets.add(new Budget(category, amount, currency, month));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    // -------------------- Banks --------------------
+    public void addBank(Bank b) {
+        banks.add(b);
+        saveBanks();
+    }
+
+    public List<Bank> getBanks() {
+        return banks;
+    }
+
+    private void saveBanks() {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(BANK_FILE))) {
+            for (Bank b : banks) {
+                pw.println(b.getId() + "|" +
+                        b.getCurrency().name() + "|" +
+                        b.getBalance() + "|" +
+                        b.getExchangeRate());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadBanks() {
+        banks.clear();
+        File file = new File(BANK_FILE);
+        if (!file.exists()) return;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split("\\|");
+                if (parts.length != 4) continue;
+
+                int id = Integer.parseInt(parts[0]);
+                Currency currency = Currency.valueOf(parts[1]);
+                float balance = Float.parseFloat(parts[2]);
+                float exchangeRate = Float.parseFloat(parts[3]);
+
+                banks.add(new Bank(id, currency, balance, exchangeRate));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
