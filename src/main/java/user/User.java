@@ -2,35 +2,30 @@ package user;
 
 import bank.Bank;
 import transaction.Transaction;
-import utils.*;
+import utils.Budget;
+import utils.Category;
+import utils.Currency;
+import utils.Month;
 import saveData.Storage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 import static ui.OutputManager.printMessage;
-import static ui.Parser.parseCommand;
-import static utils.Currency.USD;
-import static utils.Currency.EUR;
-import static utils.Currency.JPY;
-import static utils.Currency.GBP;
-import static utils.Currency.CNY;
 
 public class User {
     public static ArrayList<Transaction> transactions;
     public static ArrayList<Bank> banks;
-    private static Storage storage = new Storage(); // single shared storage
+    private static final Storage storage = new Storage(); // single shared storage
 
-    public static void main(String[] args) {
+    public static void initialise() {
         transactions = new ArrayList<>(storage.getTransactions());
         banks = new ArrayList<>(storage.getBanks());
         printMessage("Welcome to finance manager V1.0!\n" +
                 "What can I do for you today?");
-        Scanner scanner = new Scanner(System.in);
 
-       /* addTransaction(new Transaction(13.10F, Category.FOOD, new Date(5, Month.NOV, 0), USD));
+        /* addTransaction(new Transaction(13.10F, Category.FOOD, new Date(5, Month.NOV, 0), USD));
         addTransaction(new Transaction(200.40F, Category.TRANSPORT, new Date(0, Month.DEC, Integer.MAX_VALUE), JPY));
         addTransaction(new Transaction(0.00F, Category.FOOD, new Date(35, Month.JUL, 10), GBP));
         addTransaction(new Transaction(10F, Category.RECREATION, new Date(10, Month.JAN, 2024), CNY));
@@ -42,10 +37,8 @@ public class User {
 
         */
 
-        while(true){
-            String str = scanner.nextLine();
-            parseCommand(str);
-        }
+
+
     }
 
     /**
@@ -74,11 +67,11 @@ public class User {
         int realIndex = index - 1;
 
         if (realIndex < 0 || realIndex >= transactions.size()) {
-            System.out.println("Invalid transaction index. Please enter a number between 1 and " + transactions.size());
+            printMessage("Invalid transaction index. Please enter a number between 1 and " + transactions.size());
             return;
         }
         Transaction removedTransaction = transactions.remove(realIndex);
-        System.out.println("Deleted transaction: " + removedTransaction.toString());
+        printMessage("Deleted transaction: " + removedTransaction.toString());
     }
 
     /**
@@ -103,8 +96,8 @@ public class User {
 
         // Initialize all categories with 0 spending
         for (Category category : Category.values()) {
-            float budget_spent = category.getBudget().getBudget() - category.getBudget().balance;
-            spendingMap.put(category, budget_spent);
+            float budgetSpent = category.getBudget().getBudget() - category.getBudget().getRemainingAmount();
+            spendingMap.put(category, budgetSpent);
         }
 
         return spendingMap;
