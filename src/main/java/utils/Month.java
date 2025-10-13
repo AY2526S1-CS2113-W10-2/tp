@@ -22,8 +22,12 @@ public enum Month {
         this.number = number;
     }
 
-    public String getLongName() { return longName; }
-    public String getNumber() { return number; }
+    public String getLongName() {
+        return longName;
+    }
+    public String getNumber() {
+        return number;
+    }
 
     // Helper to parse input like "JAN" or "January"
     public static Month fromString(String input) {

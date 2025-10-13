@@ -8,18 +8,25 @@ import utils.Currency;
 import utils.Date;
 import utils.Month;
 
-import java.io.*;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Storage {
+    private static final String TRANSACTION_FILE = "transactions.txt";
+    private static final String BUDGET_FILE = "budgets.txt";
+    private static final String BANK_FILE = "banks.txt";
+
     private final List<Transaction> transactions = new ArrayList<>();
     private final List<Budget> budgets = new ArrayList<>();
     private final List<Bank> banks = new ArrayList<>();
 
-    private static final String TRANSACTION_FILE = "transactions.txt";
-    private static final String BUDGET_FILE = "budgets.txt";
-    private static final String BANK_FILE = "banks.txt";
 
     public Storage() {
         loadTransactions();
@@ -64,13 +71,17 @@ public class Storage {
     private void loadTransactions() {
         transactions.clear();
         File file = new File(TRANSACTION_FILE);
-        if (!file.exists()) return;
+        if (!file.exists()) {
+            return;
+        }
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split("\\|");
-                if (parts.length != 6) continue;
+                if (parts.length != 6) {
+                    continue;
+                }
 
                 Category category = Category.toCategory(parts[0]);
                 float value = Float.parseFloat(parts[1]);
@@ -131,13 +142,17 @@ public class Storage {
     private void loadBudgets() {
         budgets.clear();
         File file = new File(BUDGET_FILE);
-        if (!file.exists()) return;
+        if (!file.exists()) {
+            return;
+        }
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split("\\|");
-                if (parts.length != 4) continue;
+                if (parts.length != 4) {
+                    continue;
+                }
 
                 Category category = Category.toCategory(parts[0]);
                 Month month = Month.valueOf(parts[1]);
@@ -178,13 +193,17 @@ public class Storage {
     private void loadBanks() {
         banks.clear();
         File file = new File(BANK_FILE);
-        if (!file.exists()) return;
+        if (!file.exists()) {
+            return;
+        }
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split("\\|");
-                if (parts.length != 4) continue;
+                if (parts.length != 4) {
+                    continue;
+                }
 
                 int id = Integer.parseInt(parts[0]);
                 Currency currency = Currency.valueOf(parts[1]);

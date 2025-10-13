@@ -7,29 +7,30 @@ import utils.Category;
 import utils.Currency;
 import utils.Date;
 import utils.Month;
-import saveData.Storage;
 import summary.Summary;
 
 import java.util.ArrayList;
 
-import static ui.OutputManager.*;
+import static ui.OutputManager.listBanks;
+import static ui.OutputManager.listRecentTransactions;
+import static ui.OutputManager.printMessage;
 
 public class Parser {
     /**
      * Parses the command string, and redirects control to the appropriate function to execute
      * @param command
      */
-    public static void parseCommand(String command){
+    public static boolean parseCommand(String command){
         ArrayList<String> commandList = splitCommand(command);
         String comm = commandList.get(0);
         switch (comm){
         case "exit":
             printMessage("Exiting program. Goodbye!");
-            System.exit(0);
-            break;
+            return true;
         case "summary":
             handleSummary(commandList);
             break;
+        case "addBank":
         case "addbank":
             addBankToUser(commandList);
             break;
@@ -39,6 +40,7 @@ public class Parser {
         case "list":
             printMessage(listRecentTransactions(User.getTransactions(), 10));
             break;
+        case "listBanks":
         case "listbanks":
             printMessage(listBanks(User.getBanks(), 10));
             break;
@@ -57,6 +59,7 @@ public class Parser {
         default:
             printMessage("Does not match known command.");
         }
+        return false;
     }
 
     private static void listBudget(ArrayList<String> commandList) {
@@ -71,7 +74,7 @@ public class Parser {
     private static void deleteTransactionFromUser(ArrayList<String> commandList) {
         try {
             if (commandList.size() < 2) {
-                System.out.println("Usage: delete <transaction_index>");
+                printMessage("Usage: delete <transaction_index>");
                 return;
             }
 
@@ -80,9 +83,9 @@ public class Parser {
             User.deleteTransaction(index);
 
         } catch (NumberFormatException e) {
-            System.out.println("Invalid input. Please enter a numeric transaction index.");
+            printMessage("Invalid input. Please enter a numeric transaction index.");
         } catch (Exception e) {
-            System.out.println("Error deleting transaction: " + e.getMessage());
+            printMessage("Error deleting transaction: " + e.getMessage());
         }
     }
 
@@ -117,7 +120,6 @@ public class Parser {
                     "  e.g. 'add food 4.50 10/4/2024 JPY'\n  " + e);
         }
     }
-
 
     private static void addBankToUser(ArrayList<String> commandList){
         try{

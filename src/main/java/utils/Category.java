@@ -23,14 +23,16 @@ public enum Category {
         budget.setBudget(amount);
     }
     public static Category toCategory(String str) {
-        if (str == null) throw new IllegalArgumentException("Category cannot be null");
+        if (str == null) {
+            throw new IllegalArgumentException("Category cannot be null");
+        }
         str = str.trim().toLowerCase();
 
         return switch (str) {
-            case "food" -> FOOD;
-            case "transport" -> TRANSPORT;
-            case "recreation" -> RECREATION;
-            default -> throw new IllegalArgumentException("Unknown category: " + str);
+        case "food" -> FOOD;
+        case "transport" -> TRANSPORT;
+        case "recreation" -> RECREATION;
+        default -> throw new IllegalArgumentException("Unknown category: " + str);
         };
     }
 }
