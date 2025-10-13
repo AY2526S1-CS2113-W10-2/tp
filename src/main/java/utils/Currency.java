@@ -5,6 +5,7 @@ public enum Currency {
     EUR("European Euro", "€", false),
     JPY("Japanese Yen", "¥", true),
     GBP("British Pound", "£", false),
+    SGD("Singapore Dollar", "$",true),
     CNY("Chinese Yuan", "¥", true);
 
     private final String longName;
@@ -60,6 +61,7 @@ public enum Currency {
         case "JPY", "jpy" -> JPY;
         case "GBP", "gbp" -> GBP;
         case "CNY", "cny" -> CNY;
+        case "SGD", "sgd" -> SGD;
         default -> null;
         };
     }

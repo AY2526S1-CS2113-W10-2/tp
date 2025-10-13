@@ -19,6 +19,11 @@ public class Bank {
         return currency;
     }
 
+    public int getId() {
+        return id;
+    }
+
+
     public float getBalance() {
         return balance;
     }

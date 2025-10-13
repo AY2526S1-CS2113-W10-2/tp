@@ -24,17 +24,23 @@ public class Summary {
                 .collect(Collectors.toList());
 
         Map<Category, Float> spendingByCategory = new HashMap<>();
-        for (Transaction t : monthlyTransactions) {
-            spendingByCategory.put(
-                    t.getCategory(),
-                    spendingByCategory.getOrDefault(t.getCategory(), 0f) + t.getValue()
-            );
+        Map<Category, Float> budgetByCategory = new HashMap<>();
+
+        Month monthEnum = Month.valueOf(month.toUpperCase());
+
+        for (Category cat : Category.values()) {
+            // Total spent in this category this month
+            float spent = (float) monthlyTransactions.stream()
+                    .filter(t -> t.getCategory() == cat)
+                    .mapToDouble(Transaction::getValue)
+                    .sum();
+            spendingByCategory.put(cat, spent);
+
+            // Budget for this category this month
+            float budget = storage.getBudgetAmount(cat, monthEnum);
+            budgetByCategory.put(cat, budget);
         }
 
-        Map<Category, Float> budgetByCategory = new HashMap<>();
-        for (Category cat : spendingByCategory.keySet()) {
-            budgetByCategory.put(cat, storage.getBudget(cat));
-        }
 
         String summaryOutput = OutputManager.printSummary(
                 month,
