@@ -4,7 +4,6 @@ import user.User;
 
 import java.util.Scanner;
 import static ui.Parser.parseCommand;
-import static ui.OutputManager.printMessage;
 
 public class UserInterface {
     public static void main(String[] args) {
