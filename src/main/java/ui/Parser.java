@@ -86,6 +86,9 @@ public class Parser {
         try {
             Category category = Category.toCategory(commandList.get(1));
             float value = Float.parseFloat(commandList.get(2));
+            if (value < 0) {
+                throw new IllegalArgumentException("Invalid value. Please enter a positive numeric value.");
+            }
 
             // Parse date (format: DD/MM/YYYY)
             String[] dateParts = commandList.get(3).split("/");

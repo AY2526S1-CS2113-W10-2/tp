@@ -17,8 +17,6 @@ public class UserInterface {
             String input = InputManager.getNextCommand(scanner);
             isExit = parseCommand(input);
         }
-        printMessage("Program exited successfully.");
-        scanner.close();
 
     }
 }
