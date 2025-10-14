@@ -85,6 +85,10 @@ public class Storage {
 
                 Category category = Category.toCategory(parts[0]);
                 float value = Float.parseFloat(parts[1]);
+                if (value < 0) {
+                    continue;
+                }
+
                 int day = Integer.parseInt(parts[2]);
                 Month month = Month.valueOf(parts[3]);
                 int year = Integer.parseInt(parts[4]);

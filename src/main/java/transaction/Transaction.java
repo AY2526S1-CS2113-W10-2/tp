@@ -11,10 +11,22 @@ public class Transaction {
     private final Currency currency;
 
     public Transaction(float value, Category category, Date date, Currency currency) {
+        if (value < 0) {
+            throw new IllegalArgumentException("Value must be positive");
+        }
+        requireNonNull(category, "Category cannot be null");
+        requireNonNull(date, "Date cannot be null");
+        requireNonNull(currency, "Currency cannot be null");
         this.value = value;
         this.category = category;
         this.date = date;
         this.currency = currency;
+    }
+
+    private static void requireNonNull(Object obj, String message) {
+        if (obj == null) {
+            throw new IllegalArgumentException(message);
+        }
     }
 
     public float getValue() {
