@@ -10,6 +10,7 @@ import saveData.Storage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static ui.OutputManager.printMessage;
@@ -17,27 +18,13 @@ import static ui.OutputManager.printMessage;
 public class User {
     public static ArrayList<Transaction> transactions;
     public static ArrayList<Bank> banks;
-    private static final Storage storage = new Storage(); // single shared storage
+    private static Storage storage = new Storage(); // single shared storage
 
     public static void initialise() {
         transactions = new ArrayList<>(storage.getTransactions());
         banks = new ArrayList<>(storage.getBanks());
         printMessage("Welcome to finance manager V1.0!\n" +
                 "What can I do for you today?");
-
-        /* addTransaction(new Transaction(13.10F, Category.FOOD, new Date(5, Month.NOV, 0), USD));
-        addTransaction(new Transaction(200.40F, Category.TRANSPORT, new Date(0, Month.DEC, Integer.MAX_VALUE), JPY));
-        addTransaction(new Transaction(0.00F, Category.FOOD, new Date(35, Month.JUL, 10), GBP));
-        addTransaction(new Transaction(10F, Category.RECREATION, new Date(10, Month.JAN, 2024), CNY));
-
-        addBank(new Bank(0, JPY, 1000.0f, 0.01f));
-        addBank(new Bank(1, USD, 846, 1));      // All exchange rates are compared to USD
-        addBank(new Bank(2, CNY, 124, 0.14f));
-        addBank(new Bank(2, EUR, 50, 0.6f));
-
-        */
-
-
 
     }
 
