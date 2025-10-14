@@ -18,6 +18,15 @@ dependencies {
 
 }
 
+jar {
+    manifest {
+        attributes 'Main-class': 'ui.UserInterface'
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
 test {
     useJUnitPlatform()
 
