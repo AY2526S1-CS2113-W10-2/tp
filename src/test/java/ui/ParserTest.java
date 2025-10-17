@@ -32,8 +32,8 @@ public class ParserTest {
         }
 
         // Clear any loaded transactions in User storage
-        storage.getTransactions().clear();
         User.getTransactions().clear();
+        //User.getTransactions().clear();
     }
 
     @AfterEach

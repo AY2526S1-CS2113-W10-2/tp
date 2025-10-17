@@ -23,9 +23,9 @@ public class Storage {
     private static final String BUDGET_FILE = "budgets.txt";
     private static final String BANK_FILE = "banks.txt";
 
-    private final List<Transaction> transactions = new ArrayList<>();
+    /*private final List<Transaction> transactions = new ArrayList<>();
     private final List<Budget> budgets = new ArrayList<>();
-    private final List<Bank> banks = new ArrayList<>();
+    private final List<Bank> banks = new ArrayList<>();*/
 
 
     public Storage() {
@@ -35,7 +35,7 @@ public class Storage {
     }
 
     // -------------------- Transactions --------------------
-    public void addTransaction(Transaction t) {
+    /*public void addTransaction(Transaction t) {
         transactions.add(t);
         saveTransactions();
     }
@@ -51,9 +51,9 @@ public class Storage {
         } else {
             System.out.println("Invalid transaction index.");
         }
-    }
+    }*/
 
-    private void saveTransactions() {
+    public void saveTransactions(ArrayList<Transaction> transactions) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(TRANSACTION_FILE))) {
             for (Transaction t : transactions) {
                 pw.println(t.getCategory().name() + "|" +
@@ -68,15 +68,16 @@ public class Storage {
         }
     }
 
-    private void loadTransactions() {
-        transactions.clear();
+    public ArrayList<Transaction> loadTransactions() {
+        //transactions.clear();
         File file = new File(TRANSACTION_FILE);
         if (!file.exists()) {
-            return;
+            return null;
         }
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
+            ArrayList<Transaction> transactions = new ArrayList<>();
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split("\\|");
                 if (parts.length != 6) {
@@ -96,13 +97,15 @@ public class Storage {
 
                 transactions.add(new Transaction(value, category, new Date(day, month, year), currency));
             }
+            return transactions;
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     // -------------------- Budgets --------------------
-    public void addBudget(Budget b) {
+    /*public void addBudget(Budget b) {
         // If a budget already exists for the same category and month, replace it
         budgets.removeIf(existing ->
                 existing.getCategory() == b.getCategory() &&
@@ -128,9 +131,9 @@ public class Storage {
             }
         }
         return null;
-    }
+    }*/
 
-    private void saveBudgets() {
+    public void saveBudgets(ArrayList<Budget> budgets) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(BUDGET_FILE))) {
             for (Budget b : budgets) {
                 pw.println(b.getCategory().name() + "|" +
@@ -143,15 +146,16 @@ public class Storage {
         }
     }
 
-    private void loadBudgets() {
-        budgets.clear();
+    public ArrayList<Budget> loadBudgets() {
+        //budgets.clear();
         File file = new File(BUDGET_FILE);
         if (!file.exists()) {
-            return;
+            return null;
         }
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
+            ArrayList<Budget> budgets = new ArrayList<>();
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split("\\|");
                 if (parts.length != 4) {
@@ -165,23 +169,25 @@ public class Storage {
 
                 budgets.add(new Budget(category, amount, currency, month));
             }
+            return budgets;
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
 
     // -------------------- Banks --------------------
-    public void addBank(Bank b) {
+    /*public void addBank(Bank b) {
         banks.add(b);
         saveBanks();
     }
 
     public List<Bank> getBanks() {
         return banks;
-    }
+    }*/
 
-    private void saveBanks() {
+    public void saveBanks(ArrayList<Bank> banks) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(BANK_FILE))) {
             for (Bank b : banks) {
                 pw.println(b.getId() + "|" +
@@ -194,15 +200,16 @@ public class Storage {
         }
     }
 
-    private void loadBanks() {
-        banks.clear();
+    public ArrayList<Bank> loadBanks() {
+        //banks.clear();
         File file = new File(BANK_FILE);
         if (!file.exists()) {
-            return;
+            return null;
         }
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
+            ArrayList<Bank> banks = new ArrayList<>();
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split("\\|");
                 if (parts.length != 4) {
@@ -216,8 +223,10 @@ public class Storage {
 
                 banks.add(new Bank(id, currency, balance, exchangeRate));
             }
+            return banks;
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return null;
     }
 }

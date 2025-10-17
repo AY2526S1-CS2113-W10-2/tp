@@ -2,6 +2,7 @@ package saveData;
 
 import org.junit.jupiter.api.*;
 import transaction.Transaction;
+import user.User;
 import utils.Category;
 import utils.Currency;
 import utils.Date;
@@ -46,10 +47,10 @@ public class StorageTest {
     public void addTransaction_savesToFile_and_canReload() throws IOException {
         // create a transaction and add
         Transaction t = new Transaction(12.34f, Category.FOOD, new Date(10, Month.JAN, 2025), Currency.SGD);
-        storage.addTransaction(t);
+        User.addTransaction(t);
 
         // in-memory list must contain it
-        List<Transaction> txs = storage.getTransactions();
+        List<Transaction> txs = User.getTransactions();
         assertEquals(1, txs.size());
         assertEquals(12.34f, txs.get(0).getValue(), 0.001);
 
@@ -62,8 +63,9 @@ public class StorageTest {
 
         // Now create a new Storage instance which should load from file
         Storage second = new Storage();
-        assertEquals(1, second.getTransactions().size());
-        Transaction loaded = second.getTransactions().get(0);
+
+        assertEquals(1, User.getTransactions().size());
+        Transaction loaded = User.getTransactions().get(0);
         assertEquals(12.34f, loaded.getValue(), 0.001);
         assertEquals(Category.FOOD, loaded.getCategory());
         assertEquals(10, loaded.getDate().getDay());

@@ -19,9 +19,9 @@ public class User {
     private static Storage storage = new Storage(); // single shared storage
 
     public static void initialise() {
-        transactions = new ArrayList<>(storage.getTransactions());
-        banks = new ArrayList<>(storage.getBanks());
-        budgets = new ArrayList<>();                                  //TODO: load budgets from file
+        transactions = storage.loadTransactions();
+        banks = storage.loadBanks();
+        budgets = storage.loadBudgets();
         printMessage("Welcome to finance manager V1.0!\n" +
                 "What can I do for you today?");
 
@@ -32,7 +32,7 @@ public class User {
      */
     public static void addTransaction(Transaction transaction){
         transactions.add(transaction);
-        storage.addTransaction(transaction); // also add to storage
+        storage.saveTransactions(transactions); // also add to storage
     }
 
     /**
@@ -40,7 +40,7 @@ public class User {
      */
     public static void addBank(Bank bank){
         banks.add(bank);
-        storage.addBank(bank);
+        storage.saveBanks(banks);
     }
 
     /**
@@ -58,6 +58,7 @@ public class User {
         }
         Transaction removedTransaction = transactions.remove(realIndex);
         printMessage("Deleted transaction: " + removedTransaction.toString());
+        storage.saveTransactions(transactions);
     }
 
     /**
@@ -193,5 +194,14 @@ public class User {
 
     public static ArrayList<Bank> getBanks() {
         return banks;
+    }
+
+    public static float getBudgetAmount(Category category, Month month) {
+        for (Budget b : budgets) {
+            if (b.getCategory() == category && b.getMonth() == month) {
+                return b.getBudget();
+            }
+        }
+        return 0f;
     }
 }
