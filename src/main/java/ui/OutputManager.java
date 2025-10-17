@@ -117,6 +117,7 @@ public class OutputManager {
     }
 
     public static String listBudget() {
+        System.out.println("WARNING: broken.");
         StringBuilder strb = new StringBuilder();
         strb.append("Current budget: ");
         for (Category category : Category.values()) {
