@@ -2,14 +2,18 @@ package summary;
 
 import saveData.Storage;
 import transaction.Transaction;
+import user.User;
 import utils.Category;
 import ui.OutputManager;
 import utils.Month;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static ui.OutputManager.printMessage;
 
 public class Summary {
     private final Storage storage;
@@ -50,5 +54,23 @@ public class Summary {
         );
 
         OutputManager.printMessage(summaryOutput);
+    }
+
+    public static void handleSummary(ArrayList<String> commandList) {
+        try {
+            if (commandList.size() < 2) {
+                printMessage("Please provide a month! \n Usage: summary <month>" );
+                return;
+            }
+
+            String monthInput = commandList.get(1);
+            Summary summary = new Summary(User.getStorage());
+            summary.showMonthlySummary(monthInput);
+
+        } catch (IllegalArgumentException e) {
+            printMessage("Invalid month name. Please try again (e.g., summary JAN).");
+        } catch (Exception e) {
+            printMessage("Error generating summary: " + e.getMessage());
+        }
     }
 }
