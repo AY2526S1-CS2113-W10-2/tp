@@ -8,6 +8,7 @@ import static ui.Parser.parseCommand;
 public class UserInterface {
     public static void main(String[] args) {
         User.initialise();
+       // assert false : "dummy assertion set to fail";
 
         Scanner scanner = new Scanner(System.in);
         boolean isExit = false;

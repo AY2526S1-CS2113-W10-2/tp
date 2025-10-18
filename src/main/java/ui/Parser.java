@@ -23,7 +23,7 @@ public class Parser {
      */
     public static boolean parseCommand(String command){
         ArrayList<String> commandList = splitCommand(command);
-        String comm = commandList.get(0);
+        String comm = commandList.get(0).toLowerCase();
         switch (comm){
         case "exit":
             printMessage("Exiting program. Goodbye!");
@@ -31,7 +31,6 @@ public class Parser {
         case "summary":
             handleSummary(commandList);
             break;
-        case "addBank":
         case "addbank":
             addBankToUser(commandList);
             break;
@@ -41,7 +40,6 @@ public class Parser {
         case "list":
             printMessage(listRecentTransactions(User.getTransactions(), 10));
             break;
-        case "listBanks":
         case "listbanks":
             printMessage(listBanks(User.getBanks(), 10));
             break;
