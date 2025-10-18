@@ -2,6 +2,7 @@ package user;
 
 import bank.Bank;
 import transaction.Transaction;
+import ui.FinanceExceptions;
 import utils.*;
 import saveData.Storage;
 
@@ -20,8 +21,17 @@ public class User {
 
     public static void initialise() {
         transactions = storage.loadTransactions();
+        if (transactions == null) {
+            transactions = new ArrayList<>();
+        }
         banks = storage.loadBanks();
+        if (banks == null) {
+            banks = new ArrayList<>();
+        }
         budgets = storage.loadBudgets();
+        if (budgets == null) {
+            budgets = new ArrayList<>();
+        }
         printMessage("Welcome to finance manager V1.0!\n" +
                 "What can I do for you today?");
 
@@ -47,14 +57,13 @@ public class User {
      * Deletes a transaction from the user's record
      *
      */
-    public static void deleteTransaction(int index){
+    public static void deleteTransaction(int index) throws FinanceExceptions {
         ArrayList<Transaction> transactions = getTransactions();
 
         int realIndex = index - 1;
 
         if (realIndex < 0 || realIndex >= transactions.size()) {
-            printMessage("Invalid transaction index. Please enter a number between 1 and " + transactions.size());
-            return;
+            throw new FinanceExceptions("Invalid transaction index. Please enter a number between 1 and " + transactions.size());
         }
         Transaction removedTransaction = transactions.remove(realIndex);
         printMessage("Deleted transaction: " + removedTransaction.toString());
@@ -64,11 +73,10 @@ public class User {
     /**
      * Adds a budget to the user's record
      */
-    public static void addBudget(String categoryStr, float amount, Currency currency, Month month) {
+    public static void addBudget(String categoryStr, float amount, Currency currency, Month month) throws FinanceExceptions{
         Category cat = Category.toCategory(categoryStr);
         if (cat == null) {
-            System.out.println("Invalid category!");
-            return;
+            throw new FinanceExceptions("Invalid category!");
         }
         Budget budget = new Budget(cat, amount, currency, month);
         //storage.addBudget(budget);
@@ -76,7 +84,7 @@ public class User {
         System.out.println(budgets.toString());
     }
 
-    public static void deleteTransactionFromUser(ArrayList<String> commandList) {
+    public static void deleteTransactionFromUser(ArrayList<String> commandList) throws FinanceExceptions{
         try {
             if (commandList.size() < 2) {
                 printMessage("Usage: delete <transaction_index>");
@@ -88,24 +96,24 @@ public class User {
             User.deleteTransaction(index);
 
         } catch (NumberFormatException e) {
-            printMessage("Invalid input. Please enter a numeric transaction index.");
+            throw new FinanceExceptions("Invalid input. Please enter a numeric transaction index.");
         } catch (Exception e) {
-            printMessage("Error deleting transaction: " + e.getMessage());
+            throw new FinanceExceptions("Error deleting transaction: " + e.getMessage());
         }
     }
 
-    public static void addTransactionToUser(ArrayList<String> commandList) {
+    public static void addTransactionToUser(ArrayList<String> commandList) throws FinanceExceptions {
         try {
             Category category = Category.toCategory(commandList.get(1));
             float value = Float.parseFloat(commandList.get(2));
             if (value < 0) {
-                throw new IllegalArgumentException("Invalid value. Please enter a positive numeric value.");
+                throw new FinanceExceptions("Invalid value. Please enter a positive numeric value.");
             }
 
             // Parse date (format: DD/MM/YYYY)
             String[] dateParts = commandList.get(3).split("/");
             if (dateParts.length != 3) {
-                throw new IllegalArgumentException("Date format must be DD/MM/YYYY");
+                throw new FinanceExceptions("Date format must be DD/MM/YYYY");
             }
 
             int day = Integer.parseInt(dateParts[0]);
@@ -124,12 +132,12 @@ public class User {
             printMessage("  Added Transaction: " + trans.toString());
 
         } catch (Exception e) {
-            printMessage("  Sorry! Wrong format. Try 'add <category> <value> <date> <currency>' \n" +
+            throw new FinanceExceptions("  Sorry! Wrong format. Try 'add <category> <value> <date> <currency>' \n" +
                     "  e.g. 'add food 4.50 10/4/2024 JPY'\n  " + e);
         }
     }
 
-    public static void addBankToUser(ArrayList<String> commandList){
+    public static void addBankToUser(ArrayList<String> commandList) throws FinanceExceptions{
         try{
             float balance       = Float.parseFloat(commandList.get(1));
             Currency currency   = Currency.toCurrency(commandList.get(2));
@@ -138,13 +146,13 @@ public class User {
             User.addBank(bank);
             printMessage("  Added " + bank.toString());
         }catch (Exception e) {
-            printMessage("  Sorry! Wrong format. Try 'addBank <balance> <currency> <exchangerate>' \n" +
+            throw new FinanceExceptions("  Sorry! Wrong format. Try 'addBank <balance> <currency> <exchangerate>' \n" +
                     "  e.g. 'addBank 1000.00 JPY 0.01'\n  " + e);
         }
 
     }
 
-    public static void addBudgetToUser(ArrayList<String> commandList){
+    public static void addBudgetToUser(ArrayList<String> commandList) throws FinanceExceptions{
         try{
             String category = commandList.get(1);
             float amount = Float.parseFloat(commandList.get(2));
@@ -155,7 +163,7 @@ public class User {
 
             printMessage("Added budget of " + amount + " " + currency + " for " + category + " in " + month);
         }catch (Exception e) {
-            printMessage("  Sorry! Wrong format. Try 'addBudget <category> <amount> <currency> <month>' \n" +
+            throw new FinanceExceptions("  Sorry! Wrong format. Try 'addBudget <category> <amount> <currency> <month>' \n" +
                     "  e.g. 'addBudget food 200 SGD JAN'\n  " + e);
         }
     }

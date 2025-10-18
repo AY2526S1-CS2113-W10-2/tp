@@ -2,6 +2,7 @@ package saveData;
 
 import bank.Bank;
 import transaction.Transaction;
+import ui.FinanceExceptions;
 import utils.Budget;
 import utils.Category;
 import utils.Currency;
@@ -17,6 +18,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+
+import static ui.OutputManager.printMessage;
 
 public class Storage {
     private static final String TRANSACTION_FILE = "transactions.txt";
@@ -95,7 +98,11 @@ public class Storage {
                 int year = Integer.parseInt(parts[4]);
                 Currency currency = Currency.valueOf(parts[5]);
 
-                transactions.add(new Transaction(value, category, new Date(day, month, year), currency));
+                try {
+                    transactions.add(new Transaction(value, category, new Date(day, month, year), currency));
+                } catch (FinanceExceptions e) {
+                    printMessage("Skipping transaction:" + e.getMessage());
+                }
             }
             return transactions;
         } catch (IOException e) {

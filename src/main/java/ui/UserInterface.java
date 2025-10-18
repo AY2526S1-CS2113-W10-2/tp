@@ -13,8 +13,12 @@ public class UserInterface {
 
         while (!isExit) {
             String input = InputManager.getNextCommand(scanner);
-            isExit = parseCommand(input);
+            try {
+                isExit = parseCommand(input);
+            } catch (FinanceExceptions e) {
+                OutputManager.printMessage(e.getMessage());
+                isExit = false;
+            }
         }
-
     }
 }
