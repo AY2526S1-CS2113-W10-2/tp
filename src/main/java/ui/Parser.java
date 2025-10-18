@@ -23,7 +23,7 @@ public class Parser {
      * Parses the command string, and redirects control to the appropriate function to execute
      * @param command
      */
-    public static boolean parseCommand(String command){
+    public static boolean parseCommand(String command) throws FinanceExceptions {
         ArrayList<String> commandList = splitCommand(command);
         String comm = commandList.get(0).toLowerCase();
         switch (comm){
@@ -48,16 +48,14 @@ public class Parser {
         case "delete":
             deleteTransactionFromUser(commandList);
             break;
-        case "addBudget":
         case "addbudget":
             addBudgetToUser(commandList);
             break;
-        case "listBudget":
         case "listbudget":
             printMessage(listBudget());
             break;
         default:
-            printMessage("Does not match known command.");
+            printMessage("Does not match any known command.");
         }
         return false;
     }
