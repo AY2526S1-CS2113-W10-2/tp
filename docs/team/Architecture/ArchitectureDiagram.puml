@@ -1,0 +1,25 @@
+@startuml
+scale 0.3
+skinparam rectangle {
+  Shadowing false
+  BackgroundColor White
+  BorderColor Black
+  RoundCorner 5
+}
+
+' Main components
+rectangle "UI\n(UserInterface, InputManager, OutputManager)" as UI
+rectangle "Logic\n(Parser)" as Logic
+rectangle "Model\n(User, Transaction, Bank, Budget)" as Model
+rectangle "Storage\n(Storage.java)" as Storage
+rectangle "File\n(TXT)" as FileIcon
+
+' Vertical two-way interactions
+UI <--> Logic : sends commands / receives output
+Logic <--> Model : updates / queries
+
+' Model interacts with Storage
+Model --> Storage : save/load data
+Storage --> FileIcon : persists data
+
+@enduml

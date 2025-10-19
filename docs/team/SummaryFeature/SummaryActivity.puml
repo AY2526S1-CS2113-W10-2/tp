@@ -1,0 +1,19 @@
+@startuml
+scale 0.3
+start
+:User types "summary <month>";
+:Parser parses command;
+:Validate month input;
+if (Month valid?) then (yes)
+  :Create Summary object;
+  :Load transactions, banks, budgets from Storage;
+  :Filter transactions by month;
+  :Aggregate spending by category;
+  :Get budgets per category;
+  :Generate formatted summary;
+  :Print summary to console;
+else (no)
+  :Show error message;
+endif
+stop
+@enduml
