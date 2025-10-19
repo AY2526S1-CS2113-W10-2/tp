@@ -1,0 +1,27 @@
+@startuml
+scale 0.1
+
+' https://plantuml.com/state-diagram
+
+[*] --> WaitingForCommand : Application Ready
+
+state WaitingForCommand {
+  [*] --> Idle
+  Idle --> ProcessingSummary : User types "summary <month>"
+}
+
+ProcessingSummary --> ValidatingInput : Parser.parseCommand()
+ValidatingInput --> GeneratingSummary : Valid month provided
+ValidatingInput --> [*] : Invalid month (error message)
+
+state GeneratingSummary {
+  [*] --> FetchingData
+  FetchingData --> AggregatingResults : Transactions & Budgets retrieved
+  AggregatingResults --> DisplayingOutput : Summary calculated
+  DisplayingOutput --> [*] : Output shown via OutputManager
+}
+
+GeneratingSummary --> WaitingForCommand : Done displaying summary
+
+@enduml
+duml

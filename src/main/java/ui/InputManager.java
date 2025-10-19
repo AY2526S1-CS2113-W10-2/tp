@@ -20,6 +20,4 @@ public class InputManager {
         }
         return input;
     }
-
-
 }

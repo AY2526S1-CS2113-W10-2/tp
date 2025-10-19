@@ -1,0 +1,28 @@
+@startuml
+scale 0.3
+
+title Sequence Diagram: summary <month> command
+
+actor User
+participant Parser
+participant Summary
+participant UserData as "User (data)"
+participant Storage
+participant OutputManager
+
+User -> Parser: types "summary JAN"
+Parser -> Summary: handleSummary(commandList)
+Summary -> Summary: validate input month
+Summary -> Summary: create new Summary(User.getStorage())
+Summary -> Storage: loadTransactions()
+Storage --> Summary: return transaction list
+Summary -> Storage: loadBanks()
+Storage --> Summary: return bank list
+Summary -> Storage: loadBudgets()
+Storage --> Summary: return budget list
+Summary -> UserData: getBudgetAmount(category, Month.JAN)
+Summary -> OutputManager: printSummary(transactions, budgets)
+OutputManager -> OutputManager: format output
+OutputManager -> User: printMessage(formatted summary)
+
+@enduml

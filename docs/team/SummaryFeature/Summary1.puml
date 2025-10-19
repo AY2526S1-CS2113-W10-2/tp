@@ -1,0 +1,36 @@
+@startuml
+scale 0.5
+title Application Initialization Flow
+
+[*] --> Application_Off
+
+Application_Off --> Initialising : User launches application
+
+state Initialising
+
+note right of Initialising
+  Loading data:
+  - storage.loadTransactions()
+  - storage.loadBanks()
+  - storage.loadBudgets()
+end note
+
+Initialising --> Application_Ready : All data loaded successfully
+Initialising --> Application_Error : Any load fails
+
+state Application_Ready
+note right of Application_Ready
+  Banks, Transactions, Budgets initialized
+  Application ready for user commands
+end note
+
+state Application_Error
+note right of Application_Error
+  Loading failed
+  Display error message and prompt retry
+end note
+
+Application_Ready --> [*]
+Application_Error --> Application_Off : Retry or Exit
+
+@enduml
