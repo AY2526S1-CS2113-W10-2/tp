@@ -3,8 +3,12 @@ package user;
 import bank.Bank;
 import transaction.Transaction;
 import ui.FinanceException;
-import utils.*;
-import saveData.Storage;
+import utils.Budget;
+import utils.Category;
+import utils.Currency;
+import utils.Date;
+import utils.Month;
+import savedata.Storage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,7 +66,7 @@ public class User {
         int realIndex = index - 1;
 
         if (realIndex < 0 || realIndex >= transactions.size()) {
-            throw new FinanceException("Invalid transaction index. Please enter a number between 1 and " + transactions.size());
+            throw new FinanceException("Invalid index. Please enter a number between 1 and " + transactions.size());
         }
         Transaction removedTransaction = transactions.remove(realIndex);
         printMessage("Deleted transaction: " + removedTransaction.toString());
