@@ -2,7 +2,7 @@ package saveData;
 
 import bank.Bank;
 import transaction.Transaction;
-import ui.FinanceExceptions;
+import ui.FinanceException;
 import utils.Budget;
 import utils.Category;
 import utils.Currency;
@@ -17,11 +17,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static ui.OutputManager.printMessage;
 
 public class Storage {
+    private static final Logger logger = Logger.getLogger(Storage.class.getName());
+
     private static final String TRANSACTION_FILE = "transactions.txt";
     private static final String BUDGET_FILE = "budgets.txt";
     private static final String BANK_FILE = "banks.txt";
@@ -32,9 +35,12 @@ public class Storage {
 
 
     public Storage() {
+        logger.log(Level.INFO, "Initialising storage - loading saved data");
         loadTransactions();
         loadBudgets();
         loadBanks();
+        logger.log(Level.INFO, "Storage initialized successfully.");
+
     }
 
     // -------------------- Transactions --------------------
@@ -57,8 +63,12 @@ public class Storage {
     }*/
 
     public void saveTransactions(ArrayList<Transaction> transactions) {
+        assert transactions != null : "Transactions list should not be null";
+
         try (PrintWriter pw = new PrintWriter(new FileWriter(TRANSACTION_FILE))) {
             for (Transaction t : transactions) {
+                assert t != null : "Transaction object should not be null";
+
                 pw.println(t.getCategory().name() + "|" +
                         t.getValue() + "|" +
                         t.getDate().getDay() + "|" +
@@ -66,7 +76,10 @@ public class Storage {
                         t.getDate().getYear() + "|" +
                         t.getCurrency().name());
             }
+            logger.log(Level.INFO, "Saved {0} transactions to {1}", new Object[]{transactions.size(), TRANSACTION_FILE});
+
         } catch (IOException e) {
+            logger.log(Level.SEVERE, "Failed to save transactions", e);
             e.printStackTrace();
         }
     }
@@ -75,21 +88,28 @@ public class Storage {
         //transactions.clear();
         File file = new File(TRANSACTION_FILE);
         if (!file.exists()) {
+            logger.warning("No transaction file found. Returning null.");
+
             return null;
         }
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            logger.info("Loading transactions from file...");
+
             String line;
             ArrayList<Transaction> transactions = new ArrayList<>();
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split("\\|");
                 if (parts.length != 6) {
+                    logger.warning("Skipping malformed transaction line: " + line);
+
                     continue;
                 }
 
                 Category category = Category.toCategory(parts[0]);
                 float value = Float.parseFloat(parts[1]);
                 if (value < 0) {
+                    logger.log(Level.WARNING, "Skipping invalid transaction with negative value: " + line);
                     continue;
                 }
 
@@ -100,12 +120,14 @@ public class Storage {
 
                 try {
                     transactions.add(new Transaction(value, category, new Date(day, month, year), currency));
-                } catch (FinanceExceptions e) {
+                } catch (FinanceException | IllegalArgumentException e) {
+                    logger.log(Level.WARNING, "Skipping invalid transaction: " + line, e);
                     printMessage("Skipping transaction:" + e.getMessage());
                 }
             }
             return transactions;
         } catch (IOException e) {
+            logger.log(Level.SEVERE, "Error reading transactions file", e);
             e.printStackTrace();
         }
         return null;
@@ -157,15 +179,19 @@ public class Storage {
         //budgets.clear();
         File file = new File(BUDGET_FILE);
         if (!file.exists()) {
+            logger.log(Level.WARNING, "No budget file found. Returning null.");
             return null;
         }
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            logger.info("Loading budgets from file...");
+
             String line;
             ArrayList<Budget> budgets = new ArrayList<>();
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split("\\|");
                 if (parts.length != 4) {
+                    logger.log(Level.WARNING, "Skipping malformed budget line: " + line);
                     continue;
                 }
 
@@ -195,6 +221,8 @@ public class Storage {
     }*/
 
     public void saveBanks(ArrayList<Bank> banks) {
+        assert banks != null : "Banks list should not be null";
+
         try (PrintWriter pw = new PrintWriter(new FileWriter(BANK_FILE))) {
             for (Bank b : banks) {
                 pw.println(b.getId() + "|" +
@@ -211,15 +239,19 @@ public class Storage {
         //banks.clear();
         File file = new File(BANK_FILE);
         if (!file.exists()) {
+            logger.info("No bank file found. Returning null.");
             return null;
         }
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            logger.info("Loading banks from file...");
+
             String line;
             ArrayList<Bank> banks = new ArrayList<>();
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split("\\|");
                 if (parts.length != 4) {
+                    logger.log(Level.WARNING, "Skipping malformed bank line: " + line);
                     continue;
                 }
 
@@ -232,6 +264,7 @@ public class Storage {
             }
             return banks;
         } catch (IOException e) {
+            logger.log(Level.SEVERE, "Error reading banks file", e);
             e.printStackTrace();
         }
         return null;
