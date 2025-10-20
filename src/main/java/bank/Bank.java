@@ -33,10 +33,16 @@ public class Bank {
     }
 
     public void setBalance(float balance) {
+        if (balance < 0) {
+            throw new IllegalArgumentException("Balance cannot be negative");
+        }
         this.balance = balance;
     }
 
     public void setExchangeRate(float exchangeRate) {
+        if (exchangeRate < 0) {
+            throw new IllegalArgumentException("Exchange Rate cannot be negative");
+        }
         this.exchangeRate = exchangeRate;
     }
 

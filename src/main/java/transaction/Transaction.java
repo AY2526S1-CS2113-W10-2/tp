@@ -1,6 +1,6 @@
 package transaction;
 
-import ui.FinanceExceptions;
+import ui.FinanceException;
 import utils.Category;
 import utils.Currency;
 import utils.Date;
@@ -11,9 +11,9 @@ public class Transaction {
     private final Date date;
     private final Currency currency;
 
-    public Transaction(float value, Category category, Date date, Currency currency) throws FinanceExceptions {
+    public Transaction(float value, Category category, Date date, Currency currency) throws FinanceException {
         if (value < 0) {
-            throw new FinanceExceptions("Value must be positive");
+            throw new FinanceException("Value must be positive");
         }
         requireNonNull(category, "Category cannot be null");
         requireNonNull(date, "Date cannot be null");
