@@ -1,4 +1,4 @@
-package saveData;
+package savedata;
 
 import bank.Bank;
 import transaction.Transaction;

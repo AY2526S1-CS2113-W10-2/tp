@@ -9,7 +9,11 @@ import static ui.OutputManager.listBanks;
 import static ui.OutputManager.listBudget;
 import static ui.OutputManager.listRecentTransactions;
 import static ui.OutputManager.printMessage;
-import static user.User.*;
+import static user.User.addBankToUser;
+import static user.User.addTransactionToUser;
+import static user.User.deleteTransactionFromUser;
+import static user.User.addBudgetToUser;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

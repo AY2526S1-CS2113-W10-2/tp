@@ -1,11 +1,12 @@
 package ui;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import user.User;
-import saveData.Storage;
+import savedata.Storage;
 import transaction.Transaction;
 import utils.Category;
-import utils.Currency;
 import utils.Month;
 
 import java.io.IOException;
@@ -13,7 +14,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class ParserTest {
     private static final Path TX_FILE = Path.of("transactions.txt");
@@ -44,7 +48,12 @@ public class ParserTest {
     @Test
     public void parse_addCommand_addsTransactionToUser_and_storageFile() throws IOException {
         String cmd = "add food 4.50 10/01/2025 SGD";
-        Parser.parseCommand(cmd); // assumes Parser.parseCommand exists
+        try {
+            Parser.parseCommand(cmd); // assumes Parser.parseCommand exists
+        } catch (FinanceException e) {
+            e.printStackTrace();
+            fail("FinanceException thrown");
+        }
 
         // User should now have an extra transaction
         List<Transaction> txs = User.getTransactions();
