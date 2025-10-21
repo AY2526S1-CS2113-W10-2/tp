@@ -52,7 +52,7 @@ class AddTransactionCommandTest {
 
     @Test
     public void addTransaction_negativeValue_throwsException() {
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(FinanceException.class, () -> {
             new Transaction(
                     -5.0f,
                     Category.FOOD,
