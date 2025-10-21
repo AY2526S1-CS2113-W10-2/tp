@@ -8,6 +8,10 @@ cd ..
 
 cd text-ui-test
 
+rm -f transactions.txt
+rm -f banks.txt
+rm -f budgets.txt
+
 java  -jar $(find ../build/libs/ -mindepth 1 -print -quit) < input.txt > ACTUAL.TXT
 
 cp EXPECTED.TXT EXPECTED-UNIX.TXT

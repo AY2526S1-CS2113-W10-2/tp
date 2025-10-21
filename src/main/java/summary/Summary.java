@@ -15,7 +15,6 @@ import java.util.logging.Logger;
 
 
 public class Summary {
-    public static final int MIN_COMMAND_LENGTH = 2;
     private static final Logger logger = Logger.getLogger(Summary.class.getName());
 
     private final Storage storage;
@@ -31,7 +30,7 @@ public class Summary {
         logger.log(Level.INFO, "Generating summary for month: " + month);
 
         List<Transaction> monthlyTransactions = User.getTransactions().stream()
-                .filter(t -> t.getDate().getMonth() == Month.valueOf(month.toUpperCase()))
+                .filter(t -> t.getDate().getMonth() == Month.fromString(month.toUpperCase()))
                 .collect(Collectors.toList());
 
         logger.log(Level.INFO, "Total transactions found for " + month + ": " + monthlyTransactions.size());

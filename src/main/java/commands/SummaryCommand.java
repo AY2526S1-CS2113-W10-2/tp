@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static summary.Summary.MIN_COMMAND_LENGTH;
 
 public class SummaryCommand implements Command {
     private static final Logger logger = Logger.getLogger(Summary.class.getName());
@@ -23,12 +22,12 @@ public class SummaryCommand implements Command {
         try {
             logger.log(Level.INFO, "Handling summary command with arguments: " + arguments);
 
-            if (arguments.size() < MIN_COMMAND_LENGTH) {
+            if (arguments.isEmpty()) {
                 logger.log(Level.WARNING, "Invalid command length: " + arguments.size());
                 throw new FinanceException("Please provide a month! \n Usage: summary <month>" );
             }
 
-            String monthInput = arguments.get(1);
+            String monthInput = arguments.get(0);
             Summary summary = new Summary(User.getStorage());
             summary.showMonthlySummary(monthInput);
 

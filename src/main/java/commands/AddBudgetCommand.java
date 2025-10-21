@@ -22,7 +22,7 @@ public class AddBudgetCommand implements Command {
     public void execute() throws FinanceException {
         if (arguments.size() < 4) {
             throw new FinanceException("  Sorry! Wrong format. " +
-                    "Try 'addBudget <category> <amount> <currency> <month>' \n" +
+                    "Try 'addBudget <category> <amount> <currency> <month>'\n" +
                     "  e.g. 'addBudget food 200 SGD JAN'");
         }
 
