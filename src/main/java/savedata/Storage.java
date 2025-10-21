@@ -76,7 +76,8 @@ public class Storage {
                         t.getDate().getYear() + "|" +
                         t.getCurrency().name());
             }
-            logger.log(Level.INFO, "Saved {0} transactions to {1}", new Object[]{transactions.size(), TRANSACTION_FILE});
+            logger.log(Level.INFO, "Saved {0} transactions to {1}",
+                    new Object[]{transactions.size(), TRANSACTION_FILE});
 
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Failed to save transactions", e);

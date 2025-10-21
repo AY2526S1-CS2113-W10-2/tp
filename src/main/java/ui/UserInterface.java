@@ -17,7 +17,6 @@ public class UserInterface {
                 isExit = parseCommand(input);
             } catch (FinanceException e) {
                 OutputManager.printMessage(e.getMessage());
-                isExit = false;
             }
         }
     }
