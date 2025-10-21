@@ -6,8 +6,6 @@ import user.User;
 import utils.Category;
 import ui.OutputManager;
 import utils.Month;
-import ui.FinanceException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,25 +69,4 @@ public class Summary {
         OutputManager.printMessage(summaryOutput);
     }
 
-    public static void handleSummary(ArrayList<String> commandList) throws FinanceException {
-        try {
-            logger.log(Level.INFO, "Handling summary command with arguments: " + commandList);
-
-            if (commandList.size() < MIN_COMMAND_LENGTH) {
-                logger.log(Level.WARNING, "Invalid command length: " + commandList.size());
-                throw new FinanceException("Please provide a month! \n Usage: summary <month>" );
-            }
-
-            String monthInput = commandList.get(1);
-            Summary summary = new Summary(User.getStorage());
-            summary.showMonthlySummary(monthInput);
-
-        } catch (IllegalArgumentException e) {
-            logger.log(Level.SEVERE, "Invalid month name provided:" + e.getMessage());
-            throw new FinanceException("Invalid month name. Please try again (e.g., summary JAN).");
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, "Unexpected error in generating summary:" + e.getMessage());
-            throw new FinanceException("Error generating summary: " + e.getMessage());
-        }
-    }
 }
