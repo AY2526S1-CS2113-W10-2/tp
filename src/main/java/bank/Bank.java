@@ -1,18 +1,23 @@
 package bank;
 
+import transaction.Transaction;
 import utils.Currency;
+
+import java.util.ArrayList;
 
 public class Bank {
     private final int id;
     private final Currency currency;        // The currency this bank trades in
     private float balance;                  // This user's balance in this bank account
     private float exchangeRate;             // The current exchange rate from this currency to USD
+    private ArrayList<Transaction> transactions;
 
     public Bank(int id, Currency currency, float balance, float exchangeRate) {
         this.id = id;
         this.currency = currency;
         this.balance = balance;
         this.exchangeRate = exchangeRate;
+        this.transactions = new ArrayList<>();
     }
 
     public Currency getCurrency() {
@@ -30,6 +35,18 @@ public class Bank {
 
     public float getExchangeRate() {
         return exchangeRate;
+    }
+
+    public ArrayList<Transaction> getTransactions(){
+        return transactions;
+    }
+
+    public void addTransactionToBank(Transaction transaction){
+        this.transactions.add(transaction);
+    }
+
+    public void deleteTransactionFromBank(int index) {
+        this.transactions.remove(index);
     }
 
     public void setBalance(float balance) {

@@ -4,6 +4,7 @@ import bank.Bank;
 import transaction.Transaction;
 import utils.Budget;
 import utils.Category;
+import utils.Month;
 
 
 import java.util.ArrayList;
@@ -115,18 +116,24 @@ public class OutputManager {
         return strb.toString();
     }
 
-    public static String listBudget() {
-        System.out.println("WARNING: broken.");
+    public static String listBudget(ArrayList<Budget> budgets, Month month) {
         StringBuilder strb = new StringBuilder();
-        strb.append("Current budget: ");
+        strb.append("Budgets for ").append(month).append(":");
         for (Category category : Category.values()) {
-            Budget budget = category.getBudget();
-            if (budget != null) {
-                strb.append("\n  ")
-                    .append(category.name().toLowerCase())
-                    .append(": ")
-                    .append(budget.getBudget());
-            } else {
+            boolean found = false;
+            for (Budget budget : budgets) {
+                if (budget.getCategory() == category && budget.getMonth() == month) {
+                    strb.append("\n  ")
+                        .append(category.name().toLowerCase())
+                        .append(": ")
+                        .append(budget.getBudget())
+                        .append(" ")
+                        .append(budget.getCurrency());
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
                 strb.append("\n  ")
                     .append(category.name().toLowerCase())
                     .append(": no budget set yet");

@@ -13,6 +13,7 @@ src/main/resources/docs/
 *.iml
 bin/
 
+budgets.txt
 banks.txt
 transactions.txt
 

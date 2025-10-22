@@ -1,29 +1,37 @@
 package savedata;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import transaction.Transaction;
+import ui.FinanceException;
 import user.User;
 import utils.Category;
 import utils.Currency;
 import utils.Date;
 import utils.Month;
 
-import java.io.*;
+
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 /**
  * Tests for Storage persistence: addTransaction, save/load transactions.
  */
 public class StorageTest {
-    private Storage storage;
-
     private static final Path TX_FILE = Path.of("transactions.txt");
     private static final Path BUD_FILE = Path.of("budgets.txt");
     private static final Path BANK_FILE = Path.of("banks.txt");
+
+    private Storage storage;
+
 
     @BeforeEach
     public void beforeEach() throws IOException {
@@ -44,7 +52,7 @@ public class StorageTest {
     }
 
     @Test
-    public void addTransaction_savesToFile_and_canReload() throws IOException {
+    public void addTransaction_validInput_updatesUserAndStorageFile() throws IOException, FinanceException {
         // create a transaction and add
         Transaction t = new Transaction(12.34f, Category.FOOD, new Date(10, Month.JAN, 2025), Currency.SGD);
         User.addTransaction(t);

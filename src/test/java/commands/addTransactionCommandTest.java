@@ -3,6 +3,7 @@ package commands;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import transaction.Transaction;
+import ui.FinanceException;
 import user.User;
 import utils.Category;
 import utils.Currency;
@@ -31,7 +32,7 @@ class AddTransactionCommandTest {
     }
 
     @Test
-    public void addTransaction_validInput_transactionAddedSuccessfully() {
+    public void addTransaction_validInput_transactionAddedSuccessfully() throws FinanceException {
         Transaction transaction = new Transaction(
                 10.5f,
                 Category.FOOD,
@@ -51,7 +52,7 @@ class AddTransactionCommandTest {
 
     @Test
     public void addTransaction_negativeValue_throwsException() {
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(FinanceException.class, () -> {
             new Transaction(
                     -5.0f,
                     Category.FOOD,

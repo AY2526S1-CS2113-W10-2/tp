@@ -1,18 +1,20 @@
 package ui;
 
+import commands.AddBankCommand;
+import commands.AddBudgetCommand;
+import commands.Command;
+import commands.AddTransactionCommand;
+import commands.DeleteTransactionCommand;
+import commands.ExitCommand;
+import commands.ListBudgetsCommand;
+import commands.SummaryCommand;
 import user.User;
 
 import java.util.ArrayList;
 
-import static summary.Summary.handleSummary;
 import static ui.OutputManager.listBanks;
-import static ui.OutputManager.listBudget;
 import static ui.OutputManager.listRecentTransactions;
 import static ui.OutputManager.printMessage;
-import static user.User.addBankToUser;
-import static user.User.addTransactionToUser;
-import static user.User.deleteTransactionFromUser;
-import static user.User.addBudgetToUser;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,6 +24,7 @@ public class Parser {
 
     /**
      * Parses the command string, and redirects control to the appropriate function to execute
+     *
      * @param command The user input command.
      * @return true if the command is 'exit', false otherwise.
      */
@@ -39,22 +42,48 @@ public class Parser {
         String comm = commandList.get(0).toLowerCase();
         logger.log(Level.FINE, "Parsed main command: {0}", comm);
 
+        ArrayList<String> arguments = new ArrayList<>(commandList.subList(1, commandList.size()));
+
+        if(comm.equals("login") && !User.isLoggedIn){
+            User.isLoggedIn = true;
+            int bank_id = Integer.parseInt(commandList.get(1));
+            if(bank_id >= User.banks.size()){
+                throw new FinanceException("Bank not found");
+            }
+            User.curr_bank = User.banks.get(bank_id);
+            if(User.curr_bank.getId() != bank_id){
+                throw new FinanceException("Bank not found");
+            }
+            System.out.println("Successfully logged into bank" + bank_id);
+        }
+
+        if(comm.equals("logout") && !User.isLoggedIn){
+            User.isLoggedIn = false;
+            User.curr_bank = null;
+        }
+
+        Command cmd = null;
         switch (comm){
         case "exit":
             logger.info("Executing 'exit' command");
-            printMessage("Exiting program. Goodbye!");
-            return true;
+            cmd = new ExitCommand();
+            break;
         case "summary":
             logger.info("Executing 'summary' command");
-            handleSummary(commandList);
+            cmd = new SummaryCommand(arguments);
             break;
         case "addbank":
             logger.info("Executing 'addbank' command");
-            addBankToUser(commandList);
+            cmd = new AddBankCommand(arguments);
             break;
         case "add":
             logger.info("Executing 'add' command");
-            addTransactionToUser(commandList);
+            if(User.isLoggedIn) {
+                cmd = new AddTransactionCommand(arguments);
+            }
+            else{
+                logger.info("Please login to a bank to execute this command");
+            }
             break;
         case "list":
             logger.info("Executing 'list' command");
@@ -66,19 +95,28 @@ public class Parser {
             break;
         case "delete":
             logger.info("Executing 'delete' command");
-            deleteTransactionFromUser(commandList);
+            if(User.isLoggedIn) {
+                cmd = new DeleteTransactionCommand(arguments);
+            }
+            else{
+                logger.info("Please login to a bank to execute this command");
+            }
             break;
         case "addbudget":
             logger.info("Executing 'addbudget' command");
-            addBudgetToUser(commandList);
+            cmd = new AddBudgetCommand(arguments);
             break;
         case "listbudget":
             logger.info("Executing 'listbudget' command");
-            printMessage(listBudget());
+            cmd = new ListBudgetsCommand(arguments);
             break;
         default:
             logger.log(Level.WARNING,"Unknown command entered: " + comm);
             printMessage("Does not match any known command.");
+        }
+        if (cmd != null) {
+            cmd.execute();
+            return cmd.shouldExit();
         }
         return false;
     }
@@ -113,7 +151,7 @@ public class Parser {
      * E.g. "command arg1 arg2 arg3" -> {"command", "arg1 arg2 arg3"}
      *
      * @param command The string to be split
-     * @return arrayList where 1st element is 1st substring, 2nd element is remainder
+     * @return arrayList where 1st element is 1st substring, 2nd element is the remainder
      */
     private static ArrayList<String> recursiveGetCommand(String command){
         assert command != null : "Command should not be null";

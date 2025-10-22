@@ -46,7 +46,7 @@ public class ParserTest {
     }
 
     @Test
-    public void parse_addCommand_addsTransactionToUser_and_storageFile() throws IOException {
+    public void parseCommand_validAddCommand_uodatesUserAndStorageFile() throws IOException {
         String cmd = "add food 4.50 10/01/2025 SGD";
         try {
             Parser.parseCommand(cmd); // assumes Parser.parseCommand exists
