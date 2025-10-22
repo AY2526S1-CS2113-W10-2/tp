@@ -17,9 +17,8 @@ public class OutputManager {
      *
      * @return String representing the user's activity
      */
-    public static String printSummary(String month, List<Transaction> transactions,
-                                      Map<Category, Float> spendingByCategory,
-                                      Map<Category, Float> budgetByCategory) {
+    public static String printSummary(String month, List<Transaction> transactions, Map<Category, Float> spendingByCategory, Map<Category, Float> budgetByCategory) {
+
         StringBuilder strb = new StringBuilder();
 
         // Center the title
