@@ -44,6 +44,24 @@ public class Parser {
 
         ArrayList<String> arguments = new ArrayList<>(commandList.subList(1, commandList.size()));
 
+        if(comm.equals("login") && !User.isLoggedIn){
+            User.isLoggedIn = true;
+            int bank_id = Integer.parseInt(commandList.get(1));
+            if(bank_id >= User.banks.size()){
+                throw new FinanceException("Bank not found");
+            }
+            User.curr_bank = User.banks.get(bank_id);
+            if(User.curr_bank.getId() != bank_id){
+                throw new FinanceException("Bank not found");
+            }
+            System.out.println("Successfully logged into bank" + bank_id);
+        }
+
+        if(comm.equals("logout") && !User.isLoggedIn){
+            User.isLoggedIn = false;
+            User.curr_bank = null;
+        }
+
         Command cmd = null;
         switch (comm){
         case "exit":
@@ -60,7 +78,12 @@ public class Parser {
             break;
         case "add":
             logger.info("Executing 'add' command");
-            cmd = new AddTransactionCommand(arguments);
+            if(User.isLoggedIn) {
+                cmd = new AddTransactionCommand(arguments);
+            }
+            else{
+                logger.info("Please login to a bank to execute this command");
+            }
             break;
         case "list":
             logger.info("Executing 'list' command");
@@ -72,7 +95,12 @@ public class Parser {
             break;
         case "delete":
             logger.info("Executing 'delete' command");
-            cmd = new DeleteTransactionCommand(arguments);
+            if(User.isLoggedIn) {
+                cmd = new DeleteTransactionCommand(arguments);
+            }
+            else{
+                logger.info("Please login to a bank to execute this command");
+            }
             break;
         case "addbudget":
             logger.info("Executing 'addbudget' command");

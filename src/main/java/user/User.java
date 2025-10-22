@@ -18,6 +18,8 @@ public class User {
     public static ArrayList<Transaction> transactions;
     public static ArrayList<Bank> banks;
     public static ArrayList<Budget> budgets;
+    public static boolean isLoggedIn;
+    public static Bank curr_bank;
     private static Storage storage = new Storage(); // single shared storage
 
     public static void initialise() {
@@ -35,7 +37,8 @@ public class User {
         }
         printMessage("Welcome to finance manager V1.0!\n" +
                 "What can I do for you today?");
-
+        curr_bank = null;
+        isLoggedIn = false;
     }
 
     /**

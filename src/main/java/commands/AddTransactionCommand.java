@@ -11,6 +11,7 @@ import utils.Month;
 import java.util.ArrayList;
 
 import static ui.OutputManager.printMessage;
+import static user.User.curr_bank;
 
 public class AddTransactionCommand implements Command {
     private final ArrayList<String> arguments;
@@ -52,10 +53,16 @@ public class AddTransactionCommand implements Command {
             Date date = new Date(day, month, year);
 
             Currency currency = Currency.toCurrency(arguments.get(3));
-            Transaction transaction = new Transaction(value, category, date, currency);
+            if (currency == curr_bank.getCurrency()){
+                Transaction trans = new Transaction(value, category, date, currency);
+                User.addTransaction(trans);
+                curr_bank.addTransactionToBank(trans);
+                printMessage("  Added Transaction: " + trans.toString());
+            }
+            else{
+                throw new FinanceException("Currency must be in" + curr_bank.getCurrency().name());
+            }
 
-            User.addTransaction(transaction);
-            printMessage("  Added Transaction: " + transaction.toString());
         } catch (FinanceException e) {
             throw e;
         } catch (Exception e) {
