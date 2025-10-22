@@ -80,11 +80,21 @@ public class Parser {
             break;
         case "list":
             logger.info("Executing 'list' command");
-            printMessage(listRecentTransactions(User.getTransactions(), 10));
+            if(!User.isLoggedIn) {
+                cmd = new ListRecentTransactionsCommand();
+            }
+            else{
+                logger.info("Please logout to execute this command");
+            }
             break;
         case "listbanks":
             logger.info("Executing 'listbanks' command");
-            printMessage(listBanks(User.getBanks(), 10));
+            if(!User.isLoggedIn) {
+                cmd = new ListBanksCommand();
+            }
+            else{
+                logger.info("Please logout to execute this command");
+            }
             break;
         case "delete":
             logger.info("Executing 'delete' command");

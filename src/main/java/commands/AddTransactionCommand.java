@@ -21,7 +21,7 @@ public class AddTransactionCommand implements Command {
     }
 
     @Override
-    public void execute() throws FinanceException {
+    public String execute() throws FinanceException {
         if (arguments.size() < 4) {
             throw new FinanceException("  Sorry! Wrong format. Try 'add <category> <value> <date> <currency>' \n" +
                     "  e.g. 'add food 4.50 10/4/2024 JPY'");
@@ -55,8 +55,9 @@ public class AddTransactionCommand implements Command {
             Currency currency = Currency.toCurrency(arguments.get(3));
             if (currency == curr_bank.getCurrency()){
                 Transaction trans = new Transaction(value, category, date, currency);
-                User.addTransaction(trans);
+                //User.addTransaction(trans);
                 curr_bank.addTransactionToBank(trans);
+                User.getStorage().saveTransactions(curr_bank);
                 printMessage("  Added Transaction: " + trans.toString());
             }
             else{
@@ -69,5 +70,6 @@ public class AddTransactionCommand implements Command {
             throw new FinanceException("  Sorry! Wrong format. Try 'add <category> <value> <date> <currency>' \n" +
                     "  e.g. 'add food 4.50 10/4/2024 JPY'");
         }
+        return null;
     }
 }

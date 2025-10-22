@@ -17,7 +17,7 @@ public class AddBankCommand implements Command {
     }
 
     @Override
-    public void execute() throws FinanceException {
+    public String execute() throws FinanceException {
         if (arguments.size() < 3) {
             throw new FinanceException("  Sorry! Wrong format. Try 'addBank <balance> <currency> <exchangerate>' \n" +
                     "  e.g. 'addBank 1000.00 JPY 0.01'");
@@ -34,5 +34,6 @@ public class AddBankCommand implements Command {
         } catch (IllegalArgumentException e) {
             throw new FinanceException("Invalid currency or input: " + e.getMessage());
         }
+        return null;
     }
 }

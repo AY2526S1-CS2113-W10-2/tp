@@ -2,6 +2,7 @@ package commands;
 
 import bank.Bank;
 import ui.FinanceException;
+import user.User;
 
 import java.util.ArrayList;
 
@@ -19,7 +20,7 @@ public class ATM implements Command{
     }
 
     @Override
-    public void execute() throws FinanceException {
+    public String execute() throws FinanceException {
         float new_balance;
         if(this.deposit && !this.withdraw){
             new_balance = this.curr_bank.getBalance() + this.amount;
@@ -31,5 +32,7 @@ public class ATM implements Command{
             this.curr_bank.setBalance(new_balance);
             System.out.println("Successful withdrawal! Your bank balance is now:" + this.curr_bank.getBalance());
         }
+        User.getStorage().saveBanks(User.getBanks());
+        return null;
     }
 }
