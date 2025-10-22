@@ -1,13 +1,6 @@
 package ui;
 
-import commands.AddBankCommand;
-import commands.AddBudgetCommand;
-import commands.Command;
-import commands.AddTransactionCommand;
-import commands.DeleteTransactionCommand;
-import commands.ExitCommand;
-import commands.ListBudgetsCommand;
-import commands.SummaryCommand;
+import commands.*;
 import user.User;
 
 import java.util.ArrayList;
@@ -109,6 +102,24 @@ public class Parser {
         case "listbudget":
             logger.info("Executing 'listbudget' command");
             cmd = new ListBudgetsCommand(arguments);
+            break;
+        case "deposit":
+            logger.info("Executing 'deposit' command");
+            if(User.isLoggedIn) {
+                cmd = new ATM(arguments, User.curr_bank, true, false);
+            }
+            else{
+                logger.info("Please login to a bank to execute this command");
+            }
+            break;
+        case "withdraw":
+            logger.info("Executing 'withdraw' command");
+            if(User.isLoggedIn) {
+                cmd = new ATM(arguments, User.curr_bank, false, true);
+            }
+            else{
+                logger.info("Please login to a bank to execute this command");
+            }
             break;
         default:
             logger.log(Level.WARNING,"Unknown command entered: " + comm);

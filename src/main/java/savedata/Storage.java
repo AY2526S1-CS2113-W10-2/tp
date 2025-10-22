@@ -226,6 +226,7 @@ public class Storage {
 
         try (PrintWriter pw = new PrintWriter(new FileWriter(BANK_FILE))) {
             for (Bank b : banks) {
+                System.out.println(b.getBalance());
                 pw.println(b.getId() + "|" +
                         b.getCurrency().name() + "|" +
                         b.getBalance() + "|" +
