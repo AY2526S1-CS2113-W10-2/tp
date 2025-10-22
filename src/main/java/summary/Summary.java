@@ -1,11 +1,15 @@
 package summary;
 
+import bank.Bank;
 import savedata.Storage;
 import transaction.Transaction;
 import user.User;
 import utils.Category;
 import ui.OutputManager;
+import utils.Currency;
 import utils.Month;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,31 +29,63 @@ public class Summary {
         logger.log(Level.INFO, "Summary instance created successfully.");
     }
 
-    public void showMonthlySummary(String month) {
+    public void showMonthlySummary(String month, Bank bank, Currency currency) {
         assert month != null && !month.isBlank() : "Month input cannot be null or empty";
-        logger.log(Level.INFO, "Generating summary for month: " + month);
+        logger.log(Level.INFO, "Generating summary for month: " + month +
+                (bank != null ? (" for bank ID " + bank.getId()) :
+                        (currency != null ? (" for currency: " + currency.name()) : " across all banks")));
 
-        List<Transaction> monthlyTransactions = User.getTransactions().stream()
-                .filter(t -> t.getDate().getMonth() == Month.fromString(month.toUpperCase()))
-                .collect(Collectors.toList());
+        Month monthEnum = Month.valueOf(month.toUpperCase());
+        List<Transaction> monthlyTransactions = new ArrayList<>();
+
+        // Case 1: Bank is specified
+        if (bank != null) {
+            logger.log(Level.INFO, "Processing transactions for bank ID: " + bank.getId());
+            monthlyTransactions = bank.getTransactions().stream()
+                    .filter(t -> t.getDate().getMonth() == monthEnum)
+                    .collect(Collectors.toList());
+        }
+        // Case 2: Bank is null — use currency
+        else {
+            logger.log(Level.INFO, "No specific bank provided. Aggregating user’s transactions.");
+
+            List<Bank> userBanks = User.getBanks();
+            for (Bank b : userBanks) {
+                // If currency is specified, only use banks with that currency
+                if (currency != null) {
+                    if (b.getCurrency() == currency) {
+                        monthlyTransactions.addAll(
+                                b.getTransactions().stream()
+                                        .filter(t -> t.getDate().getMonth() == monthEnum)
+                                        .collect(Collectors.toList())
+                        );
+                    }
+                } else {
+                    // No currency restriction — collect all
+                    monthlyTransactions.addAll(
+                            b.getTransactions().stream()
+                                    .filter(t -> t.getDate().getMonth() == monthEnum)
+                                    .collect(Collectors.toList())
+                    );
+                }
+            }
+        }
 
         logger.log(Level.INFO, "Total transactions found for " + month + ": " + monthlyTransactions.size());
 
-
+        // ===============================
+        // Category-based Spending & Budget
+        // ===============================
         Map<Category, Float> spendingByCategory = new HashMap<>();
         Map<Category, Float> budgetByCategory = new HashMap<>();
 
-        Month monthEnum = Month.valueOf(month.toUpperCase());
-
         for (Category cat : Category.values()) {
-            // Total spent in this category this month
             float spent = (float) monthlyTransactions.stream()
                     .filter(t -> t.getCategory() == cat)
                     .mapToDouble(Transaction::getValue)
                     .sum();
             spendingByCategory.put(cat, spent);
 
-            // Budget for this category this month
             float budget = User.getBudgetAmount(cat, monthEnum);
             budgetByCategory.put(cat, budget);
         }
@@ -67,5 +103,4 @@ public class Summary {
         logger.log(Level.INFO, "Summary generated successfully for month: " + month);
         OutputManager.printMessage(summaryOutput);
     }
-
 }
