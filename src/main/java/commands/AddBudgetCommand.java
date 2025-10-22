@@ -19,7 +19,7 @@ public class AddBudgetCommand implements Command {
     }
 
     @Override
-    public void execute() throws FinanceException {
+    public String execute() throws FinanceException {
         if (arguments.size() < 4) {
             throw new FinanceException("  Sorry! Wrong format. " +
                     "Try 'addBudget <category> <amount> <currency> <month>'\n" +
@@ -39,5 +39,6 @@ public class AddBudgetCommand implements Command {
         }catch (Exception e) {
             throw new FinanceException("Error adding budget: " + e.getMessage());
         }
+        return null;
     }
 }

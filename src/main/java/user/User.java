@@ -23,14 +23,15 @@ public class User {
     private static Storage storage = new Storage(); // single shared storage
 
     public static void initialise() {
-        transactions = storage.loadTransactions();
+        /*transactions = storage.loadTransactions();
         if (transactions == null) {
             transactions = new ArrayList<>();
-        }
+        }*/
         banks = storage.loadBanks();
         if (banks == null) {
             banks = new ArrayList<>();
         }
+        storage.loadTransactions();
         budgets = storage.loadBudgets();
         if (budgets == null) {
             budgets = new ArrayList<>();
@@ -44,10 +45,10 @@ public class User {
     /**
      * Adds a transaction to the user's record
      */
-    public static void addTransaction(Transaction transaction) {
+    /*public static void addTransaction(Transaction transaction) {
         transactions.add(transaction);
         storage.saveTransactions(transactions); // also add to storage
-    }
+    }*/
 
     /**
      * Adds a bank balance to the user's record
@@ -69,7 +70,7 @@ public class User {
      * Deletes a transaction from the user's record
      *
      */
-    public static void deleteTransaction(int index) throws FinanceException {
+    /*public static void deleteTransaction(int index) throws FinanceException {
         ArrayList<Transaction> transactions = getTransactions();
 
         int realIndex = index - 1;
@@ -80,7 +81,7 @@ public class User {
         Transaction removedTransaction = transactions.remove(realIndex);
         printMessage("Deleted transaction: " + removedTransaction.toString());
         storage.saveTransactions(transactions);
-    }
+    }*/
 
 
     public static Map<Category, Float> spendingByCategory() {

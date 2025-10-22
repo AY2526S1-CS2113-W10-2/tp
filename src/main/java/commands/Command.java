@@ -4,7 +4,7 @@ import ui.FinanceException;
 
 public interface Command {
 
-    void execute() throws FinanceException;
+    String execute() throws FinanceException;
 
     /**
      * Returns true if this command should exit the application.
