@@ -20,7 +20,7 @@ public class SummaryCommand implements Command {
     }
 
     @Override
-    public void execute() throws FinanceException {
+    public String execute() throws FinanceException {
         try {
             logger.log(Level.INFO, "Handling summary command with arguments: " + arguments);
 
@@ -59,5 +59,6 @@ public class SummaryCommand implements Command {
             logger.log(Level.SEVERE, "Unexpected error in generating summary:" + e.getMessage());
             throw new FinanceException("Error generating summary: " + e.getMessage());
         }
+        return null;
     }
 }

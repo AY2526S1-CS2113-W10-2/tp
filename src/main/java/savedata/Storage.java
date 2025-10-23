@@ -3,6 +3,7 @@ package savedata;
 import bank.Bank;
 import transaction.Transaction;
 import ui.FinanceException;
+import user.User;
 import utils.Budget;
 import utils.Category;
 import utils.Currency;
@@ -36,9 +37,9 @@ public class Storage {
 
     public Storage() {
         logger.log(Level.INFO, "Initialising storage - loading saved data");
-        loadTransactions();
-        loadBudgets();
-        loadBanks();
+        //loadBanks();
+        //loadTransactions();
+        //loadBudgets();
         logger.log(Level.INFO, "Storage initialized successfully.");
 
     }
@@ -62,28 +63,32 @@ public class Storage {
         }
     }*/
 
-    public void saveTransactions(ArrayList<Transaction> transactions) {
-        assert transactions != null : "Transactions list should not be null";
+    public void saveTransactions(Bank bank) {
+        assert bank != null : "Bank should not be null";
+        assert bank.getTransactions() != null : "Bank must have valid transactions list";
 
         try (PrintWriter pw = new PrintWriter(new FileWriter(TRANSACTION_FILE))) {
-            for (Transaction t : transactions) {
+            for (Transaction t : bank.getTransactions()) {
                 assert t != null : "Transaction object should not be null";
 
-                pw.println(t.getCategory().name() + "|" +
+                pw.println( bank.getId() + "|" +
+                        t.getCategory().name() + "|" +
                         t.getValue() + "|" +
                         t.getDate().getDay() + "|" +
                         t.getDate().getMonth().name() + "|" +
                         t.getDate().getYear() + "|" +
                         t.getCurrency().name());
             }
-            logger.log(Level.INFO, "Saved {0} transactions to {1}",
-                    new Object[]{transactions.size(), TRANSACTION_FILE});
+
+            logger.log(Level.INFO, "Saved {0} transactions for bank ID {1} to {2}",
+                    new Object[]{bank.getTransactions().size(), bank.getId(), TRANSACTION_FILE});
 
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Failed to save transactions", e);
+            logger.log(Level.SEVERE, "Failed to save transactions for bank ID: " + bank.getId(), e);
             e.printStackTrace();
         }
     }
+
 
     public ArrayList<Transaction> loadTransactions() {
         //transactions.clear();
@@ -101,26 +106,29 @@ public class Storage {
             ArrayList<Transaction> transactions = new ArrayList<>();
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split("\\|");
-                if (parts.length != 6) {
+                if (parts.length != 7) {
                     logger.warning("Skipping malformed transaction line: " + line);
 
                     continue;
                 }
 
-                Category category = Category.toCategory(parts[0]);
-                float value = Float.parseFloat(parts[1]);
+                int bank_id = Integer.parseInt(parts[0]);
+                Category category = Category.toCategory(parts[1]);
+                float value = Float.parseFloat(parts[2]);
                 if (value < 0) {
                     logger.log(Level.WARNING, "Skipping invalid transaction with negative value: " + line);
                     continue;
                 }
 
-                int day = Integer.parseInt(parts[2]);
-                Month month = Month.valueOf(parts[3]);
-                int year = Integer.parseInt(parts[4]);
-                Currency currency = Currency.valueOf(parts[5]);
+                int day = Integer.parseInt(parts[3]);
+                Month month = Month.valueOf(parts[4]);
+                int year = Integer.parseInt(parts[5]);
+                Currency currency = Currency.valueOf(parts[6]);
 
                 try {
-                    transactions.add(new Transaction(value, category, new Date(day, month, year), currency));
+                    Transaction transaction = new Transaction(value, category, new Date(day, month, year), currency);
+                    Bank bank_to_be_loaded_to = User.getBanks().get(bank_id);
+                    bank_to_be_loaded_to.getTransactions().add(transaction);
                 } catch (FinanceException | IllegalArgumentException e) {
                     logger.log(Level.WARNING, "Skipping invalid transaction: " + line, e);
                     printMessage("Skipping transaction:" + e.getMessage());
@@ -226,6 +234,7 @@ public class Storage {
 
         try (PrintWriter pw = new PrintWriter(new FileWriter(BANK_FILE))) {
             for (Bank b : banks) {
+                System.out.println(b.getBalance());
                 pw.println(b.getId() + "|" +
                         b.getCurrency().name() + "|" +
                         b.getBalance() + "|" +

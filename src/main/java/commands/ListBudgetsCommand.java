@@ -18,7 +18,7 @@ public class ListBudgetsCommand implements Command {
     }
 
     @Override
-    public void execute() throws FinanceException {
+    public String execute() throws FinanceException {
         if (arguments.size() != 1) {
             throw new FinanceException(" Sorry! Wrong format. Try 'listBudget <month>'\n" +
                     "e.g. 'listBudget JAN'");
@@ -31,5 +31,6 @@ public class ListBudgetsCommand implements Command {
         } catch (IllegalArgumentException e) {
             throw new FinanceException("Invalid month! Use e.g., JAN, FEB, etc.");
         }
+        return null;
     }
 }

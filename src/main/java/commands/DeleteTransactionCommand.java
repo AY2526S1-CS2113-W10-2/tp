@@ -15,7 +15,7 @@ public class DeleteTransactionCommand implements Command {
         this.arguments = arguments;
     }
     @Override
-    public void execute() throws FinanceException {
+    public String execute() throws FinanceException {
 
         try {
             if (arguments.size() != 1) {
@@ -23,10 +23,12 @@ public class DeleteTransactionCommand implements Command {
             }
             int index = Integer.parseInt(arguments.get(0));
             curr_bank.deleteTransactionFromBank(index);
+            User.getStorage().saveTransactions(curr_bank);
         } catch (NumberFormatException e) {
             throw new FinanceException("Invalid input. Please enter a numeric transaction index.");
         } catch (Exception e) {
             throw new FinanceException("Error deleting transaction: " + e.getMessage());
         }
+        return null;
     }
 }
