@@ -1,5 +1,7 @@
 package utils;
 
+import user.User;
+
 public enum Category {
     FOOD,
     TRANSPORT,
@@ -10,7 +12,7 @@ public enum Category {
 
     // call this after all enums are created
     public void initBudget(float amount, Currency currency, Month month) {
-        this.budget = new Budget(this, amount, currency, month);
+        this.budget = new Budget(this, amount, currency, month, User.curr_bank);
     }
 
     public Budget getBudget() {

@@ -24,41 +24,44 @@ public class SummaryCommand implements Command {
         try {
             logger.log(Level.INFO, "Handling summary command with arguments: " + arguments);
 
-            /*if (arguments.size() < 2) {
-                logger.log(Level.WARNING, "Invalid command length: " + arguments.size());
-                throw new FinanceException("Please provide a month! \n Usage: summary <month>" );
-            }*/
-
-            String monthInput = arguments.get(0);
-            Summary summary = new Summary(User.getStorage());
-            Month monthEnum = Month.valueOf(monthInput.toUpperCase());
-
-            // Case 1: Three or more arguments
-            if (arguments.size() >= 2) {
-                if (User.isLoggedIn) {
-                    throw new FinanceException("You are logged into a bank. Too many arguments for summary command.");
-                }
-                String currencyArg = arguments.get(1).toUpperCase();
-                Currency currency = Currency.valueOf(currencyArg);
-                summary.showMonthlySummary(monthInput, null, currency);
+            if (arguments.isEmpty()) {
+                throw new FinanceException("Please provide a month. Usage: summary <month> [currency]");
             }
 
-            // Case 2: Less than 3 arguments
-            else {
-                if (!User.isLoggedIn) {
-                    throw new FinanceException("No bank logged in. Please provide a currency. Usage: summary <month> <currency>");
-                }
+            String monthInput = arguments.get(0).toUpperCase();
+            try {
+                Month.valueOf(monthInput); // just to check validity
+            } catch (IllegalArgumentException e) {
+                throw new FinanceException("Invalid month name. Please try again (e.g., summary JAN).");
+            }
+            Summary summary = new Summary(User.getStorage());
+
+            if (User.isLoggedIn && User.curr_bank != null) {
+                // Logged in → ignore currency argument if provided
                 summary.showMonthlySummary(monthInput, User.curr_bank, User.curr_bank.getCurrency());
+            } else {
+                // Logged out → must provide a currency or default to SGD
+                Currency currency = Currency.SGD; // default
+                if (arguments.size() >= 2) {
+                    try {
+                        currency = Currency.valueOf(arguments.get(1).toUpperCase());
+                    } catch (IllegalArgumentException e) {
+                        throw new FinanceException("Invalid currency. Please provide a valid currency code.");
+                    }
+                }
+                summary.showMonthlySummary(monthInput, null, currency);
             }
 
 
         } catch (IllegalArgumentException e) {
-            logger.log(Level.SEVERE, "Invalid month name provided:" + e.getMessage());
-            throw new FinanceException("Invalid month name. Please try again (e.g., summary JAN).");
+            logger.log(Level.SEVERE, "Invalid month or currency:" + e.getMessage());
+            throw new FinanceException("Invalid month or currency. Please check your input.");
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Unexpected error in generating summary:" + e.getMessage());
             throw new FinanceException("Error generating summary: " + e.getMessage());
         }
+
         return null;
     }
+
 }

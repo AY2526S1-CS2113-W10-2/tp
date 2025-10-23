@@ -27,6 +27,17 @@ public enum Currency {
         return symbol;
     }
 
+    public static float getExchangeRateToSGD(Currency c) {
+        switch (c) {
+        case SGD: return 1.0f;
+        case USD: return 1.29f;   // example rate: 1 USD = 1.29 SGD
+        case JPY: return 0.0085f; // 1 JPY = 0.0085 SGD
+        case EUR: return 1.50f;   // 1 EUR = 1.50 SGD
+        default: return 1.0f;
+        }
+    }
+
+
     /**
      * Gets the symbol for this currency. For currencies that have the same symbol (e.g. JPY, CNY),
      * add the prefix to clarify.

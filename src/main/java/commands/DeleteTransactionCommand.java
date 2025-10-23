@@ -22,8 +22,8 @@ public class DeleteTransactionCommand implements Command {
                 throw new FinanceException("Usage: delete <transaction_index>");
             }
             int index = Integer.parseInt(arguments.get(0));
-            curr_bank.deleteTransactionFromBank(index);
-            User.getStorage().saveTransactions(curr_bank);
+            curr_bank.deleteTransactionFromBank(index-1);
+            User.getStorage().saveTransactions(User.getBanks());
         } catch (NumberFormatException e) {
             throw new FinanceException("Invalid input. Please enter a numeric transaction index.");
         } catch (Exception e) {

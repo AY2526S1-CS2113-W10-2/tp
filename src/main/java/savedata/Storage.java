@@ -63,31 +63,35 @@ public class Storage {
         }
     }*/
 
-    public void saveTransactions(Bank bank) {
-        assert bank != null : "Bank should not be null";
-        assert bank.getTransactions() != null : "Bank must have valid transactions list";
+    public void saveTransactions(ArrayList<Bank> banks) {
+        assert banks != null : "Banks list should not be null";
 
         try (PrintWriter pw = new PrintWriter(new FileWriter(TRANSACTION_FILE))) {
-            for (Transaction t : bank.getTransactions()) {
-                assert t != null : "Transaction object should not be null";
+            for (Bank bank : banks) {
+                assert bank != null : "Bank should not be null";
+                assert bank.getTransactions() != null : "Bank must have a valid transactions list";
 
-                pw.println( bank.getId() + "|" +
-                        t.getCategory().name() + "|" +
-                        t.getValue() + "|" +
-                        t.getDate().getDay() + "|" +
-                        t.getDate().getMonth().name() + "|" +
-                        t.getDate().getYear() + "|" +
-                        t.getCurrency().name());
+                for (Transaction t : bank.getTransactions()) {
+                    assert t != null : "Transaction object should not be null";
+
+                    pw.println(bank.getId() + "|" +
+                            t.getCategory().name() + "|" +
+                            t.getValue() + "|" +
+                            t.getDate().getDay() + "|" +
+                            t.getDate().getMonth().name() + "|" +
+                            t.getDate().getYear() + "|" +
+                            t.getCurrency().name());
+                }
+
+                logger.log(Level.INFO, "Saved {0} transactions for bank ID {1} to {2}",
+                        new Object[]{bank.getTransactions().size(), bank.getId(), TRANSACTION_FILE});
             }
-
-            logger.log(Level.INFO, "Saved {0} transactions for bank ID {1} to {2}",
-                    new Object[]{bank.getTransactions().size(), bank.getId(), TRANSACTION_FILE});
-
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Failed to save transactions for bank ID: " + bank.getId(), e);
+            logger.log(Level.SEVERE, "Failed to save transactions", e);
             e.printStackTrace();
         }
     }
+
 
 
     public ArrayList<Transaction> loadTransactions() {
@@ -174,7 +178,9 @@ public class Storage {
     public void saveBudgets(ArrayList<Budget> budgets) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(BUDGET_FILE))) {
             for (Budget b : budgets) {
-                pw.println(b.getCategory().name() + "|" +
+                int bankId = b.getBank() != null ? b.getBank().getId() : -1; // -1 for logged-out/global
+                pw.println(bankId + "|" +
+                        b.getCategory().name() + "|" +
                         b.getMonth().name() + "|" +
                         b.getBudget() + "|" +
                         b.getCurrency().name());
@@ -184,8 +190,8 @@ public class Storage {
         }
     }
 
+
     public ArrayList<Budget> loadBudgets() {
-        //budgets.clear();
         File file = new File(BUDGET_FILE);
         if (!file.exists()) {
             logger.log(Level.WARNING, "No budget file found. Returning null.");
@@ -194,22 +200,27 @@ public class Storage {
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             logger.info("Loading budgets from file...");
-
             String line;
             ArrayList<Budget> budgets = new ArrayList<>();
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split("\\|");
-                if (parts.length != 4) {
+                if (parts.length != 5) {
                     logger.log(Level.WARNING, "Skipping malformed budget line: " + line);
                     continue;
                 }
 
-                Category category = Category.toCategory(parts[0]);
-                Month month = Month.valueOf(parts[1]);
-                float amount = Float.parseFloat(parts[2]);
-                Currency currency = Currency.valueOf(parts[3]);
+                int bankId = Integer.parseInt(parts[0]);
+                Bank bank = bankId == -1 ? null : User.getBanks().stream()
+                        .filter(b -> b.getId() == bankId)
+                        .findFirst()
+                        .orElse(null);
 
-                budgets.add(new Budget(category, amount, currency, month));
+                Category category = Category.toCategory(parts[1]);
+                Month month = Month.valueOf(parts[2]);
+                float amount = Float.parseFloat(parts[3]);
+                Currency currency = Currency.valueOf(parts[4]);
+
+                budgets.add(new Budget(category, amount, currency, month, bank));
             }
             return budgets;
         } catch (IOException e) {

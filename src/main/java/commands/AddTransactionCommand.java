@@ -2,6 +2,7 @@ package commands;
 
 import transaction.Transaction;
 import ui.FinanceException;
+import ui.OutputManager;
 import user.User;
 import utils.Category;
 import utils.Currency;
@@ -22,9 +23,9 @@ public class AddTransactionCommand implements Command {
 
     @Override
     public String execute() throws FinanceException {
-        if (arguments.size() < 4) {
-            throw new FinanceException("  Sorry! Wrong format. Try 'add <category> <value> <date> <currency>' \n" +
-                    "  e.g. 'add food 4.50 10/4/2024 JPY'");
+        if (arguments.size() < 3) {
+            throw new FinanceException("  Sorry! Wrong format. Try 'add <category> <value> <date>' \n" +
+                    "  e.g. 'add food 4.50 10/4/2024'");
         }
 
         try {
@@ -52,13 +53,16 @@ public class AddTransactionCommand implements Command {
 
             Date date = new Date(day, month, year);
 
-            Currency currency = Currency.toCurrency(arguments.get(3));
+            //Currency currency = Currency.toCurrency(arguments.get(3));
+            Currency currency = curr_bank.getCurrency();
             if (currency == curr_bank.getCurrency()){
                 Transaction trans = new Transaction(value, category, date, currency);
                 //User.addTransaction(trans);
                 curr_bank.addTransactionToBank(trans);
-                User.getStorage().saveTransactions(curr_bank);
-                printMessage("  Added Transaction: " + trans.toString());
+                curr_bank.setBalance(curr_bank.getBalance() - value);
+                User.getStorage().saveTransactions(User.getBanks());
+                User.getStorage().saveBanks(User.banks);              // save updated balance
+                printMessage("Added Transaction: " + trans.toString());
             }
             else{
                 throw new FinanceException("Currency must be in" + curr_bank.getCurrency().name());
@@ -67,8 +71,8 @@ public class AddTransactionCommand implements Command {
         } catch (FinanceException e) {
             throw e;
         } catch (Exception e) {
-            throw new FinanceException("  Sorry! Wrong format. Try 'add <category> <value> <date> <currency>' \n" +
-                    "  e.g. 'add food 4.50 10/4/2024 JPY'");
+            throw new FinanceException("  Sorry! Wrong format. Try 'add <category> <value> <date>' \n" +
+                    "  e.g. 'add food 4.50 10/4/2024'");
         }
         return null;
     }
