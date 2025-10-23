@@ -46,7 +46,7 @@ public class ListRecentTransactionsCommand implements Command{
         for (int i = start; i < size; i++) {
             Transaction t = transactionsToDisplay.get(i);
             strb.append("\n  [").append(i + 1).append("] ") // 1-based index
-                    .append(t.getCurrency().name()).append("$")
+                    .append(t.getCurrency().name()).append(t.getCurrency().getSymbol())
                     .append(t.getValue()).append(" spent on ")
                     .append(t.getCategory().name()).append(" on ")
                     .append(t.getDate().getDay()).append("th of ")

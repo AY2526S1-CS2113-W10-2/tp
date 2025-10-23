@@ -1,18 +1,23 @@
 package utils;
 
+import bank.Bank;
+import user.User;
+
 public class Budget {
     private final Category category;
     private float balance = 0.0F;
     private float initialAmount = 0.0F;
     private final Currency currency;
     private final Month month;
+    private final Bank bank;
 
-    public Budget(Category category, float initialAmount, Currency currency, Month month) {
+    public Budget(Category category, float initialAmount, Currency currency, Month month, Bank bank) {
         this.category = category;
         this.initialAmount = initialAmount;
         this.balance = initialAmount; // initialize balance
         this.currency = currency;
         this.month = month;
+        this.bank = bank;
     }
 
     /**
@@ -28,8 +33,12 @@ public class Budget {
         return initialAmount;
     }
 
-    public Month getMonth(){
+    public Month getMonth() {
         return month;
+    }
+
+    public Bank getBank() {
+        return bank;
     }
 
     public Currency getCurrency() {

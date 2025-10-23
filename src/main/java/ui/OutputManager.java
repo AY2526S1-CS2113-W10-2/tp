@@ -2,8 +2,10 @@ package ui;
 
 import bank.Bank;
 import transaction.Transaction;
+import user.User;
 import utils.Budget;
 import utils.Category;
+import utils.Currency;
 import utils.Month;
 
 
@@ -18,15 +20,25 @@ public class OutputManager {
      *
      * @return String representing the user's activity
      */
-    public static String printSummary(String month, List<Transaction> transactions, Map<Category, Float> spendingByCategory, Map<Category, Float> budgetByCategory) {
+    public static String printSummary(String month, List<Transaction> transactions,
+                                      Map<Category, Float> spendingByCategory,
+                                      Map<Category, Float> budgetByCategory,
+                                      Currency displayCurrency) {
 
         StringBuilder strb = new StringBuilder();
 
         // Center the title
         String title = "Summary for " + month;
-        int width = 40; // total width for centering
+        int width = 40;
         int padding = (width - title.length()) / 2;
         strb.append(" ".repeat(Math.max(0, padding))).append(title).append("\n\n");
+
+        // Add note about conversion if needed
+        if (displayCurrency == Currency.SGD) {
+            strb.append("All transactions, spending, and budgets are converted to SGD.\n\n");
+        } else {
+            strb.append("Amounts are displayed in ").append(displayCurrency.name()).append(".\n\n");
+        }
 
         // --- Recent Transactions ---
         strb.append("--- Recent Transactions ---\n");
@@ -35,12 +47,15 @@ public class OutputManager {
         } else {
             for (int i = 0; i < transactions.size(); i++) {
                 Transaction t = transactions.get(i);
+                float convertedValue = t.getValue()
+                        * Currency.getExchangeRateToSGD(t.getCurrency())
+                        / Currency.getExchangeRateToSGD(displayCurrency);
+
                 strb.append("[")
-                        .append(i + 1) // 1-based index
+                        .append(i + 1)
                         .append("] ")
-                        .append(t.getCurrency().name())
-                        .append("$")
-                        .append(t.getValue())
+                        .append(displayCurrency.getSymbol())
+                        .append(String.format("%.2f", convertedValue))
                         .append(" spent on ")
                         .append(t.getCategory().name())
                         .append(" on ")
@@ -58,12 +73,29 @@ public class OutputManager {
         for (Category cat : Category.values()) {
             float spent = spendingByCategory.getOrDefault(cat, 0f);
             float budget = budgetByCategory.getOrDefault(cat, 0f);
-            strb.append(String.format("%-12s : $%.2f / $%.2f", cat.name(), spent, budget));
+
+            strb.append(String.format("%-12s : %s%.2f / %s%.2f",
+                    cat.name(),
+                    displayCurrency.getSymbol(), spent,
+                    displayCurrency.getSymbol(), budget));
+
             if (budget > 0 && spent > budget) {
                 strb.append(" (Over budget!)");
             }
             strb.append("\n");
         }
+
+        // --- Total Spend ---
+        float totalSpend = 0f;
+        for (Transaction t : transactions) {
+            totalSpend += t.getValue()
+                    * Currency.getExchangeRateToSGD(t.getCurrency())
+                    / Currency.getExchangeRateToSGD(displayCurrency);
+        }
+        strb.append("\nTotal spend this month: ")
+                .append(displayCurrency.getSymbol())
+                .append(String.format("%.2f", totalSpend))
+                .append("\n");
 
         return strb.toString();
     }
@@ -87,7 +119,7 @@ public class OutputManager {
             Transaction t = transactions.get(i);
             strb.append("\n  [").append(i + 1).append("] ") // 1-based index
                     .append(t.getCurrency().name())
-                    .append("$")
+                    .append(t.getCurrency().getSymbol())
                     .append(t.getValue())
                     .append(" spent on ")
                     .append(t.getCategory().name())
@@ -107,10 +139,10 @@ public class OutputManager {
      *
      * @return String representing the user's activity
      */
-    public static String listBanks(ArrayList<Bank> banks, int numToList){
+    public static String listBanks(ArrayList<Bank> banks, int numToList) {
         StringBuilder strb = new StringBuilder();
         strb.append("  Your Bank Accounts are:");
-        for (int i = 0; i < banks.size(); i++){
+        for (int i = 0; i < banks.size(); i++) {
             strb.append("\n  ").append(banks.get(i).toString());
         }
         return strb.toString();
@@ -124,19 +156,19 @@ public class OutputManager {
             for (Budget budget : budgets) {
                 if (budget.getCategory() == category && budget.getMonth() == month) {
                     strb.append("\n  ")
-                        .append(category.name().toLowerCase())
-                        .append(": ")
-                        .append(budget.getBudget())
-                        .append(" ")
-                        .append(budget.getCurrency());
+                            .append(category.name().toLowerCase())
+                            .append(": ")
+                            .append(budget.getBudget())
+                            .append(" ")
+                            .append(budget.getCurrency());
                     found = true;
                     break;
                 }
             }
             if (!found) {
                 strb.append("\n  ")
-                    .append(category.name().toLowerCase())
-                    .append(": no budget set yet");
+                        .append(category.name().toLowerCase())
+                        .append(": no budget set yet");
             }
         }
         return strb.toString();
@@ -147,9 +179,57 @@ public class OutputManager {
      *
      * @param str The string to be printed in the software format
      */
-    public static void printMessage(String str){
+    public static void printMessage(String str) {
         System.out.println("  ===== SYSTEM =====");
         System.out.println(str);
         System.out.println("  ====== USER ======");
     }
+
+    public static void showWelcomeMessage(ArrayList<Bank> banks) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Welcome to Finance Manager V1.0!\n");
+
+        if (banks == null || banks.isEmpty()) {
+            sb.append("You have not added any banks yet.\n")
+                    .append("Use the 'addbank' command to link a bank or 'login' to access an existing one.");
+        } else {
+            sb.append("You have the following banks linked:\n");
+            for (Bank b : banks) {
+                Currency c = b.getCurrency();
+                String balanceStr = String.format("%.2f", b.getBalance());
+
+                sb.append("ID: ").append(b.getId()).append(" | ");
+
+                if (c.getDuplicateSymbol()) {
+                    // If duplicate, show symbol + amount + (currency code)
+                    sb.append(c.getSymbol()).append(balanceStr)
+                            .append(" (").append(c.name()).append(")");
+                } else {
+                    // Otherwise just symbol + amount
+                    sb.append(c.getSymbol()).append(balanceStr);
+                }
+
+                sb.append("\n");
+            }
+            sb.append("What can I do for you today?");
+        }
+
+        printMessage(sb.toString());
+    }
+    public static void showCurrentBank(Bank currBank) {
+        if (currBank == null) {
+            printMessage("You are not logged into any bank.");
+        } else {
+            Currency c = currBank.getCurrency();
+            String balanceStr = c.getDuplicateSymbol()
+                    ? c.getSymbol() + currBank.getBalance() + " (" + c.name() + ")"
+                    : c.getSymbol() + currBank.getBalance();
+            printMessage("Currently logged into bank ID: " + currBank.getId() + "\n" +
+                    "Balance: " + balanceStr);
+        }
+    }
+
 }
+
+
+

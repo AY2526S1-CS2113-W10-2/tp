@@ -37,7 +37,7 @@ public class Parser {
 
         ArrayList<String> arguments = new ArrayList<>(commandList.subList(1, commandList.size()));
 
-        if(comm.equals("login") && !User.isLoggedIn){
+      /*  if(comm.equals("login") && !User.isLoggedIn){
             User.isLoggedIn = true;
             int bank_id = Integer.parseInt(commandList.get(1));
             if(bank_id >= User.banks.size()){
@@ -48,15 +48,39 @@ public class Parser {
                 throw new FinanceException("Bank not found");
             }
             System.out.println("Successfully logged into bank" + bank_id);
+            OutputManager.showCurrentBank(User.curr_bank);
         }
 
         if(comm.equals("logout") && !User.isLoggedIn){
             User.isLoggedIn = false;
             User.curr_bank = null;
         }
-
+*/
         Command cmd = null;
         switch (comm){
+        case "login":
+            if (!User.isLoggedIn) {
+                int bank_id = Integer.parseInt(commandList.get(1));
+                if (bank_id >= User.banks.size() || User.banks.get(bank_id).getId() != bank_id) {
+                    throw new FinanceException("Bank not found");
+                }
+                User.curr_bank = User.banks.get(bank_id);
+                User.isLoggedIn = true;
+                printMessage("Successfully logged into bank " + bank_id);
+                OutputManager.showCurrentBank(User.curr_bank);
+            } else {
+                printMessage("Already logged into a bank. Please logout first.");
+            }
+            break;
+        case "logout":
+            if (User.isLoggedIn) {
+                User.curr_bank = null;
+                User.isLoggedIn = false;
+                printMessage("Logged out successfully.");
+            } else {
+                printMessage("You are not logged into any bank.");
+            }
+            break;
         case "exit":
             logger.info("Executing 'exit' command");
             cmd = new ExitCommand();
@@ -80,13 +104,9 @@ public class Parser {
             break;
         case "list":
             logger.info("Executing 'list' command");
-            if(!User.isLoggedIn) {
-                cmd = new ListRecentTransactionsCommand();
-            }
-            else{
-                logger.info("Please logout to execute this command");
-            }
+            cmd = new ListRecentTransactionsCommand(); // always execute
             break;
+
         case "listbanks":
             logger.info("Executing 'listbanks' command");
             if(!User.isLoggedIn) {
@@ -137,6 +157,7 @@ public class Parser {
         }
         if (cmd != null) {
             cmd.execute();
+            OutputManager.showCurrentBank(User.curr_bank);
             return cmd.shouldExit();
         }
         return false;
