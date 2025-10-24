@@ -23,7 +23,8 @@ public class OutputManager {
     public static String printSummary(String month, List<Transaction> transactions,
                                       Map<Category, Float> spendingByCategory,
                                       Map<Category, Float> budgetByCategory,
-                                      Currency displayCurrency) {
+                                      Currency displayCurrency,
+                                      boolean convertAll) {
 
         StringBuilder strb = new StringBuilder();
 
@@ -31,13 +32,13 @@ public class OutputManager {
         String title = "Summary for " + month;
         int width = 40;
         int padding = (width - title.length()) / 2;
-        strb.append(" ".repeat(Math.max(0, padding))).append(title).append("\n\n");
+        strb.append(" ".repeat(Math.max(0, padding))).append(title).append("\n");
 
-        // Add note about conversion if needed
-        if (displayCurrency == Currency.SGD) {
-            strb.append("All transactions, spending, and budgets are converted to SGD.\n\n");
+        // Add note about conversion based on convertAll flag
+        if (convertAll) {
+            strb.append("All transactions, spending, and budgets are converted to SGD.\n");
         } else {
-            strb.append("Amounts are displayed in ").append(displayCurrency.name()).append(".\n\n");
+            strb.append("Amounts are displayed in ").append(displayCurrency.name()).append(".\n");
         }
 
         // --- Recent Transactions ---
@@ -47,9 +48,15 @@ public class OutputManager {
         } else {
             for (int i = 0; i < transactions.size(); i++) {
                 Transaction t = transactions.get(i);
-                float convertedValue = t.getValue()
-                        * Currency.getExchangeRateToSGD(t.getCurrency())
-                        / Currency.getExchangeRateToSGD(displayCurrency);
+                float convertedValue;
+
+                if (convertAll) {
+                    convertedValue = t.getValue()
+                            * Currency.getExchangeRateToSGD(t.getCurrency())
+                            / Currency.getExchangeRateToSGD(displayCurrency);
+                } else {
+                    convertedValue = t.getValue();
+                }
 
                 strb.append("[")
                         .append(i + 1)
@@ -88,9 +95,13 @@ public class OutputManager {
         // --- Total Spend ---
         float totalSpend = 0f;
         for (Transaction t : transactions) {
-            totalSpend += t.getValue()
-                    * Currency.getExchangeRateToSGD(t.getCurrency())
-                    / Currency.getExchangeRateToSGD(displayCurrency);
+            if (convertAll) {
+                totalSpend += t.getValue()
+                        * Currency.getExchangeRateToSGD(t.getCurrency())
+                        / Currency.getExchangeRateToSGD(displayCurrency);
+            } else {
+                totalSpend += t.getValue();
+            }
         }
         strb.append("\nTotal spend this month: ")
                 .append(displayCurrency.getSymbol())

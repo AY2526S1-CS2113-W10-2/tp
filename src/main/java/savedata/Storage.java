@@ -146,35 +146,6 @@ public class Storage {
         return null;
     }
 
-    // -------------------- Budgets --------------------
-    /*public void addBudget(Budget b) {
-        // If a budget already exists for the same category and month, replace it
-        budgets.removeIf(existing ->
-                existing.getCategory() == b.getCategory() &&
-                        existing.getMonth() == b.getMonth()
-        );
-        budgets.add(b);
-        saveBudgets();
-    }
-
-    public float getBudgetAmount(Category category, Month month) {
-        for (Budget b : budgets) {
-            if (b.getCategory() == category && b.getMonth() == month) {
-                return b.getBudget();
-            }
-        }
-        return 0f;
-    }
-
-    public Currency getBudgetCurrency(Category category, Month month) {
-        for (Budget b : budgets) {
-            if (b.getCategory() == category && b.getMonth() == month) {
-                return b.getCurrency();
-            }
-        }
-        return null;
-    }*/
-
     public void saveBudgets(ArrayList<Budget> budgets) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(BUDGET_FILE))) {
             for (Budget b : budgets) {
@@ -230,22 +201,12 @@ public class Storage {
     }
 
 
-    // -------------------- Banks --------------------
-    /*public void addBank(Bank b) {
-        banks.add(b);
-        saveBanks();
-    }
-
-    public List<Bank> getBanks() {
-        return banks;
-    }*/
-
     public void saveBanks(ArrayList<Bank> banks) {
         assert banks != null : "Banks list should not be null";
 
         try (PrintWriter pw = new PrintWriter(new FileWriter(BANK_FILE))) {
             for (Bank b : banks) {
-                System.out.println(b.getBalance());
+            //    System.out.println(b.getBalance());
                 pw.println(b.getId() + "|" +
                         b.getCurrency().name() + "|" +
                         b.getBalance() + "|" +

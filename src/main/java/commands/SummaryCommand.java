@@ -37,21 +37,21 @@ public class SummaryCommand implements Command {
             Summary summary = new Summary(User.getStorage());
 
             if (User.isLoggedIn && User.curr_bank != null) {
-                // Logged in → ignore currency argument if provided
-                summary.showMonthlySummary(monthInput, User.curr_bank, User.curr_bank.getCurrency());
-            } else {
-                // Logged out → must provide a currency or default to SGD
-                Currency currency = Currency.SGD; // default
-                if (arguments.size() >= 2) {
-                    try {
-                        currency = Currency.valueOf(arguments.get(1).toUpperCase());
-                    } catch (IllegalArgumentException e) {
-                        throw new FinanceException("Invalid currency. Please provide a valid currency code.");
-                    }
+                // Logged in → show only this bank
+                summary.showMonthlySummary(monthInput, User.curr_bank, User.curr_bank.getCurrency(), false);
+            } else if (arguments.size() >= 2) {
+                // Logged out WITH currency specified → show only that currency
+                Currency currency;
+                try {
+                    currency = Currency.valueOf(arguments.get(1).toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    throw new FinanceException("Invalid currency. Please provide a valid currency code.");
                 }
-                summary.showMonthlySummary(monthInput, null, currency);
+                summary.showMonthlySummary(monthInput, null, currency, false);
+            } else {
+                // Logged out WITHOUT currency → show ALL banks converted to SGD
+                summary.showMonthlySummary(monthInput, null, Currency.SGD, true);
             }
-
 
         } catch (IllegalArgumentException e) {
             logger.log(Level.SEVERE, "Invalid month or currency:" + e.getMessage());

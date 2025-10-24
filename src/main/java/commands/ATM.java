@@ -25,12 +25,12 @@ public class ATM implements Command{
         if(this.deposit && !this.withdraw){
             new_balance = this.curr_bank.getBalance() + this.amount;
             this.curr_bank.setBalance(new_balance);
-            System.out.println("Successful deposit! Your bank balance is now:" + this.curr_bank.getBalance());
+            System.out.println("Successful deposit! Your bank balance is now: " + this.curr_bank.getCurrency().getSymbol() + this.curr_bank.getBalance());
         }
         if(this.withdraw && !this.deposit){
             new_balance = this.curr_bank.getBalance() - this.amount;
             this.curr_bank.setBalance(new_balance);
-            System.out.println("Successful withdrawal! Your bank balance is now:" + this.curr_bank.getBalance());
+            System.out.println("Successful withdrawal! Your bank balance is now: " + this.curr_bank.getCurrency().getSymbol() + this.curr_bank.getBalance());
         }
         User.getStorage().saveBanks(User.getBanks());
         return null;

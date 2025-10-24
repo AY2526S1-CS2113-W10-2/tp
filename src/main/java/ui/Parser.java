@@ -37,25 +37,6 @@ public class Parser {
 
         ArrayList<String> arguments = new ArrayList<>(commandList.subList(1, commandList.size()));
 
-      /*  if(comm.equals("login") && !User.isLoggedIn){
-            User.isLoggedIn = true;
-            int bank_id = Integer.parseInt(commandList.get(1));
-            if(bank_id >= User.banks.size()){
-                throw new FinanceException("Bank not found");
-            }
-            User.curr_bank = User.banks.get(bank_id);
-            if(User.curr_bank.getId() != bank_id){
-                throw new FinanceException("Bank not found");
-            }
-            System.out.println("Successfully logged into bank" + bank_id);
-            OutputManager.showCurrentBank(User.curr_bank);
-        }
-
-        if(comm.equals("logout") && !User.isLoggedIn){
-            User.isLoggedIn = false;
-            User.curr_bank = null;
-        }
-*/
         Command cmd = null;
         switch (comm){
         case "login":
