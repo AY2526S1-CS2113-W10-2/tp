@@ -67,7 +67,7 @@ public class Bank {
     public String toString() {
         return "Bank Account " + id +
                 " in " + currency.getSymbolVerbose() +
-                " with balance " + balance +
+                " with balance " + this.getCurrency().getSymbol() + balance +
                 " and exchangeRate " + exchangeRate;
     }
 }

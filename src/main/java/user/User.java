@@ -5,6 +5,7 @@ import transaction.Transaction;
 import ui.FinanceException;
 import utils.Budget;
 import utils.Category;
+import utils.Currency;
 import utils.Month;
 import savedata.Storage;
 
@@ -43,14 +44,6 @@ public class User {
     }
 
     /**
-     * Adds a transaction to the user's record
-     */
-    /*public static void addTransaction(Transaction transaction) {
-        transactions.add(transaction);
-        storage.saveTransactions(transactions); // also add to storage
-    }*/
-
-    /**
      * Adds a bank balance to the user's record
      */
     public static void addBank(Bank bank) {
@@ -70,18 +63,7 @@ public class User {
      * Deletes a transaction from the user's record
      *
      */
-    /*public static void deleteTransaction(int index) throws FinanceException {
-        ArrayList<Transaction> transactions = getTransactions();
 
-        int realIndex = index - 1;
-
-        if (realIndex < 0 || realIndex >= transactions.size()) {
-            throw new FinanceException("Invalid index. Please enter a number between 1 and " + transactions.size());
-        }
-        Transaction removedTransaction = transactions.remove(realIndex);
-        printMessage("Deleted transaction: " + removedTransaction.toString());
-        storage.saveTransactions(transactions);
-    }*/
     public static Map<Category, Float> spendingByCategory() {
         Map<Category, Float> spendingMap = new HashMap<>();
 
@@ -142,5 +124,4 @@ public class User {
         }
         return null;
     }
-
 }

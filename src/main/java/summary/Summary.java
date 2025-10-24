@@ -30,10 +30,11 @@ public class Summary {
         logger.log(Level.INFO, "Summary instance created successfully.");
     }
 
-    public void showMonthlySummary(String month, Bank bank, Currency currency) {
+    public void showMonthlySummary(String month, Bank bank, Currency currency, boolean convertAll) {
         assert month != null && !month.isBlank() : "Month input cannot be null or empty";
 
-        String headerMessage;
+        logger.log(Level.INFO, "Generating summary for month: " + month + ", Currency: " + currency.name() + ", ConvertAll: " + convertAll);
+
         Currency displayCurrency;
         List<Transaction> monthlyTransactions = new ArrayList<>();
 
@@ -42,33 +43,36 @@ public class Summary {
         if (bank != null) {
             // Logged in → show this bank only
             displayCurrency = bank.getCurrency();
-            headerMessage = "Summary for " + month + " for Bank " + bank.getId();
 
             monthlyTransactions = bank.getTransactions().stream()
                     .filter(t -> t.getDate().getMonth() == monthEnum)
                     .collect(Collectors.toList());
         } else {
-            // Logged out → aggregate all banks
-            if (currency == null) {
-                displayCurrency = Currency.SGD;
-                headerMessage = "Summary for " + month + "\nAll transactions, spending and budgeting are converted to SGD";
-            } else {
-                displayCurrency = currency;
-                headerMessage = "Summary for " + month + " (Showing only " + currency.name() + " transactions)";
-            }
+            // Logged out → aggregate banks based on convertAll flag
+            displayCurrency = currency;
 
-            for (Bank b : User.getBanks()) {
-                if (currency == null || b.getCurrency() == currency) {
+            if (convertAll) {
+                // summary JAN → include ALL banks, convert to SGD
+                for (Bank b : User.getBanks()) {
                     monthlyTransactions.addAll(
                             b.getTransactions().stream()
                                     .filter(t -> t.getDate().getMonth() == monthEnum)
                                     .collect(Collectors.toList())
                     );
                 }
+            } else {
+                // summary JAN <currency> → include only banks of that currency
+                for (Bank b : User.getBanks()) {
+                    if (b.getCurrency() == currency) {
+                        monthlyTransactions.addAll(
+                                b.getTransactions().stream()
+                                        .filter(t -> t.getDate().getMonth() == monthEnum)
+                                        .collect(Collectors.toList())
+                        );
+                    }
+                }
             }
         }
-
-        OutputManager.printMessage(headerMessage);
 
         // ===============================
         // Category-based Spending & Budget
@@ -77,44 +81,54 @@ public class Summary {
         Map<Category, Float> budgetByCategory = new HashMap<>();
 
         for (Category cat : Category.values()) {
-            // Spending: convert each transaction to displayCurrency
+            // Spending
             float spent = 0f;
             for (Transaction t : monthlyTransactions) {
                 if (t.getCategory() == cat) {
-                    spent += t.getValue()
-                            * Currency.getExchangeRateToSGD(t.getCurrency())
-                            / Currency.getExchangeRateToSGD(displayCurrency);
+                    if (convertAll) {
+                        // summary JAN (all banks): convert to SGD
+                        spent += t.getValue()
+                                * Currency.getExchangeRateToSGD(t.getCurrency())
+                                / Currency.getExchangeRateToSGD(displayCurrency);
+                    } else {
+                        // Logged in OR specific currency: no conversion needed
+                        spent += t.getValue();
+                    }
                 }
             }
             spendingByCategory.put(cat, spent);
 
             // Budget
             float budget = 0f;
-
-            if (bank != null) {
-                // Logged in → use bank-specific budget
-                budget = User.getBudgetAmount(cat, monthEnum, bank);
-            } else {
-                // Logged out → aggregate budgets from all banks in SGD
-                for (Bank b : User.getBanks()) {
-                    Budget bgt = User.getBudgetForBank(cat, monthEnum, b); // you may need to implement this
-                    if (bgt != null) {
-                        // convert to SGD
-                        float amountInSGD = bgt.getBudget() * Currency.getExchangeRateToSGD(bgt.getCurrency());
-                        budget += amountInSGD;
+            for (Bank b : User.getBanks()) {
+                Budget bgt = User.getBudgetForBank(cat, monthEnum, b);
+                if (bgt != null) {
+                    if (bank != null) {
+                        // Logged in → bank-specific
+                        if (b == bank) budget += bgt.getBudget();
+                    } else {
+                        if (convertAll) {
+                            // summary JAN → convert all budgets to SGD
+                            budget += bgt.getBudget()
+                                    * Currency.getExchangeRateToSGD(bgt.getCurrency())
+                                    / Currency.getExchangeRateToSGD(displayCurrency);
+                        } else if (b.getCurrency() == currency) {
+                            // summary JAN <currency> → budgets only of that currency (no conversion)
+                            budget += bgt.getBudget();
+                        }
                     }
                 }
             }
             budgetByCategory.put(cat, budget);
         }
 
-
-            String summaryOutput = OutputManager.printSummary(
+        String summaryOutput = OutputManager.printSummary(
                 month,
                 monthlyTransactions,
                 spendingByCategory,
                 budgetByCategory,
-                displayCurrency
+                displayCurrency,
+                convertAll
         );
 
         OutputManager.printMessage(summaryOutput);
