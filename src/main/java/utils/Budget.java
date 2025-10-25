@@ -1,7 +1,6 @@
 package utils;
 
 import bank.Bank;
-import user.User;
 
 public class Budget {
     private final Category category;

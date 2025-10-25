@@ -2,7 +2,6 @@ package commands;
 
 import transaction.Transaction;
 import ui.FinanceException;
-import ui.OutputManager;
 import user.User;
 import utils.Category;
 import utils.Currency;
@@ -12,7 +11,7 @@ import utils.Month;
 import java.util.ArrayList;
 
 import static ui.OutputManager.printMessage;
-import static user.User.curr_bank;
+import static user.User.currBank;
 
 public class AddTransactionCommand implements Command {
     private final ArrayList<String> arguments;
@@ -54,18 +53,17 @@ public class AddTransactionCommand implements Command {
             Date date = new Date(day, month, year);
 
             //Currency currency = Currency.toCurrency(arguments.get(3));
-            Currency currency = curr_bank.getCurrency();
-            if (currency == curr_bank.getCurrency()){
+            Currency currency = currBank.getCurrency();
+            if (currency == currBank.getCurrency()){
                 Transaction trans = new Transaction(value, category, date, currency);
                 //User.addTransaction(trans);
-                curr_bank.addTransactionToBank(trans);
-                curr_bank.setBalance(curr_bank.getBalance() - value);
+                currBank.addTransactionToBank(trans);
+                currBank.setBalance(currBank.getBalance() - value);
                 User.getStorage().saveTransactions(User.getBanks());
                 User.getStorage().saveBanks(User.banks);              // save updated balance
                 printMessage("Added Transaction: " + trans.toString());
-            }
-            else{
-                throw new FinanceException("Currency must be in" + curr_bank.getCurrency().name());
+            } else {
+                throw new FinanceException("Currency must be in" + currBank.getCurrency().name());
             }
 
         } catch (FinanceException e) {

@@ -1,7 +1,7 @@
 package summary;
 
 import bank.Bank;
-import savedata.Storage;
+import storage.Storage;
 import transaction.Transaction;
 import user.User;
 import utils.Budget;
@@ -33,7 +33,12 @@ public class Summary {
     public void showMonthlySummary(String month, Bank bank, Currency currency, boolean convertAll) {
         assert month != null && !month.isBlank() : "Month input cannot be null or empty";
 
-        logger.log(Level.INFO, "Generating summary for month: " + month + ", Currency: " + currency.name() + ", ConvertAll: " + convertAll);
+        logger.log(Level.INFO, "Generating summary for month: "
+                + month
+                + ", Currency: "
+                + currency.name()
+                + ", ConvertAll: "
+                + convertAll);
 
         Currency displayCurrency;
         List<Transaction> monthlyTransactions = new ArrayList<>();
@@ -105,7 +110,9 @@ public class Summary {
                 if (bgt != null) {
                     if (bank != null) {
                         // Logged in → bank-specific
-                        if (b == bank) budget += bgt.getBudget();
+                        if (b == bank) {
+                            budget += bgt.getBudget();
+                        }
                     } else {
                         if (convertAll) {
                             // summary JAN → convert all budgets to SGD

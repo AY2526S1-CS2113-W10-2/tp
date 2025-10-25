@@ -2,7 +2,6 @@ package ui;
 
 import bank.Bank;
 import transaction.Transaction;
-import user.User;
 import utils.Budget;
 import utils.Category;
 import utils.Currency;
@@ -113,52 +112,11 @@ public class OutputManager {
 
 
 
-
     /**
-     * Prints a list of the recent transactions the user has done
+     * Prints a list of the budgets the user has set for the month
      *
-     * @return String representing the user's activity
+     * @return String representing the user's budgets
      */
-    public static String listRecentTransactions(ArrayList<Transaction> transactions, int numToList) {
-        StringBuilder strb = new StringBuilder();
-        strb.append("  Recent Transactions:");
-
-        int size = transactions.size();
-        int start = Math.max(0, size - numToList); // last `numToList` transactions
-
-        for (int i = start; i < size; i++) {
-            Transaction t = transactions.get(i);
-            strb.append("\n  [").append(i + 1).append("] ") // 1-based index
-                    .append(t.getCurrency().name())
-                    .append(t.getCurrency().getSymbol())
-                    .append(t.getValue())
-                    .append(" spent on ")
-                    .append(t.getCategory().name())
-                    .append(" on ")
-                    .append(t.getDate().getDay())
-                    .append("th of ")
-                    .append(t.getDate().getMonth().name())
-                    .append(", ")
-                    .append(t.getDate().getYear());
-        }
-        return strb.toString();
-    }
-
-
-    /**
-     * Prints a list of the recent transactions the user has done
-     *
-     * @return String representing the user's activity
-     */
-    public static String listBanks(ArrayList<Bank> banks, int numToList) {
-        StringBuilder strb = new StringBuilder();
-        strb.append("  Your Bank Accounts are:");
-        for (int i = 0; i < banks.size(); i++) {
-            strb.append("\n  ").append(banks.get(i).toString());
-        }
-        return strb.toString();
-    }
-
     public static String listBudget(ArrayList<Budget> budgets, Month month) {
         StringBuilder strb = new StringBuilder();
         strb.append("Budgets for ").append(month).append(":");

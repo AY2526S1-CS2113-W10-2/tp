@@ -12,7 +12,7 @@ public enum Category {
 
     // call this after all enums are created
     public void initBudget(float amount, Currency currency, Month month) {
-        this.budget = new Budget(this, amount, currency, month, User.curr_bank);
+        this.budget = new Budget(this, amount, currency, month, User.currBank);
     }
 
     public Budget getBudget() {

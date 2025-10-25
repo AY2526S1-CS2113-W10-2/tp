@@ -36,9 +36,9 @@ public class SummaryCommand implements Command {
             }
             Summary summary = new Summary(User.getStorage());
 
-            if (User.isLoggedIn && User.curr_bank != null) {
+            if (User.isLoggedIn && User.currBank != null) {
                 // Logged in → show only this bank
-                summary.showMonthlySummary(monthInput, User.curr_bank, User.curr_bank.getCurrency(), false);
+                summary.showMonthlySummary(monthInput, User.currBank, User.currBank.getCurrency(), false);
             } else if (arguments.size() >= 2) {
                 // Logged out WITH currency specified → show only that currency
                 Currency currency;

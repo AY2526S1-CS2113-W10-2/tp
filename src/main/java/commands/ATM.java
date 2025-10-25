@@ -8,29 +8,33 @@ import java.util.ArrayList;
 
 public class ATM implements Command{
     private float amount;
-    private Bank curr_bank;
+    private Bank currBank;
     private boolean deposit;
     private boolean withdraw;
 
-    public ATM(ArrayList<String> arguments, Bank curr_bank, boolean deposit, boolean withdraw){
+    public ATM(ArrayList<String> arguments, Bank currBank, boolean deposit, boolean withdraw){
         this.amount = Float.parseFloat(arguments.get(0));
-        this.curr_bank = curr_bank;
+        this.currBank = currBank;
         this.deposit = deposit;
         this.withdraw = withdraw;
     }
 
     @Override
     public String execute() throws FinanceException {
-        float new_balance;
+        float newBalance;
         if(this.deposit && !this.withdraw){
-            new_balance = this.curr_bank.getBalance() + this.amount;
-            this.curr_bank.setBalance(new_balance);
-            System.out.println("Successful deposit! Your bank balance is now: " + this.curr_bank.getCurrency().getSymbol() + this.curr_bank.getBalance());
+            newBalance = this.currBank.getBalance() + this.amount;
+            this.currBank.setBalance(newBalance);
+            System.out.println("Successful deposit! Your bank balance is now: "
+                    + this.currBank.getCurrency().getSymbol()
+                    + this.currBank.getBalance());
         }
         if(this.withdraw && !this.deposit){
-            new_balance = this.curr_bank.getBalance() - this.amount;
-            this.curr_bank.setBalance(new_balance);
-            System.out.println("Successful withdrawal! Your bank balance is now: " + this.curr_bank.getCurrency().getSymbol() + this.curr_bank.getBalance());
+            newBalance = this.currBank.getBalance() - this.amount;
+            this.currBank.setBalance(newBalance);
+            System.out.println("Successful withdrawal! Your bank balance is now: "
+                    + this.currBank.getCurrency().getSymbol()
+                    + this.currBank.getBalance());
         }
         User.getStorage().saveBanks(User.getBanks());
         return null;

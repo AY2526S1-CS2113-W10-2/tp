@@ -9,8 +9,6 @@ import user.User;
 import java.util.ArrayList;
 import java.util.List;
 
-import static user.User.transactions;
-
 public class ListRecentTransactionsCommand implements Command{
 
     @Override
@@ -21,7 +19,7 @@ public class ListRecentTransactionsCommand implements Command{
         List<Transaction> transactionsToDisplay = new ArrayList<>();
 
         // Step 1: Check if user is logged in to a bank
-        Bank loggedInBank = User.curr_bank;
+        Bank loggedInBank = User.currBank;
 
         if (loggedInBank != null) {
             // User logged in → show transactions from this bank only
