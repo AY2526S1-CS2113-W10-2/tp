@@ -1,13 +1,6 @@
 package ui;
 
-import commands.AddBankCommand;
-import commands.AddBudgetCommand;
-import commands.Command;
-import commands.AddTransactionCommand;
-import commands.DeleteTransactionCommand;
-import commands.ExitCommand;
-import commands.ListBudgetsCommand;
-import commands.SummaryCommand;
+import commands.*;
 import user.User;
 
 import java.util.ArrayList;
@@ -46,6 +39,29 @@ public class Parser {
 
         Command cmd = null;
         switch (comm){
+        case "login":
+            if (!User.isLoggedIn) {
+                int bank_id = Integer.parseInt(commandList.get(1));
+                if (bank_id >= User.banks.size() || User.banks.get(bank_id).getId() != bank_id) {
+                    throw new FinanceException("Bank not found");
+                }
+                User.curr_bank = User.banks.get(bank_id);
+                User.isLoggedIn = true;
+                printMessage("Successfully logged into bank " + bank_id);
+                OutputManager.showCurrentBank(User.curr_bank);
+            } else {
+                printMessage("Already logged into a bank. Please logout first.");
+            }
+            break;
+        case "logout":
+            if (User.isLoggedIn) {
+                User.curr_bank = null;
+                User.isLoggedIn = false;
+                printMessage("Logged out successfully.");
+            } else {
+                printMessage("You are not logged into any bank.");
+            }
+            break;
         case "exit":
             logger.info("Executing 'exit' command");
             cmd = new ExitCommand();
@@ -60,19 +76,35 @@ public class Parser {
             break;
         case "add":
             logger.info("Executing 'add' command");
-            cmd = new AddTransactionCommand(arguments);
+            if(User.isLoggedIn) {
+                cmd = new AddTransactionCommand(arguments);
+            }
+            else{
+                logger.info("Please login to a bank to execute this command");
+            }
             break;
         case "list":
             logger.info("Executing 'list' command");
-            printMessage(listRecentTransactions(User.getTransactions(), 10));
+            cmd = new ListRecentTransactionsCommand(); // always execute
             break;
+
         case "listbanks":
             logger.info("Executing 'listbanks' command");
-            printMessage(listBanks(User.getBanks(), 10));
+            if(!User.isLoggedIn) {
+                cmd = new ListBanksCommand();
+            }
+            else{
+                logger.info("Please logout to execute this command");
+            }
             break;
         case "delete":
             logger.info("Executing 'delete' command");
-            cmd = new DeleteTransactionCommand(arguments);
+            if(User.isLoggedIn) {
+                cmd = new DeleteTransactionCommand(arguments);
+            }
+            else{
+                logger.info("Please login to a bank to execute this command");
+            }
             break;
         case "addbudget":
             logger.info("Executing 'addbudget' command");
@@ -82,12 +114,31 @@ public class Parser {
             logger.info("Executing 'listbudget' command");
             cmd = new ListBudgetsCommand(arguments);
             break;
+        case "deposit":
+            logger.info("Executing 'deposit' command");
+            if(User.isLoggedIn) {
+                cmd = new ATM(arguments, User.curr_bank, true, false);
+            }
+            else{
+                logger.info("Please login to a bank to execute this command");
+            }
+            break;
+        case "withdraw":
+            logger.info("Executing 'withdraw' command");
+            if(User.isLoggedIn) {
+                cmd = new ATM(arguments, User.curr_bank, false, true);
+            }
+            else{
+                logger.info("Please login to a bank to execute this command");
+            }
+            break;
         default:
             logger.log(Level.WARNING,"Unknown command entered: " + comm);
             printMessage("Does not match any known command.");
         }
         if (cmd != null) {
             cmd.execute();
+            OutputManager.showCurrentBank(User.curr_bank);
             return cmd.shouldExit();
         }
         return false;

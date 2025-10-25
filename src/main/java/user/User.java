@@ -5,6 +5,7 @@ import transaction.Transaction;
 import ui.FinanceException;
 import utils.Budget;
 import utils.Category;
+import utils.Currency;
 import utils.Month;
 import savedata.Storage;
 
@@ -13,43 +14,39 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static ui.OutputManager.printMessage;
+import static ui.OutputManager.showWelcomeMessage;
 
 public class User {
     public static ArrayList<Transaction> transactions;
     public static ArrayList<Bank> banks;
     public static ArrayList<Budget> budgets;
+    public static boolean isLoggedIn;
+    public static Bank curr_bank;
     private static Storage storage = new Storage(); // single shared storage
 
     public static void initialise() {
-        transactions = storage.loadTransactions();
+        /*transactions = storage.loadTransactions();
         if (transactions == null) {
             transactions = new ArrayList<>();
-        }
+        }*/
         banks = storage.loadBanks();
         if (banks == null) {
             banks = new ArrayList<>();
         }
+        storage.loadTransactions();
         budgets = storage.loadBudgets();
         if (budgets == null) {
             budgets = new ArrayList<>();
         }
-        printMessage("Welcome to finance manager V1.0!\n" +
-                "What can I do for you today?");
-
-    }
-
-    /**
-     * Adds a transaction to the user's record
-     */
-    public static void addTransaction(Transaction transaction) {
-        transactions.add(transaction);
-        storage.saveTransactions(transactions); // also add to storage
+        showWelcomeMessage(banks);
+        curr_bank = null;
+        isLoggedIn = false;
     }
 
     /**
      * Adds a bank balance to the user's record
      */
-    public static void addBank(Bank bank){
+    public static void addBank(Bank bank) {
         banks.add(bank);
         storage.saveBanks(banks);
     }
@@ -66,19 +63,6 @@ public class User {
      * Deletes a transaction from the user's record
      *
      */
-    public static void deleteTransaction(int index) throws FinanceException {
-        ArrayList<Transaction> transactions = getTransactions();
-
-        int realIndex = index - 1;
-
-        if (realIndex < 0 || realIndex >= transactions.size()) {
-            throw new FinanceException("Invalid index. Please enter a number between 1 and " + transactions.size());
-        }
-        Transaction removedTransaction = transactions.remove(realIndex);
-        printMessage("Deleted transaction: " + removedTransaction.toString());
-        storage.saveTransactions(transactions);
-    }
-
 
     public static Map<Category, Float> spendingByCategory() {
         Map<Category, Float> spendingMap = new HashMap<>();
@@ -92,7 +76,7 @@ public class User {
         return spendingMap;
     }
 
-    public static Map<Category, Float> budgetByCategory(){
+    public static Map<Category, Float> budgetByCategory() {
         Map<Category, Float> budgetMap = new HashMap<>();
 
         // Initialize all categories with 0 spending
@@ -120,12 +104,24 @@ public class User {
         return storage;
     }
 
-    public static float getBudgetAmount(Category category, Month month) {
+    public static float getBudgetAmount(Category category, Month month, Bank bank) {
+        float total = 0f;
         for (Budget b : budgets) {
             if (b.getCategory() == category && b.getMonth() == month) {
-                return b.getBudget();
+                if (bank == null || b.getBank() == bank) {
+                    total += b.getBudget();
+                }
             }
         }
-        return 0f;
+        return total;
+    }
+
+    public static Budget getBudgetForBank(Category category, Month month, Bank bank) {
+        for (Budget b : budgets) {
+            if (b.getCategory() == category && b.getMonth() == month && b.getBank() == bank) {
+                return b;
+            }
+        }
+        return null;
     }
 }

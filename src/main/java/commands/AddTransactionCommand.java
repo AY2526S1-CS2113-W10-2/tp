@@ -2,6 +2,7 @@ package commands;
 
 import transaction.Transaction;
 import ui.FinanceException;
+import ui.OutputManager;
 import user.User;
 import utils.Category;
 import utils.Currency;
@@ -11,6 +12,7 @@ import utils.Month;
 import java.util.ArrayList;
 
 import static ui.OutputManager.printMessage;
+import static user.User.curr_bank;
 
 public class AddTransactionCommand implements Command {
     private final ArrayList<String> arguments;
@@ -20,10 +22,10 @@ public class AddTransactionCommand implements Command {
     }
 
     @Override
-    public void execute() throws FinanceException {
-        if (arguments.size() < 4) {
-            throw new FinanceException("  Sorry! Wrong format. Try 'add <category> <value> <date> <currency>' \n" +
-                    "  e.g. 'add food 4.50 10/4/2024 JPY'");
+    public String execute() throws FinanceException {
+        if (arguments.size() < 3) {
+            throw new FinanceException("  Sorry! Wrong format. Try 'add <category> <value> <date>' \n" +
+                    "  e.g. 'add food 4.50 10/4/2024'");
         }
 
         try {
@@ -51,16 +53,27 @@ public class AddTransactionCommand implements Command {
 
             Date date = new Date(day, month, year);
 
-            Currency currency = Currency.toCurrency(arguments.get(3));
-            Transaction transaction = new Transaction(value, category, date, currency);
+            //Currency currency = Currency.toCurrency(arguments.get(3));
+            Currency currency = curr_bank.getCurrency();
+            if (currency == curr_bank.getCurrency()){
+                Transaction trans = new Transaction(value, category, date, currency);
+                //User.addTransaction(trans);
+                curr_bank.addTransactionToBank(trans);
+                curr_bank.setBalance(curr_bank.getBalance() - value);
+                User.getStorage().saveTransactions(User.getBanks());
+                User.getStorage().saveBanks(User.banks);              // save updated balance
+                printMessage("Added Transaction: " + trans.toString());
+            }
+            else{
+                throw new FinanceException("Currency must be in" + curr_bank.getCurrency().name());
+            }
 
-            User.addTransaction(transaction);
-            printMessage("  Added Transaction: " + transaction.toString());
         } catch (FinanceException e) {
             throw e;
         } catch (Exception e) {
-            throw new FinanceException("  Sorry! Wrong format. Try 'add <category> <value> <date> <currency>' \n" +
-                    "  e.g. 'add food 4.50 10/4/2024 JPY'");
+            throw new FinanceException("  Sorry! Wrong format. Try 'add <category> <value> <date>' \n" +
+                    "  e.g. 'add food 4.50 10/4/2024'");
         }
+        return null;
     }
 }

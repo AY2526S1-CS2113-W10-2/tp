@@ -3,6 +3,8 @@ package commands;
 import summary.Summary;
 import ui.FinanceException;
 import user.User;
+import utils.Currency;
+import utils.Month;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -18,25 +20,48 @@ public class SummaryCommand implements Command {
     }
 
     @Override
-    public void execute() throws FinanceException {
+    public String execute() throws FinanceException {
         try {
             logger.log(Level.INFO, "Handling summary command with arguments: " + arguments);
 
             if (arguments.isEmpty()) {
-                logger.log(Level.WARNING, "Invalid command length: " + arguments.size());
-                throw new FinanceException("Please provide a month! \n Usage: summary <month>" );
+                throw new FinanceException("Please provide a month. Usage: summary <month> [currency]");
             }
 
-            String monthInput = arguments.get(0);
+            String monthInput = arguments.get(0).toUpperCase();
+            try {
+                Month.valueOf(monthInput); // just to check validity
+            } catch (IllegalArgumentException e) {
+                throw new FinanceException("Invalid month name. Please try again (e.g., summary JAN).");
+            }
             Summary summary = new Summary(User.getStorage());
-            summary.showMonthlySummary(monthInput);
+
+            if (User.isLoggedIn && User.curr_bank != null) {
+                // Logged in → show only this bank
+                summary.showMonthlySummary(monthInput, User.curr_bank, User.curr_bank.getCurrency(), false);
+            } else if (arguments.size() >= 2) {
+                // Logged out WITH currency specified → show only that currency
+                Currency currency;
+                try {
+                    currency = Currency.valueOf(arguments.get(1).toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    throw new FinanceException("Invalid currency. Please provide a valid currency code.");
+                }
+                summary.showMonthlySummary(monthInput, null, currency, false);
+            } else {
+                // Logged out WITHOUT currency → show ALL banks converted to SGD
+                summary.showMonthlySummary(monthInput, null, Currency.SGD, true);
+            }
 
         } catch (IllegalArgumentException e) {
-            logger.log(Level.SEVERE, "Invalid month name provided:" + e.getMessage());
-            throw new FinanceException("Invalid month name. Please try again (e.g., summary JAN).");
+            logger.log(Level.SEVERE, "Invalid month or currency:" + e.getMessage());
+            throw new FinanceException("Invalid month or currency. Please check your input.");
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Unexpected error in generating summary:" + e.getMessage());
             throw new FinanceException("Error generating summary: " + e.getMessage());
         }
+
+        return null;
     }
+
 }
