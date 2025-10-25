@@ -1,4 +1,4 @@
-package savedata;
+package storage;
 
 import bank.Bank;
 import transaction.Transaction;
@@ -95,7 +95,6 @@ public class Storage {
 
 
     public ArrayList<Transaction> loadTransactions() {
-        //transactions.clear();
         File file = new File(TRANSACTION_FILE);
         if (!file.exists()) {
             logger.warning("No transaction file found. Returning null.");
@@ -116,7 +115,7 @@ public class Storage {
                     continue;
                 }
 
-                int bank_id = Integer.parseInt(parts[0]);
+                int bankId = Integer.parseInt(parts[0]);
                 Category category = Category.toCategory(parts[1]);
                 float value = Float.parseFloat(parts[2]);
                 if (value < 0) {
@@ -131,8 +130,8 @@ public class Storage {
 
                 try {
                     Transaction transaction = new Transaction(value, category, new Date(day, month, year), currency);
-                    Bank bank_to_be_loaded_to = User.getBanks().get(bank_id);
-                    bank_to_be_loaded_to.getTransactions().add(transaction);
+                    Bank bankToBeLoadedTo = User.getBanks().get(bankId);
+                    bankToBeLoadedTo.getTransactions().add(transaction);
                 } catch (FinanceException | IllegalArgumentException e) {
                     logger.log(Level.WARNING, "Skipping invalid transaction: " + line, e);
                     printMessage("Skipping transaction:" + e.getMessage());
@@ -206,7 +205,7 @@ public class Storage {
 
         try (PrintWriter pw = new PrintWriter(new FileWriter(BANK_FILE))) {
             for (Bank b : banks) {
-            //    System.out.println(b.getBalance());
+                //    System.out.println(b.getBalance());
                 pw.println(b.getId() + "|" +
                         b.getCurrency().name() + "|" +
                         b.getBalance() + "|" +

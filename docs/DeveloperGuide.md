@@ -67,8 +67,57 @@ The computed totals are passed to OutputManager.printSummary() to format the out
 The following sequence diagram shows how the summary command goes through the relevant components to display the output to the user.
 ![img_2.png](team/SummaryFeature/img_2.png)
 
-The following activity diagram summarises what happens when the user executes summary JAN
+The following activity diagram summarises what happens when the user executes summary JAN  
 ![img_3.png](team/SummaryFeature/img_3.png)
+
+---
+
+#### Delete Transaction Feature
+The DeleteTransaction feature allows users to remove a specific transaction from their financial record.
+This command improves user flexibility by enabling correction of mistakes or removal of outdated records.
+The command follows the syntax:
+
+`delete <transaction-id>`
+
+Example: `delete 3`
+deletes the 3rd transaction listed under the user’s records.
+
+The feature is implemented using the Command Pattern, 
+where each user command is represented as a class that implements the `Command` interface.
+`DeleteTransactionCommand` is the class responsible for executing the delete operation.
+
+Given below is an example usage scenario and how the delete mechanism behaves at each step.
+
+**Step 1: User launches the application**  
+The user starts the program, and all previously saved transactions are 
+loaded from `transactions.txt` into memory by the `Storage` class.
+
+**Step 2: The user executes the delete command**  
+The user enters: `delete 2`. The Parser identifies `delete` as the command word 
+and passes control to the `DeleteTransactionCommand`, with `2` as the argument.
+
+**Step 3: The command validates the input**    
+`DeleteTransactionCommand`  checks that: 
+- Only one argument is inputted
+- The argument is a valid integer. 
+- The transaction list is not empty.
+
+If validation passes, execution proceeds.
+Otherwise, a FinanceException is thrown, e.g.:  
+`Error deleting transaction: Usage: delete <transaction_index>`
+
+**Step 4: The transaction is deleted**  
+DeleteTransactionCommand calls: `User.deleteTransaction(index)`  
+This method removes the transaction at index 2 from the user’s list. 
+It then overwrites `transactions.txt` with the updated list, ensuring persistence across sessions. 
+At the same time, The user interface then prints: `"Deleted transaction: ..."`
+
+
+The following sequence diagram shows how delete operation goes through the components:
+![Delete_Transaction_Sequence_Diagram.png](team/CommandFeature/deleteCommand/Delete_Transaction_Sequence_Diagram.png)
+
+The following activity diagram summarizes what happens when a user executes a new command:
+![deleteCommandActivity.png](team/CommandFeature/deleteCommand/deleteCommandActivity.png)
 
 ## Product scope
 ### Target user profile

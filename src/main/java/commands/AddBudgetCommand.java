@@ -1,6 +1,5 @@
 package commands;
 
-import bank.Bank;
 import ui.FinanceException;
 import user.User;
 import utils.Budget;
@@ -50,10 +49,10 @@ public class AddBudgetCommand implements Command {
             }
 
             // Use the currency of the currently logged-in bank
-            var currency = User.curr_bank.getCurrency();
+            var currency = User.currBank.getCurrency();
 
             // Create and add budget
-            Budget budget = new Budget(category, amount, User.curr_bank.getCurrency(), month, User.curr_bank);
+            Budget budget = new Budget(category, amount, User.currBank.getCurrency(), month, User.currBank);
             User.addBudget(budget);
 
             printMessage("Added budget of " + amount + " " + currency.getSymbol() +

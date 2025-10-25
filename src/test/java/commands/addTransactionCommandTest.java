@@ -1,5 +1,6 @@
 package commands;
 
+import bank.Bank;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import transaction.Transaction;
@@ -10,25 +11,32 @@ import utils.Currency;
 import utils.Date;
 import utils.Month;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class AddTransactionCommandTest {
+    private static final Path TX_FILE = Path.of("transactions.txt");
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws IOException {
+        Files.deleteIfExists(TX_FILE);
+        // Initialize User class (loads structure)
         User.initialise();
 
-        // Clear previous transactions and banks
-        User.getTransactions().clear();
-        User.getBanks().clear();
+        // Completely reset lists to avoid leftover file data
+        User.transactions = new ArrayList<>();
+        User.banks = new ArrayList<>();
+        User.budgets = new ArrayList<>();
 
-        // Reset budgets if set
-        for (Category category : Category.values()) {
-            if (category.getBudget() != null) {
-                category.getBudget().setBudget(0f);
-            }
-        }
+        // Set up a test bank
+        Bank testBank = new Bank(1, Currency.SGD, 1000f, 1.0f);
+        User.addBank(testBank);
+        User.currBank = testBank;
     }
 
     @Test
@@ -40,45 +48,39 @@ class AddTransactionCommandTest {
                 Currency.SGD
         );
 
-        User.addTransaction(transaction);
+        User.currBank.addTransactionToBank(transaction);
 
-        // Assert the transaction was added
-        assertEquals(1, User.getTransactions().size());
+        assertEquals(1, User.currBank.getTransactions().size());
 
-        Transaction storedTransaction = User.getTransactions().get(0);
+        Transaction storedTransaction = User.currBank.getTransactions().get(0);
         assertEquals(Category.FOOD, storedTransaction.getCategory());
         assertEquals(10.5f, storedTransaction.getValue());
     }
 
+
     @Test
     public void addTransaction_negativeValue_throwsException() {
-        assertThrows(FinanceException.class, () -> {
-            new Transaction(
-                    -5.0f,
-                    Category.FOOD,
-                    new Date(1, Month.JAN, 2025),
-                    Currency.SGD
-            );
-        });
+        assertThrows(FinanceException.class, () -> new Transaction(
+                -5.0f,
+                Category.FOOD,
+                new Date(1, Month.JAN, 2025),
+                Currency.SGD
+        ));
 
     }
 
     @Test
     public void addTransaction_invalidCategory_throwsException() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            Category.toCategory("invalidCategory");
-        });
+        assertThrows(IllegalArgumentException.class, () -> Category.toCategory("invalidCategory"));
     }
 
     @Test
     public void addTransaction_nullDate_throwsException() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            new Transaction(
-                    10.0f,
-                    Category.FOOD,
-                    null,
-                    Currency.SGD
-            );
-        });
+        assertThrows(IllegalArgumentException.class, () -> new Transaction(
+                10.0f,
+                Category.FOOD,
+                null,
+                Currency.SGD
+        ));
     }
 }

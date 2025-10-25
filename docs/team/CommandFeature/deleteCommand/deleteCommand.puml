@@ -1,0 +1,54 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+'autonumber
+
+actor User as U
+
+participant ":UserInterface" as UserInterface #60A0BF
+participant ":Parser" as Parser #A378AA
+participant ":DeleteTransactionCommand" as DeleteTransactionCommand #3EA33B
+participant ":User" as User #D4D442
+participant ":Storage" as Storage #D142D4
+participant ":OutputManager" as OutputManager #24D6B6
+
+title Delete Transaction Sequence Diagram
+
+== User deletes a transaction ==
+
+U -> UserInterface : Enters "delete 2" command
+activate UserInterface
+
+UserInterface -> Parser : parseCommand(...)
+activate Parser
+
+Parser -> DeleteTransactionCommand : execute(...)
+activate DeleteTransactionCommand
+
+DeleteTransactionCommand -> User : deleteTransaction(2)
+deactivate DeleteTransactionCommand
+activate User
+
+User -> User : remove(index = 2) from TransactionList
+activate User
+User --> User : confirm deletion
+deactivate User
+
+User -> Storage : saveTransactions(...)
+activate Storage
+
+Storage --> User :
+deactivate Storage
+
+User -> OutputManager : print delete success message
+deactivate User
+activate OutputManager
+
+OutputManager --> U : ""Deleted transaction: ..."
+deactivate OutputManager
+Parser --> UserInterface : return shouldExit = "false"
+deactivate Parser
+deactivate UserInterface
+
+
+@enduml

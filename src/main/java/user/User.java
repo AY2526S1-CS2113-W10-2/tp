@@ -2,18 +2,15 @@ package user;
 
 import bank.Bank;
 import transaction.Transaction;
-import ui.FinanceException;
 import utils.Budget;
 import utils.Category;
-import utils.Currency;
 import utils.Month;
-import savedata.Storage;
+import storage.Storage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static ui.OutputManager.printMessage;
 import static ui.OutputManager.showWelcomeMessage;
 
 public class User {
@@ -21,25 +18,24 @@ public class User {
     public static ArrayList<Bank> banks;
     public static ArrayList<Budget> budgets;
     public static boolean isLoggedIn;
-    public static Bank curr_bank;
+    public static Bank currBank;
     private static Storage storage = new Storage(); // single shared storage
 
     public static void initialise() {
-        /*transactions = storage.loadTransactions();
+        transactions = storage.loadTransactions();
         if (transactions == null) {
             transactions = new ArrayList<>();
-        }*/
+        }
         banks = storage.loadBanks();
         if (banks == null) {
             banks = new ArrayList<>();
         }
-        storage.loadTransactions();
         budgets = storage.loadBudgets();
         if (budgets == null) {
             budgets = new ArrayList<>();
         }
         showWelcomeMessage(banks);
-        curr_bank = null;
+        currBank = null;
         isLoggedIn = false;
     }
 
