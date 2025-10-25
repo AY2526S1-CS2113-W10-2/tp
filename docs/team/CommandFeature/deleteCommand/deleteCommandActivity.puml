@@ -1,0 +1,33 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+
+'title Delete Transaction Activity Diagram
+
+start
+
+:User enters "delete <index>" command;
+:UserInterface receives input;
+
+:Parser parses command;
+if (command valid?) then (yes)
+    :Create DeleteTransactionCommand;
+    :Execute DeleteTransactionCommand;
+    if (valid input?) then (yes)
+        :Delete transaction from User's TransactionList;
+        if (transaction exists?) then (yes)
+            :Remove transaction;
+            :Update storage (saveTransactions);
+            :Print success message;
+        else (no)
+            :Print error "Invalid index";
+        endif
+    else (no)
+        :Print error "Invalid input";
+    endif
+else (no)
+    :Print error "Unknown command";
+endif
+
+stop
+
+@enduml
