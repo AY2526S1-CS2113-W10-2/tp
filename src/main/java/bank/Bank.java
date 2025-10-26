@@ -15,8 +15,8 @@ public class Bank {
     public Bank(int id, Currency currency, float balance, float exchangeRate) {
         this.id = id;
         this.currency = currency;
-        this.balance = balance;
-        this.exchangeRate = exchangeRate;
+        this.setBalance(balance);
+        this.setExchangeRate(exchangeRate);
         this.transactions = new ArrayList<>();
     }
 
@@ -27,7 +27,6 @@ public class Bank {
     public int getId() {
         return id;
     }
-
 
     public float getBalance() {
         return balance;
