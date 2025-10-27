@@ -89,6 +89,7 @@ public class Parser {
                 cmd = new AddTransactionCommand(arguments);
             } else{
                 logger.info("Please login to a bank to execute this command");
+                throw new FinanceException("Please login to a bank to execute this command");
             }
             break;
         case "list":
@@ -102,6 +103,7 @@ public class Parser {
                 cmd = new ListBanksCommand();
             } else{
                 logger.info("Please logout to execute this command");
+                throw new FinanceException("Please logout to execute this command");
             }
             break;
         case "delete":
@@ -110,6 +112,7 @@ public class Parser {
                 cmd = new DeleteTransactionCommand(arguments);
             } else{
                 logger.info("Please login to a bank to execute this command");
+                throw new FinanceException("Please login to a bank to execute this command");
             }
             break;
         case "addbudget":
@@ -126,6 +129,7 @@ public class Parser {
                 cmd = new ATM(arguments, User.currBank, true, false);
             } else{
                 logger.info("Please login to a bank to execute this command");
+                throw new FinanceException("Please login to a bank to execute this command");
             }
             break;
         case "withdraw":
@@ -134,11 +138,13 @@ public class Parser {
                 cmd = new ATM(arguments, User.currBank, false, true);
             } else{
                 logger.info("Please login to a bank to execute this command");
+                throw new FinanceException("Please login to a bank to execute this command");
             }
             break;
         default:
             logger.log(Level.WARNING,"Unknown command entered: " + comm);
             printMessage("Does not match any known command.");
+            throw new FinanceException("Does not match any known command.");
         }
         if (cmd != null) {
             cmd.execute();

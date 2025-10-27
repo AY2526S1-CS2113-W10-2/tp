@@ -14,6 +14,7 @@ import static ui.OutputManager.printMessage;
 import static user.User.currBank;
 
 public class AddTransactionCommand implements Command {
+    private static final int ALLOWED_ADD_ARGUMENTS = 3;
     private final ArrayList<String> arguments;
 
     public AddTransactionCommand(ArrayList<String> arguments) {
@@ -22,7 +23,7 @@ public class AddTransactionCommand implements Command {
 
     @Override
     public String execute() throws FinanceException {
-        if (arguments.size() < 3) {
+        if (arguments.size() < ALLOWED_ADD_ARGUMENTS) {
             throw new FinanceException("  Sorry! Wrong format. Try 'add <category> <value> <date>' \n" +
                     "  e.g. 'add food 4.50 10/4/2024'");
         }
