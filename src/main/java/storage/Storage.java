@@ -94,12 +94,12 @@ public class Storage {
 
 
 
-    public ArrayList<Transaction> loadTransactions() {
+    public void loadTransactions() {
         File file = new File(TRANSACTION_FILE);
         if (!file.exists()) {
             logger.warning("No transaction file found. Returning null.");
 
-            return null;
+            return;
         }
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
@@ -137,12 +137,10 @@ public class Storage {
                     printMessage("Skipping transaction:" + e.getMessage());
                 }
             }
-            return transactions;
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Error reading transactions file", e);
             e.printStackTrace();
         }
-        return null;
     }
 
     public void saveBudgets(ArrayList<Budget> budgets) {

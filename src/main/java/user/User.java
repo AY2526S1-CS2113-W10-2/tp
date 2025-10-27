@@ -22,14 +22,12 @@ public class User {
     private static Storage storage = new Storage(); // single shared storage
 
     public static void initialise() {
-        transactions = storage.loadTransactions();
-        if (transactions == null) {
-            transactions = new ArrayList<>();
-        }
         banks = storage.loadBanks();
         if (banks == null) {
             banks = new ArrayList<>();
         }
+        storage.loadTransactions();
+
         budgets = storage.loadBudgets();
         if (budgets == null) {
             budgets = new ArrayList<>();

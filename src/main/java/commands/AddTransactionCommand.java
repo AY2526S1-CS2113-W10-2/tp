@@ -34,7 +34,8 @@ public class AddTransactionCommand implements Command {
             }
 
             float value = Float.parseFloat(arguments.get(1));
-            if (value < 0) {
+
+            if (value < 0.0) {
                 throw new FinanceException("Value cannot be negative");
             }
 
@@ -69,8 +70,7 @@ public class AddTransactionCommand implements Command {
         } catch (FinanceException e) {
             throw e;
         } catch (Exception e) {
-            throw new FinanceException("  Sorry! Wrong format. Try 'add <category> <value> <date>' \n" +
-                    "  e.g. 'add food 4.50 10/4/2024'");
+            throw new FinanceException(e.getMessage());
         }
         return null;
     }
