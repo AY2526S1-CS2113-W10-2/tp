@@ -5,11 +5,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import transaction.Transaction;
 import ui.FinanceException;
+import ui.Parser;
 import user.User;
 import utils.Category;
 import utils.Currency;
-import utils.Date;
-import utils.Month;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -29,7 +28,6 @@ class AddTransactionCommandTest {
         User.initialise();
 
         // Completely reset lists to avoid leftover file data
-        User.transactions = new ArrayList<>();
         User.banks = new ArrayList<>();
         User.budgets = new ArrayList<>();
 
@@ -37,50 +35,51 @@ class AddTransactionCommandTest {
         Bank testBank = new Bank(1, Currency.SGD, 1000f, 1.0f);
         User.addBank(testBank);
         User.currBank = testBank;
+        User.isLoggedIn = true;
     }
 
     @Test
-    public void addTransaction_validInput_transactionAddedSuccessfully() throws FinanceException {
-        Transaction transaction = new Transaction(
-                10.5f,
-                Category.FOOD,
-                new Date(10, Month.AUG, 2024),
-                Currency.SGD
-        );
+    public void execute_validInput_transactionAddedSuccessfully() throws FinanceException {
+        Parser.parseCommand("add food 10.50 10/4/2024");
 
-        User.currBank.addTransactionToBank(transaction);
 
         assertEquals(1, User.currBank.getTransactions().size());
+        Transaction t = User.currBank.getTransactions().get(0);
+        assertEquals(Category.FOOD, t.getCategory());
+        assertEquals(10.5f, t.getValue());
+    }
 
-        Transaction storedTransaction = User.currBank.getTransactions().get(0);
-        assertEquals(Category.FOOD, storedTransaction.getCategory());
-        assertEquals(10.5f, storedTransaction.getValue());
+    @Test
+    public void execute_invalidInput_throwsException() {
+        FinanceException exception = assertThrows(FinanceException.class, () ->
+                Parser.parseCommand("add food 10/4/2024")
+        );
+        assertEquals("  Sorry! Wrong format. Try 'add <category> <value> <date>' \n" +
+                "  e.g. 'add food 4.50 10/4/2024'", exception.getMessage());
     }
 
 
     @Test
-    public void addTransaction_negativeValue_throwsException() {
-        assertThrows(FinanceException.class, () -> new Transaction(
-                -5.0f,
-                Category.FOOD,
-                new Date(1, Month.JAN, 2025),
-                Currency.SGD
-        ));
-
+    public void execute_negativeValue_throwsException() {
+        FinanceException exception = assertThrows(FinanceException.class, () ->
+                Parser.parseCommand("add food -0.50 10/4/2024")
+        );
+        assertEquals("Value cannot be negative", exception.getMessage());
     }
 
     @Test
-    public void addTransaction_invalidCategory_throwsException() {
-        assertThrows(IllegalArgumentException.class, () -> Category.toCategory("invalidCategory"));
+    public void execute_nullCategory_throwsException() {
+        FinanceException exception = assertThrows(FinanceException.class, () ->
+                Parser.parseCommand("add sports 10.50 10/4/2024")
+        );
+        assertEquals("Unknown category: sports", exception.getMessage());
     }
 
     @Test
-    public void addTransaction_nullDate_throwsException() {
-        assertThrows(IllegalArgumentException.class, () -> new Transaction(
-                10.0f,
-                Category.FOOD,
-                null,
-                Currency.SGD
-        ));
+    public void execute_notLoggedIn_doesNotAddTransaction() throws FinanceException {
+        Parser.parseCommand("logout");
+
+        Parser.parseCommand("add 10 SGD /food 1 Jan 2025");
+        assertEquals(0, User.banks.get(0).getTransactions().size());
     }
 }

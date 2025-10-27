@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static utils.Currency.SGD;
 import static utils.Currency.JPY;
-import static utils.Currency.CNY;
+import static utils.Currency.VND;
 
 public class BankTest {
     private static final Path TX_FILE = Path.of("transactions.txt");
@@ -49,7 +49,7 @@ public class BankTest {
     @Test
     public void bank_initialiseNegativeBalance_exceptionThrown(){
         assertThrows(IllegalArgumentException.class, () -> {
-            new Bank(0, CNY, -100, 0.2f);
+            new Bank(0, VND, -100, 0.2f);
         });
     }
 
@@ -74,7 +74,7 @@ public class BankTest {
     @Test
     public void bank_initialiseNegativeExchangeRate_exceptionThrown(){
         assertThrows(IllegalArgumentException.class, () -> {
-            new Bank(0, CNY, 0, -0.2f);
+            new Bank(0, VND, 0, -0.2f);
         });
     }
 }
