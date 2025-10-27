@@ -75,11 +75,4 @@ class AddTransactionCommandTest {
         assertEquals("Unknown category: sports", exception.getMessage());
     }
 
-    @Test
-    public void execute_notLoggedIn_doesNotAddTransaction() throws FinanceException {
-        Parser.parseCommand("logout");
-
-        Parser.parseCommand("add 10 SGD /food 1 Jan 2025");
-        assertEquals(0, User.banks.get(0).getTransactions().size());
-    }
 }

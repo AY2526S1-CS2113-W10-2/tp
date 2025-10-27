@@ -121,7 +121,7 @@ public class OutputManager {
         StringBuilder strb = new StringBuilder();
         strb.append("Budgets for ").append(month).append(":");
         for (Category category : Category.values()) {
-            boolean found = false;
+            boolean isFound = false;
             for (Budget budget : budgets) {
                 if (budget.getCategory() == category && budget.getMonth() == month) {
                     strb.append("\n  ")
@@ -130,11 +130,11 @@ public class OutputManager {
                             .append(budget.getBudget())
                             .append(" ")
                             .append(budget.getCurrency());
-                    found = true;
+                    isFound = true;
                     break;
                 }
             }
-            if (!found) {
+            if (!isFound) {
                 strb.append("\n  ")
                         .append(category.name().toLowerCase())
                         .append(": no budget set yet");
