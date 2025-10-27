@@ -1,12 +1,13 @@
 package utils;
 
 public enum Currency {
-    USD("United States Dollar", "$", false),
-    EUR("European Euro", "€", false),
+    MYR("Malaysian Ringgit", "RM", false),
+    VND("Vietnamese Dong", "d", false),
     JPY("Japanese Yen", "¥", true),
-    GBP("British Pound", "£", false),
+    IDR("Indonesian Rupiah", "£", false),
     SGD("Singapore Dollar", "$",true),
-    CNY("Chinese Yuan", "¥", true);
+    THB("Thai Baht", "฿", true);
+
 
     private final String longName;
     private final String symbol;
@@ -30,9 +31,11 @@ public enum Currency {
     public static float getExchangeRateToSGD(Currency c) {
         switch (c) {
         case SGD: return 1.0f;
-        case USD: return 1.29f;   // example rate: 1 USD = 1.29 SGD
-        case JPY: return 0.0085f; // 1 JPY = 0.0085 SGD
-        case EUR: return 1.50f;   // 1 EUR = 1.50 SGD
+        case THB: return 0.04f;          // example rate: 1 THB = 0.04 SGD
+        case JPY: return 0.0085f;       // 1 JPY = 0.0085 SGD
+        case VND: return 0.000049f;    // 1 VND = 0.000049 SGD
+        case IDR: return 0.000078f;   // 1 IDR = 0.000078 SGD
+        case MYR: return 0.31f;      // 1 MYR = 0.31 SGD
         default: return 1.0f;
         }
     }
@@ -67,11 +70,11 @@ public enum Currency {
 
     public static Currency toCurrency(String str){
         return switch (str) {
-        case "USD", "usd" -> USD;
-        case "EUR", "eur" -> EUR;
+        case "MYR", "myr" -> MYR;
+        case "THB", "thb" -> THB;
         case "JPY", "jpy" -> JPY;
-        case "GBP", "gbp" -> GBP;
-        case "CNY", "cny" -> CNY;
+        case "IDR", "idr" -> IDR;
+        case "VND", "vnd" -> VND;
         case "SGD", "sgd" -> SGD;
         default -> null;
         };
