@@ -49,7 +49,7 @@ public class Transaction {
     @Override
     public String toString() {
         return this.currency.getSymbolSemiVerbose() + value +
-                " spent on " + category +
-                " on " + date.getLongDate();
+                " | " + category +
+                " | " + date.getLongDate();
     }
 }

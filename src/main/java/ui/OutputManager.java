@@ -143,6 +143,33 @@ public class OutputManager {
         return strb.toString();
     }
 
+    public static String listSearch(String keyword, ArrayList<Transaction> transactions) {
+        StringBuilder strb = new StringBuilder();
+        strb.append("Search results for keyword '")
+                .append(keyword)
+                .append("':");
+
+        boolean isFound = false;
+
+        for (Transaction t : transactions) {
+            if (t.getCategory().name().toLowerCase().contains(keyword)
+                    || t.toString().toLowerCase().contains(keyword)) {
+                strb.append("\n  ")
+                        .append(t.getCategory()).append(" | ")
+                        .append(t.getDate().getLongDate()).append(" | ")
+                        .append(t.getValue()).append(" ")
+                        .append(t.getCurrency());
+                isFound = true;
+            }
+        }
+
+        if (!isFound) {
+            strb.append("\n  No matching transactions found.");
+        }
+
+        return strb.toString();
+    }
+
     /**
      * Prints a formatted message to terminal. Ensure entire response to user query is on one string
      *

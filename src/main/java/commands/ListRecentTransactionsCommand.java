@@ -9,6 +9,8 @@ import user.User;
 import java.util.ArrayList;
 import java.util.List;
 
+import static utils.Date.getDaySuffix;
+
 public class ListRecentTransactionsCommand implements Command{
 
     @Override
@@ -34,7 +36,8 @@ public class ListRecentTransactionsCommand implements Command{
 
         // Step 2: Handle empty transaction case
         if (transactionsToDisplay.isEmpty()) {
-            return "  No transactions found.";
+            OutputManager.printMessage("There are no transactions");
+            return "";
         }
 
         // Step 3: Display up to 10 most recent transactions
@@ -47,7 +50,8 @@ public class ListRecentTransactionsCommand implements Command{
                     .append(t.getCurrency().name()).append(t.getCurrency().getSymbol())
                     .append(t.getValue()).append(" spent on ")
                     .append(t.getCategory().name()).append(" on ")
-                    .append(t.getDate().getDay()).append("th of ")
+                    .append(t.getDate().getDay())
+                    .append(getDaySuffix(t.getDate().getDay())).append(" ")
                     .append(t.getDate().getMonth().name()).append(", ")
                     .append(t.getDate().getYear());
         }

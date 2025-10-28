@@ -7,6 +7,7 @@ import commands.AddTransactionCommand;
 import commands.DeleteTransactionCommand;
 import commands.ExitCommand;
 import commands.ListBudgetsCommand;
+import commands.SearchCommand;
 import commands.SummaryCommand;
 import commands.ListRecentTransactionsCommand;
 import commands.ListBanksCommand;
@@ -141,9 +142,17 @@ public class Parser {
                 throw new FinanceException("Please login to a bank to execute this command");
             }
             break;
+        case "search":
+            logger.info("Executing 'search' command");
+            if (User.isLoggedIn) {
+                cmd = new SearchCommand(arguments);
+            } else {
+                logger.info("Please login to a bank to execute this command");
+                throw new FinanceException("Please login to a bank to execute this command");
+            }
+            break;
         default:
             logger.log(Level.WARNING,"Unknown command entered: " + comm);
-            printMessage("Does not match any known command.");
             throw new FinanceException("Does not match any known command.");
         }
         if (cmd != null) {
