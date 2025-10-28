@@ -49,7 +49,11 @@ public class ListRecentTransactionsCommand implements Command{
             strb.append("\n  [").append(i + 1).append("] ") // 1-based index
                     .append(t.getCurrency().name()).append(t.getCurrency().getSymbol())
                     .append(t.getValue()).append(" spent on ")
-                    .append(t.getCategory().name()).append(" on ")
+                    .append(t.getTag())
+                    .append("(")
+                    .append(t.getCategory().name())
+                    .append(")")
+                    .append(" on ")
                     .append(t.getDate().getDay())
                     .append(getDaySuffix(t.getDate().getDay())).append(" ")
                     .append(t.getDate().getMonth().name()).append(", ")

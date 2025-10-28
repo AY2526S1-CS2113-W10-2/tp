@@ -10,8 +10,9 @@ public class Transaction {
     private final Category category;
     private final Date date;
     private final Currency currency;
+    private final String tag;
 
-    public Transaction(float value, Category category, Date date, Currency currency) throws FinanceException {
+    public Transaction(float value, Category category, Date date, Currency currency, String tag) throws FinanceException {
         if (value < 0) {
             throw new FinanceException("Value must be positive");
         }
@@ -22,6 +23,7 @@ public class Transaction {
         this.category = category;
         this.date = date;
         this.currency = currency;
+        this.tag = tag;
     }
 
     private static void requireNonNull(Object obj, String message) {
@@ -29,6 +31,8 @@ public class Transaction {
             throw new IllegalArgumentException(message);
         }
     }
+
+    public String getTag() { return tag; }
 
     public float getValue() {
         return value;
@@ -49,7 +53,7 @@ public class Transaction {
     @Override
     public String toString() {
         return this.currency.getSymbolSemiVerbose() + value +
-                " | " + category +
+                " | " + this.tag + "(" + category + ")" +
                 " | " + date.getLongDate();
     }
 }

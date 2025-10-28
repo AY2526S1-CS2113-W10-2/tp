@@ -18,7 +18,7 @@ As such, TrackStars can operate with foreign currencies that are from popular So
 
 {Give detailed description of each feature}
 
-### Adding a bank account: 'addbank'
+### Adding a bank account: `addbank`
 Adds a new bank account to the user in the specified currency 
 
 Format: 'addbank a/AMOUNT c/CURRENCY'
@@ -31,15 +31,62 @@ Example of usage:
 
 'addbank 250000 IDR'
 
+### Logging into a bank account: `login`
+Logs into a pre-existing bank account. If you do not have a bank account yet, you must create one by using 'addbank'.
+Logging into a bank account allows the user to do bank specific commands like adding transactions and setting budgets. Once logged in, there isn o need to specify the currency of the amounts as the 
+currency is tied to that specific bank account you are logged into.
+
+Format: 'login INDEX'
+* The 'INDEX' refers to the index number of that bank account in 'listbanks'
+
+
+Example of usage:
+
+'listbanks' to see current bank accounts
+'login INDEX' to log into that specific bank account
+
+
+### Logging out of a bank account: `logout`
+Logs out of the currently logged-in account. Does nothing of not currently logged into an account.
+
+
+Format: 'logout'
+* The 'INDEX' refers to the index number of that bank account in 'listbanks'
+
+
+Example of usage:
+
+'logout' to see log out of the currently logged-in bank
+
+
+### Listing recent transaction: `list`
+Lists the 10 most recent transactions, across all accounts.
+
+Format: 'list'
+
+Example of usage:
+
+'list' to see recent transactions
+
+
+### Listing owned Bank Accounts: `listBanks`
+Lists all registered bank accounts, with their balance and exchange rate
+
+Format: 'listBanks'
+
+Example of usage:
+
+'listBanks' to see recent all bank accounts
+
+
 ### Adding a transaction: `add`
 Adds a new transaction to the list of transactions. This works only when logged into a bank, and the transaction is tied to the currency of the bank 
 
 Format: `add c/CATEGORY a/AMOUNT d/DATE`
 
 * The `CATEGORY` must be one of these: food, transport, entertainment, recreation 
-* The `MONTH` must be the shortened three letter form of each month. For example, JAN for January, FEB for February, APR for April.
-* The 'AMOUNT' must be a positive real number in the currency of the bank you are logged into.
-* The 'DATE' must be in the form dd/mm/yyyy
+* The `AMOUNT` must be a positive real number in the currency of the bank you are logged into.
+* The `DATE` must be in the form dd/mm/yyyy
 
 Example of usage: 
 
@@ -47,12 +94,92 @@ Example of usage:
 
 'add entertainment 15 25/12/2025'
 
+### Deleting a transaction: `delete`
+Deletes a previously keyed in transaction from the list. The 'delete' feature deletes the transaction at the specified index. This index refers to the index number shown in the transactions list.
+You can view this by using the command 'list'. You must be logged into a bank account to delete transactions from that bank. 
+
+Format: 'delete INDEX'
+* The 'INDEX' refers to the index of that transaction in 'list'
+
+Example of usage: 
+'list' followed by 'delete 2' to delete the 2nd transaction in that list
+
+### Adding a Budget: `addBudget`
+Adds a new budget for a specific category of spending. Used to keep track of total amounts spent on different categories over time.
+
+Format: `addBudget c/CATEGORY a/AMOUNT d/MONTH`
+
+* The `CATEGORY` must be one of these: food, transport, entertainment, recreation
+* The `AMOUNT` must be a positive real number in the currency of the bank you are logged into.
+* The `MONTH` must be the shortened three letter form of each month. For example, JAN for January, FEB for February, APR for April.
+
+Example of usage:
+
+`addBudget transport 40 JAN' to indicate a target of 40 Spent on transport in January.
+
+'addBudget entertainment 75 MAR' to indicate a target of 75 Spent on transport in March.
+
+
+### Listing Budgets: `listBudget`
+Lists all budgets, and their current utilisation. Used as brief summary of spending by category.
+
+Format: `listBudget d/MONTH`
+
+* The `MONTH` must be the shortened three letter form of each month. For example, JAN for January, FEB for February, APR for April.
+
+Example of usage:
+
+`listBudget  JAN' to indicate show budget utilisation for January
+
+### Depositing money into current bank account: `deposit`
+Adds to the balance of a current signed in account. Used to track income.
+
+Format: 'deposit a/AMOUNT'
+
+* The `AMOUNT` must be a positive real number in the currency of the bank you are logged into.
+
+Example of usage:
+
+'deposit' deposits 1500 into the account, in whatever currency that account trades in
+
+
+### Withdrawing money from current bank account: `withdraw`
+Subtracts from the balance of a current signed in account. Used to track outgoing payments not assigned to a specific category.
+
+Format: 'withdraw a/AMOUNT'
+
+* The `AMOUNT` must be a positive real number in the currency of the bank you are logged into.
+
+Example of usage:
+
+'withdraw 1500' withdraws 1500 from the account, in whatever currency that account trades in
+
+
+### View Summary of Recent Transactions and Usage: `summary`
+Prints a summary of individual transations and total values spent on different categories in the selected month.
+
+Format: 'summary MONTH'
+* The `MONTH` must be the shortened three letter form of each month. For example, JAN for January, FEB for February, APR for April.
+
+Example of usage:
+
+'summary FEB' to see summary from the mots recent february
+
+
+### Exiting the programme
+Exits the programme
+
+Format: 'exit'
+
+### Saving the data
+TrackStars automatically stores the previously listed transactions, banks and budgets into the hard disk automatically. There is no need to manually key in a command to store data. 
+
 ## FAQ
 
 **Q**: Do the exchange rates on this application fluctuate? 
 
-**A**: No, the exchange rates on TrackStars are hardcoded into the programme. One of the key requirements of this project is that it must be able to run while offline. Hence, live updates of 
-exchange rates are difficult to implement. We take the latest exchange rates as of 27 October 2025.
+**A**: No, the exchange rates on TrackStars are hardcoded into the programme. One of the key requirements of this project is that it must be able to run  offline. Hence, live updates of 
+exchange rates are difficult to implement. We have taken the latest exchange rates as of 27 October 2025.
 
 **Q** Can I attach my bank account or transactions to any currency I want?
 
@@ -63,6 +190,10 @@ Japan is not a South East Asian country, but is included since it is such a popu
 **Q** Can the parameters of a command be input in any order?
 
 **A** No, the parameters of the commands must be input in the specific order that the User Guide mentions.
+
+**Q** When keying in transactions, must the dates be in the format dd/mm/yyyy? 
+
+**A** Yes, the dates must be in that specific format (dd/mm/yyyy). The programme is not able to convert 10 Janaury 2025 to 10/1/2025.
 
 ## Command Summary
 

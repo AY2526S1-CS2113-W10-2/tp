@@ -6,6 +6,7 @@ import user.User;
 import utils.Category;
 import utils.Currency;
 import utils.Date;
+import utils.Month;
 
 import java.util.ArrayList;
 
@@ -21,7 +22,7 @@ public class AddTransactionCommand implements Command {
         this.arguments = arguments;
     }
 
-    @Override
+    /*@Override
     public String execute() throws FinanceException {
         if (arguments.size() < ALLOWED_ARGUMENTS_LENGTH) {
             throw new FinanceException("  Sorry! Wrong format. Try 'add <category> <value> <date>' \n" +
@@ -61,5 +62,72 @@ public class AddTransactionCommand implements Command {
             throw new FinanceException(e.getMessage());
         }
         return null;
+    }*/
+
+    @Override
+    public String execute() throws FinanceException {
+        // Accept either 3 or 4 arguments
+        if (arguments.size() < 3) {
+            throw new FinanceException("Sorry! Wrong format. Try 'add <tag(optional)> <category> <value> <date>' \n"
+                    + "e.g. 'add food 4.50 10/4/2024' or 'add 'groceries' food 4.50 10/4/2024'");
+        }
+
+        String tag;
+        String categoryString;
+        String valueString;
+        String dateString;
+
+        if (arguments.size() == 4) {
+            // Tag provided
+            tag = arguments.get(0);
+            categoryString = arguments.get(1);
+            valueString = arguments.get(2);
+            dateString = arguments.get(3);
+        } else {
+            // Tag omitted
+            tag = "unnamed";
+            categoryString = arguments.get(0);
+            valueString = arguments.get(1);
+            dateString = arguments.get(2);
+        }
+
+        try {
+            Category category = Category.toCategory(categoryString);
+            if (category == null) {
+                throw new FinanceException("Invalid category");
+            }
+
+            float value = Float.parseFloat(valueString);
+            if (value < 0.0) {
+                throw new FinanceException("Value cannot be negative");
+            }
+
+            String[] dateParts = dateString.split("/");
+            if (dateParts.length != 3) {
+                throw new FinanceException("Date format must be DD/MM/YYYY");
+            }
+
+            int day = Integer.parseInt(dateParts[0]);
+            int monthNum = Integer.parseInt(dateParts[1]);
+            int year = Integer.parseInt(dateParts[2]);
+            Month month = Month.values()[monthNum - 1];
+            Date date = new Date(day, month, year);
+
+            Currency currency = currBank.getCurrency();
+
+            Transaction trans = new Transaction(value, category, date, currency, tag);
+            currBank.addTransactionToBank(trans);
+            currBank.setBalance(currBank.getBalance() - value);
+            User.getStorage().saveTransactions(User.getBanks());
+            User.getStorage().saveBanks(User.banks); // save updated balance
+            printMessage("Added Transaction: " + trans.toString());
+
+        } catch (FinanceException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new FinanceException(e.getMessage());
+        }
+        return null;
     }
+
 }

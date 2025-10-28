@@ -30,38 +30,13 @@ public class Storage {
     private static final String BUDGET_FILE = "budgets.txt";
     private static final String BANK_FILE = "banks.txt";
 
-    /*private final List<Transaction> transactions = new ArrayList<>();
-    private final List<Budget> budgets = new ArrayList<>();
-    private final List<Bank> banks = new ArrayList<>();*/
-
 
     public Storage() {
         logger.log(Level.INFO, "Initialising storage - loading saved data");
-        //loadBanks();
-        //loadTransactions();
-        //loadBudgets();
+
         logger.log(Level.INFO, "Storage initialized successfully.");
 
     }
-
-    // -------------------- Transactions --------------------
-    /*public void addTransaction(Transaction t) {
-        transactions.add(t);
-        saveTransactions();
-    }
-
-    public List<Transaction> getTransactions() {
-        return transactions;
-    }
-
-    public void deleteTransaction(int index) {
-        if (index >= 0 && index < transactions.size()) {
-            transactions.remove(index);
-            saveTransactions();
-        } else {
-            System.out.println("Invalid transaction index.");
-        }
-    }*/
 
     public void saveTransactions(ArrayList<Bank> banks) {
         assert banks != null : "Banks list should not be null";
@@ -75,6 +50,7 @@ public class Storage {
                     assert t != null : "Transaction object should not be null";
 
                     pw.println(bank.getId() + "|" +
+                            t.getTag() + "|" +
                             t.getCategory().name() + "|" +
                             t.getValue() + "|" +
                             t.getDate().getDay() + "|" +
@@ -109,27 +85,28 @@ public class Storage {
             ArrayList<Transaction> transactions = new ArrayList<>();
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split("\\|");
-                if (parts.length != 7) {
+                if (parts.length != 8) {
                     logger.warning("Skipping malformed transaction line: " + line);
 
                     continue;
                 }
 
                 int bankId = Integer.parseInt(parts[0]);
-                Category category = Category.toCategory(parts[1]);
-                float value = Float.parseFloat(parts[2]);
+                String tag = parts[1];
+                Category category = Category.toCategory(parts[2]);
+                float value = Float.parseFloat(parts[3]);
                 if (value < 0) {
                     logger.log(Level.WARNING, "Skipping invalid transaction with negative value: " + line);
                     continue;
                 }
 
-                int day = Integer.parseInt(parts[3]);
-                Month month = Month.valueOf(parts[4]);
-                int year = Integer.parseInt(parts[5]);
-                Currency currency = Currency.valueOf(parts[6]);
+                int day = Integer.parseInt(parts[4]);
+                Month month = Month.valueOf(parts[5]);
+                int year = Integer.parseInt(parts[6]);
+                Currency currency = Currency.valueOf(parts[7]);
 
                 try {
-                    Transaction transaction = new Transaction(value, category, new Date(day, month, year), currency);
+                    Transaction transaction = new Transaction(value, category, new Date(day, month, year), currency, tag);
                     Bank bankToBeLoadedTo = User.getBanks().get(bankId);
                     bankToBeLoadedTo.getTransactions().add(transaction);
                 } catch (FinanceException | IllegalArgumentException e) {

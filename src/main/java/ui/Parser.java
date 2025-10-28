@@ -199,14 +199,30 @@ public class Parser {
         assert command != null : "Command should not be null";
 
         ArrayList<String> retVal = new ArrayList<>();
-        int firstSpace = command.indexOf((" "));
-        if (firstSpace < 0){
-            firstSpace = command.length();
-        }
-        retVal.add(command.substring(0, firstSpace));
-        if (firstSpace + 1 <= command.length()){
-            retVal.add(command.substring(firstSpace + 1).trim());
+        command = command.trim();
+        if (command.startsWith("\"")) {
+            // Find closing quote
+            int endQuote = command.indexOf("\"", 1);
+            if (endQuote < 0) {
+                throw new IllegalArgumentException("Unmatched quotation mark in input");
+            }
+            // First arg is quoted span (without quotes)
+            retVal.add(command.substring(1, endQuote));
+            // Remainder is everything after closing quote, trimmed
+            if (endQuote + 1 < command.length()){
+                retVal.add(command.substring(endQuote + 1).trim());
+            }
+        } else {
+            int firstSpace = command.indexOf(" ");
+            if (firstSpace < 0){
+                firstSpace = command.length();
+            }
+            retVal.add(command.substring(0, firstSpace));
+            if (firstSpace + 1 <= command.length()){
+                retVal.add(command.substring(firstSpace + 1).trim());
+            }
         }
         return retVal;
     }
+
 }

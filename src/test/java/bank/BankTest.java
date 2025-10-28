@@ -2,7 +2,12 @@ package bank;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import transaction.Transaction;
+import ui.FinanceException;
 import user.User;
+import utils.Category;
+import utils.Date;
+import utils.Month;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -75,6 +80,37 @@ public class BankTest {
     public void bank_initialiseNegativeExchangeRate_exceptionThrown(){
         assertThrows(IllegalArgumentException.class, () -> {
             new Bank(0, VND, 0, -0.2f);
+        });
+    }
+
+    @Test
+    public void bank_addTransaction_success() throws FinanceException {
+        float value = 9.8f;
+        Category category = Category.FOOD;
+        Date date = new Date(2, Month.APR, 2025);
+        Transaction transaction = new Transaction(value, category, date, SGD);
+        User.currBank.addTransactionToBank(transaction);
+        Transaction addedTransaction = User.currBank.getTransactions().get(0);
+        assertEquals(addedTransaction, transaction);
+    }
+
+    @Test
+    public void bank_addTransactionNegativeValue_failure() {
+        float value = -1 * 9.8f;
+        Category category = Category.FOOD;
+        Date date = new Date(2, Month.APR, 2025);
+        assertThrows(FinanceException.class, () -> {
+            new Transaction(value, category, date, SGD);
+        });
+    }
+
+    @Test
+    public void bank_addTransactionNullValues_failure(){
+        float value = 9.8f;
+        Category category = null;
+        Date date = null;
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Transaction(value, category, date, null);
         });
     }
 }
