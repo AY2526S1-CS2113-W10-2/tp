@@ -12,6 +12,8 @@ import utils.Date;
 import utils.Month;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,12 +21,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class FilterCommandTest {
-
+    private static final Path TX_FILE = Path.of("transactions.txt");
     private Bank bank0;
 
     @BeforeEach
     public void setUp() throws IOException, FinanceException {
-        // Reset User storage
+        Files.deleteIfExists(TX_FILE);
         User.initialise();
         User.banks = new ArrayList<>();
         User.budgets = new ArrayList<>();
