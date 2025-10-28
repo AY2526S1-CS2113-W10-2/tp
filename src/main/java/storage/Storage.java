@@ -30,38 +30,13 @@ public class Storage {
     private static final String BUDGET_FILE = "budgets.txt";
     private static final String BANK_FILE = "banks.txt";
 
-    /*private final List<Transaction> transactions = new ArrayList<>();
-    private final List<Budget> budgets = new ArrayList<>();
-    private final List<Bank> banks = new ArrayList<>();*/
-
 
     public Storage() {
         logger.log(Level.INFO, "Initialising storage - loading saved data");
-        //loadBanks();
-        //loadTransactions();
-        //loadBudgets();
+
         logger.log(Level.INFO, "Storage initialized successfully.");
 
     }
-
-    // -------------------- Transactions --------------------
-    /*public void addTransaction(Transaction t) {
-        transactions.add(t);
-        saveTransactions();
-    }
-
-    public List<Transaction> getTransactions() {
-        return transactions;
-    }
-
-    public void deleteTransaction(int index) {
-        if (index >= 0 && index < transactions.size()) {
-            transactions.remove(index);
-            saveTransactions();
-        } else {
-            System.out.println("Invalid transaction index.");
-        }
-    }*/
 
     public void saveTransactions(ArrayList<Bank> banks) {
         assert banks != null : "Banks list should not be null";

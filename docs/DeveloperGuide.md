@@ -19,13 +19,22 @@ The Architecture Diagram given above explains the high-level design of the App. 
 
 The bulk of the work done by the app is from these four components: 
 
-
-'Storage': Reads data from, and writes data to the hard disk.
+UserInterface: Is the class from which the programme runs.
+Parser: Takes in the command, and calls upon the commands package to execute the commands
+User: Serves as a central manager for a user's financial data, such as transactions, budgets and banks
+Storage: Reads data from, and writes data to the hard disk.
 
 #### UserInterface component
 API: UserInterface.java
 #### Storage component
 API: Storage.java 
+![img_1.png](team/Storage/img_1.png)
+
+* The Storage component is responsible for saving and loading user financial data, including banks, budgets, and transactions, from text files.
+* Can read the stored data from plain-text (.txt) files (e.g., banks.txt, budgets.txt, transactions.txt) and reconstruct the corresponding Java objects (Bank, Budget, Transaction) during program initialization.
+* Acts as a central persistence layer for the application — it provides a single interface for all file input/output operations so that other components (like User) don’t need to handle file management directly.
+* Depends on classes in the Domain Model (such as Bank, Transaction, Budget, Category, and Month), because its role is to serialize and deserialize these model objects into storable formats.
+* Is used by the User component, which coordinates data loading at startup (User.initialise()) and saving whenever changes are made (e.g., adding a bank or updating budgets).
 
 #### User component
 API: User.java
