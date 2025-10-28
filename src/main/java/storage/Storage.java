@@ -50,6 +50,7 @@ public class Storage {
                     assert t != null : "Transaction object should not be null";
 
                     pw.println(bank.getId() + "|" +
+                            t.getTag() + "|" +
                             t.getCategory().name() + "|" +
                             t.getValue() + "|" +
                             t.getDate().getDay() + "|" +
@@ -84,27 +85,28 @@ public class Storage {
             ArrayList<Transaction> transactions = new ArrayList<>();
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split("\\|");
-                if (parts.length != 7) {
+                if (parts.length != 8) {
                     logger.warning("Skipping malformed transaction line: " + line);
 
                     continue;
                 }
 
                 int bankId = Integer.parseInt(parts[0]);
-                Category category = Category.toCategory(parts[1]);
-                float value = Float.parseFloat(parts[2]);
+                String tag = parts[1];
+                Category category = Category.toCategory(parts[2]);
+                float value = Float.parseFloat(parts[3]);
                 if (value < 0) {
                     logger.log(Level.WARNING, "Skipping invalid transaction with negative value: " + line);
                     continue;
                 }
 
-                int day = Integer.parseInt(parts[3]);
-                Month month = Month.valueOf(parts[4]);
-                int year = Integer.parseInt(parts[5]);
-                Currency currency = Currency.valueOf(parts[6]);
+                int day = Integer.parseInt(parts[4]);
+                Month month = Month.valueOf(parts[5]);
+                int year = Integer.parseInt(parts[6]);
+                Currency currency = Currency.valueOf(parts[7]);
 
                 try {
-                    Transaction transaction = new Transaction(value, category, new Date(day, month, year), currency);
+                    Transaction transaction = new Transaction(value, category, new Date(day, month, year), currency, tag);
                     Bank bankToBeLoadedTo = User.getBanks().get(bankId);
                     bankToBeLoadedTo.getTransactions().add(transaction);
                 } catch (FinanceException | IllegalArgumentException e) {
