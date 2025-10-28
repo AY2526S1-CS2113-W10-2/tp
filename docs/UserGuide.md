@@ -31,6 +31,20 @@ Example of usage:
 
 'addbank 250000 IDR'
 
+### Logging into a bank account: 'login'
+Logs into a pre-existing bank account. If you do not have a bank account yet, you must create one by using 'addbank'.
+Logging into a bank account allows the user to do bank specific commands like adding transactions and setting budgets. Once logged in, there isn o need to specify the currency of the amounts as the 
+currency is tied to that specific bank account you are logged into.
+
+Format: 'login INDEX'
+* The 'INDEX' refers to the index number of that bank account in 'listbanks'
+
+
+Example of usage:
+
+'listbanks' to see current bank accounts
+'login INDEX' to log into that specific bank account
+
 ### Adding a transaction: `add`
 Adds a new transaction to the list of transactions. This works only when logged into a bank, and the transaction is tied to the currency of the bank 
 
@@ -47,12 +61,30 @@ Example of usage:
 
 'add entertainment 15 25/12/2025'
 
+### Deleting a transaction: 'delete'
+Deletes a previously keyed in transaction from the list. The 'delete' feature deletes the transaction at the specified index. This index refers to the index number shown in the transactions list.
+You can view this by using the command 'list'. You must be logged into a bank account to delete transactions from that bank. 
+
+Format: 'delete INDEX'
+* The 'INDEX' refers to the index of that transaction in 'list'
+
+Example of usage: 
+'list' followed by 'delete 2' to delete the 2nd transaction in that list
+
+### Exiting the programme
+Exits the programme
+
+Format: 'exit'
+
+### Saving the data
+TrackStars automatically stores the previously listed transactions, banks and budgets into the hard disk automatically. There is no need to manually key in a command to store data. 
+
 ## FAQ
 
 **Q**: Do the exchange rates on this application fluctuate? 
 
-**A**: No, the exchange rates on TrackStars are hardcoded into the programme. One of the key requirements of this project is that it must be able to run while offline. Hence, live updates of 
-exchange rates are difficult to implement. We take the latest exchange rates as of 27 October 2025.
+**A**: No, the exchange rates on TrackStars are hardcoded into the programme. One of the key requirements of this project is that it must be able to run  offline. Hence, live updates of 
+exchange rates are difficult to implement. We have taken the latest exchange rates as of 27 October 2025.
 
 **Q** Can I attach my bank account or transactions to any currency I want?
 
@@ -63,6 +95,10 @@ Japan is not a South East Asian country, but is included since it is such a popu
 **Q** Can the parameters of a command be input in any order?
 
 **A** No, the parameters of the commands must be input in the specific order that the User Guide mentions.
+
+**Q** When keying in transactions, must the dates be in the format dd/mm/yyyy? 
+
+**A** Yes, the dates must be in that specific format (dd/mm/yyyy). The programme is not able to convert 10 Janaury 2025 to 10/1/2025.
 
 ## Command Summary
 
