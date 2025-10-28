@@ -183,4 +183,33 @@ public class ParserTest {
         assertEquals("Please login to a bank to execute this command", e.getMessage());
     }
 
+    @Test
+    public void addBank_initialiseBank_success() throws FinanceException {
+        assertDoesNotThrow(() ->
+                Parser.parseCommand("addBank 150 JPY"));
+    }
+
+    @Test
+    public void addBank_initialiseBankWrongFormat_throwsFinanceException() throws FinanceException {
+        assertThrows(FinanceException.class, () ->
+                Parser.parseCommand("addBank Fake Input"));
+    }
+
+    @Test
+    public void addBank_initialiseBankNegativeBalance_throwsFinanceException() throws FinanceException {
+        assertThrows(FinanceException.class, () ->
+                Parser.parseCommand("addBank -1 USD"));
+    }
+
+    @Test
+    public void addBank_initialiseBankStringBalance_throwsFinanceException() throws FinanceException {
+        assertThrows(FinanceException.class, () ->
+                Parser.parseCommand("addBank NOT_A_NUMBER JPY"));
+    }
+
+    @Test
+    public void addBank_initialiseBankInvalidCurrency_throwsFinanceException() throws FinanceException {
+        assertThrows(FinanceException.class, () ->
+                Parser.parseCommand("addBank Fake_Input"));
+    }
 }
