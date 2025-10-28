@@ -88,7 +88,8 @@ public class BankTest {
         float value = 9.8f;
         Category category = Category.FOOD;
         Date date = new Date(2, Month.APR, 2025);
-        Transaction transaction = new Transaction(value, category, date, SGD);
+        String tag = "Milo";
+        Transaction transaction = new Transaction(value, category, date, SGD, tag);
         User.currBank.addTransactionToBank(transaction);
         Transaction addedTransaction = User.currBank.getTransactions().get(0);
         assertEquals(addedTransaction, transaction);
@@ -99,8 +100,9 @@ public class BankTest {
         float value = -1 * 9.8f;
         Category category = Category.FOOD;
         Date date = new Date(2, Month.APR, 2025);
+        String tag = "Milo";
         assertThrows(FinanceException.class, () -> {
-            new Transaction(value, category, date, SGD);
+            new Transaction(value, category, date, SGD, tag);
         });
     }
 
@@ -109,8 +111,9 @@ public class BankTest {
         float value = 9.8f;
         Category category = null;
         Date date = null;
+        String tag = "Milo";
         assertThrows(IllegalArgumentException.class, () -> {
-            new Transaction(value, category, date, null);
+            new Transaction(value, category, date, null, tag);
         });
     }
 }

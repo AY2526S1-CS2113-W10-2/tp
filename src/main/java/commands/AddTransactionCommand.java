@@ -6,7 +6,6 @@ import user.User;
 import utils.Category;
 import utils.Currency;
 import utils.Date;
-import utils.Month;
 
 import java.util.ArrayList;
 
@@ -14,7 +13,11 @@ import static ui.OutputManager.printMessage;
 import static user.User.currBank;
 
 public class AddTransactionCommand implements Command {
-    private static final int ALLOWED_ARGUMENTS_LENGTH = 3;
+    private static final String ERROR_INVALID_FORMAT =
+            "Sorry! Wrong format. Try 'add <tag(optional)> <category> <value> <date>' \n"
+        + "e.g. 'add food 4.50 10/4/2024' or 'add 'groceries' food 4.50 10/4/2024'";
+    private static final int MIN_ALLOWED_ARGUMENTS_LENGTH = 3;
+    private static final int MAX_ALLOWED_ARGUMENTS_LENGTH = 4;
     private static final double MIN_VALUE = 0.0;
     private final ArrayList<String> arguments;
 
@@ -22,54 +25,11 @@ public class AddTransactionCommand implements Command {
         this.arguments = arguments;
     }
 
-    /*@Override
-    public String execute() throws FinanceException {
-        if (arguments.size() < ALLOWED_ARGUMENTS_LENGTH) {
-            throw new FinanceException("  Sorry! Wrong format. Try 'add <category> <value> <date>' \n" +
-                    "  e.g. 'add food 4.50 10/4/2024'");
-        }
-
-        try {
-            Category category = Category.toCategory(arguments.get(0));
-            if (category == null) {
-                throw new FinanceException("Invalid category");
-            }
-
-            float value = Float.parseFloat(arguments.get(1));
-
-            if (value < MIN_VALUE) {
-                throw new FinanceException("Value cannot be negative");
-            }
-
-            Date date = Date.toDate(arguments.get(2));
-
-            //Currency currency = Currency.toCurrency(arguments.get(3));
-            Currency currency = currBank.getCurrency();
-            if (currency == currBank.getCurrency()){
-                Transaction trans = new Transaction(value, category, date, currency);
-                currBank.addTransactionToBank(trans);
-                currBank.setBalance(currBank.getBalance() - value);
-                User.getStorage().saveTransactions(User.getBanks());
-                User.getStorage().saveBanks(User.banks);              // save updated balance
-                printMessage("Added Transaction: " + trans.toString());
-            } else {
-                throw new FinanceException("Currency must be in" + currBank.getCurrency().name());
-            }
-
-        } catch (FinanceException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new FinanceException(e.getMessage());
-        }
-        return null;
-    }*/
-
     @Override
     public String execute() throws FinanceException {
         // Accept either 3 or 4 arguments
-        if (arguments.size() < 3) {
-            throw new FinanceException("Sorry! Wrong format. Try 'add <tag(optional)> <category> <value> <date>' \n"
-                    + "e.g. 'add food 4.50 10/4/2024' or 'add 'groceries' food 4.50 10/4/2024'");
+        if (arguments.size() < MIN_ALLOWED_ARGUMENTS_LENGTH || arguments.size() > MAX_ALLOWED_ARGUMENTS_LENGTH) {
+            throw new FinanceException(ERROR_INVALID_FORMAT);
         }
 
         String tag;
@@ -98,20 +58,11 @@ public class AddTransactionCommand implements Command {
             }
 
             float value = Float.parseFloat(valueString);
-            if (value < 0.0) {
+            if (value < MIN_VALUE) {
                 throw new FinanceException("Value cannot be negative");
             }
 
-            String[] dateParts = dateString.split("/");
-            if (dateParts.length != 3) {
-                throw new FinanceException("Date format must be DD/MM/YYYY");
-            }
-
-            int day = Integer.parseInt(dateParts[0]);
-            int monthNum = Integer.parseInt(dateParts[1]);
-            int year = Integer.parseInt(dateParts[2]);
-            Month month = Month.values()[monthNum - 1];
-            Date date = new Date(day, month, year);
+            Date date = Date.toDate(dateString);
 
             Currency currency = currBank.getCurrency();
 

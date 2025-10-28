@@ -12,7 +12,8 @@ public class Transaction {
     private final Currency currency;
     private final String tag;
 
-    public Transaction(float value, Category category, Date date, Currency currency, String tag) throws FinanceException {
+    public Transaction(float value, Category category, Date date, Currency currency, String tag)
+            throws FinanceException {
         if (value < 0) {
             throw new FinanceException("Value must be positive");
         }
@@ -32,7 +33,9 @@ public class Transaction {
         }
     }
 
-    public String getTag() { return tag; }
+    public String getTag() {
+        return tag;
+    }
 
     public float getValue() {
         return value;

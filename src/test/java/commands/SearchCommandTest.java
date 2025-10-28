@@ -36,11 +36,11 @@ public class SearchCommandTest {
         User.currBank = testBank;
 
         User.currBank.addTransactionToBank(new Transaction(10.0f, Category.FOOD,
-                new Date(5, Month.JAN, 2025), Currency.SGD));
+                new Date(5, Month.JAN, 2025), Currency.SGD, "Chicken Rice"));
         User.currBank.addTransactionToBank(new Transaction(25.0f, Category.ENTERTAINMENT,
-                new Date(10, Month.JAN, 2025), Currency.SGD));
+                new Date(10, Month.JAN, 2025), Currency.SGD, "Movie"));
         User.currBank.addTransactionToBank(new Transaction(5.0f, Category.FOOD,
-                new Date(12, Month.JAN, 2025), Currency.SGD));
+                new Date(12, Month.JAN, 2025), Currency.SGD, "Bubble Tea"));
     }
 
     @Test

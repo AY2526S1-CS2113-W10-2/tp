@@ -54,8 +54,8 @@ class AddTransactionCommandTest {
         FinanceException exception = assertThrows(FinanceException.class, () ->
                 Parser.parseCommand("add food 10/4/2024")
         );
-        assertEquals("  Sorry! Wrong format. Try 'add <category> <value> <date>' \n" +
-                "  e.g. 'add food 4.50 10/4/2024'", exception.getMessage());
+        assertEquals("Sorry! Wrong format. Try 'add <tag(optional)> <category> <value> <date>' \n" +
+                "e.g. 'add food 4.50 10/4/2024' or 'add 'groceries' food 4.50 10/4/2024'", exception.getMessage());
     }
 
 
