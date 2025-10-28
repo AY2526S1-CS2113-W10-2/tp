@@ -19,7 +19,7 @@ public class DeleteTransactionCommand implements Command {
 
         try {
             if (arguments.size() != 1) {
-                throw new FinanceException("Usage: delete <transaction_index>");
+                throw new FinanceException(" Sorry! Wrong format. Try delete <transaction_index>");
             }
             int index = Integer.parseInt(arguments.get(0));
             currBank.deleteTransactionFromBank(index-1);

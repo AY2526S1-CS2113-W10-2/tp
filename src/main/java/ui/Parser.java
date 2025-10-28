@@ -6,6 +6,7 @@ import commands.Command;
 import commands.AddTransactionCommand;
 import commands.DeleteTransactionCommand;
 import commands.ExitCommand;
+import commands.FilterCommand;
 import commands.ListBudgetsCommand;
 import commands.LoginCommand;
 import commands.LogoutCommand;
@@ -129,6 +130,15 @@ public class Parser {
             logger.info("Executing 'search' command");
             if (User.isLoggedIn) {
                 cmd = new SearchCommand(arguments);
+            } else {
+                logger.info("Please login to a bank to execute this command");
+                throw new FinanceException("Please login to a bank to execute this command");
+            }
+            break;
+        case "filter":
+            logger.info("Executing 'filter' command");
+            if (User.isLoggedIn) {
+                cmd = new FilterCommand(arguments);
             } else {
                 logger.info("Please login to a bank to execute this command");
                 throw new FinanceException("Please login to a bank to execute this command");

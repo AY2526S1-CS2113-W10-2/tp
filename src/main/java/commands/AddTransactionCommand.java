@@ -71,7 +71,7 @@ public class AddTransactionCommand implements Command {
             currBank.setBalance(currBank.getBalance() - value);
             User.getStorage().saveTransactions(User.getBanks());
             User.getStorage().saveBanks(User.banks); // save updated balance
-            printMessage("Added Transaction: " + trans.toString());
+            printMessage("Added Transaction: " + trans);
 
         } catch (FinanceException e) {
             throw e;

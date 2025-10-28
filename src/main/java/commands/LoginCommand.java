@@ -21,7 +21,7 @@ public class LoginCommand implements Command {
             printMessage("Already logged into a bank. Please logout first.");
             return null;
         }
-        if (arguments.isEmpty()) {
+        if (arguments.size() != 1) {
             throw new FinanceException("Please specify a bank ID. Usage: login <bank_id>");
         }
 
