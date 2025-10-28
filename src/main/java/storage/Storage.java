@@ -106,7 +106,13 @@ public class Storage {
                 Currency currency = Currency.valueOf(parts[7]);
 
                 try {
-                    Transaction transaction = new Transaction(value, category, new Date(day, month, year), currency, tag);
+                    Transaction transaction = new Transaction(
+                            value,
+                            category,
+                            new Date(day, month, year),
+                            currency,
+                            tag);
+
                     Bank bankToBeLoadedTo = User.getBanks().get(bankId);
                     bankToBeLoadedTo.getTransactions().add(transaction);
                 } catch (FinanceException | IllegalArgumentException e) {

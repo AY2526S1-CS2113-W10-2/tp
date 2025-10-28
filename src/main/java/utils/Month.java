@@ -40,12 +40,12 @@ public enum Month {
         throw new IllegalArgumentException("Invalid month: " + input);
     }
 
-    public static Month fromNumber(String number) {
+    public static Month fromNumber(int number) {
         for (Month month : Month.values()) {
-            if (month.number.equals(number)) {
+            if (Integer.parseInt(month.number) == number) {
                 return month;
             }
         }
-        return null; // or throw an exception
+        throw new IllegalArgumentException("Invalid month: " + number);
     }
 }

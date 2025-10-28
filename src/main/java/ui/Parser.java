@@ -7,6 +7,9 @@ import commands.AddTransactionCommand;
 import commands.DeleteTransactionCommand;
 import commands.ExitCommand;
 import commands.ListBudgetsCommand;
+import commands.LoginCommand;
+import commands.LogoutCommand;
+import commands.SearchCommand;
 import commands.SummaryCommand;
 import commands.ListRecentTransactionsCommand;
 import commands.ListBanksCommand;
@@ -15,8 +18,6 @@ import commands.ATM;
 import user.User;
 
 import java.util.ArrayList;
-
-import static ui.OutputManager.printMessage;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,27 +50,10 @@ public class Parser {
         Command cmd = null;
         switch (comm){
         case "login":
-            if (!User.isLoggedIn) {
-                int bankId = Integer.parseInt(commandList.get(1));
-                if (bankId >= User.banks.size() || User.banks.get(bankId).getId() != bankId) {
-                    throw new FinanceException("Bank not found");
-                }
-                User.currBank = User.banks.get(bankId);
-                User.isLoggedIn = true;
-                printMessage("Successfully logged into bank " + bankId);
-                OutputManager.showCurrentBank(User.currBank);
-            } else {
-                printMessage("Already logged into a bank. Please logout first.");
-            }
+            cmd = new LoginCommand(arguments);
             break;
         case "logout":
-            if (User.isLoggedIn) {
-                User.currBank = null;
-                User.isLoggedIn = false;
-                printMessage("Logged out successfully.");
-            } else {
-                printMessage("You are not logged into any bank.");
-            }
+            cmd = new LogoutCommand();
             break;
         case "exit":
             logger.info("Executing 'exit' command");
@@ -141,9 +125,17 @@ public class Parser {
                 throw new FinanceException("Please login to a bank to execute this command");
             }
             break;
+        case "search":
+            logger.info("Executing 'search' command");
+            if (User.isLoggedIn) {
+                cmd = new SearchCommand(arguments);
+            } else {
+                logger.info("Please login to a bank to execute this command");
+                throw new FinanceException("Please login to a bank to execute this command");
+            }
+            break;
         default:
             logger.log(Level.WARNING,"Unknown command entered: " + comm);
-            printMessage("Does not match any known command.");
             throw new FinanceException("Does not match any known command.");
         }
         if (cmd != null) {
