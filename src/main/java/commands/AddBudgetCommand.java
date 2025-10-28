@@ -19,9 +19,9 @@ public class AddBudgetCommand implements Command {
 
     @Override
     public String execute() throws FinanceException {
-        if (!User.isLoggedIn) {
+        /*if (!User.isLoggedIn) {
             throw new FinanceException("Please login to a bank to add a budget.");
-        }
+        }*/
 
         if (arguments.size() < 3) {
             throw new FinanceException("  Sorry! Wrong format. " +

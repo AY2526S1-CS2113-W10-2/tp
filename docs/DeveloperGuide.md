@@ -128,6 +128,169 @@ The following sequence diagram shows how delete operation goes through the compo
 The following activity diagram summarizes what happens when a user executes a new command:
 ![deleteCommandActivity.png](team/CommandFeature/deleteCommand/deleteCommandActivity.png)
 
+---
+
+#### Bank Login Feature 
+
+#### Purpose
+
+The bank login feature ensures that user operations (such as adding transactions, budgets, or performing account actions) are scoped to a specific bank account context. By requiring the user to log in to a bank before executing sensitive operations, the system maintains data integrity and simplifies account management. This feature allows users to interact with multiple bank accounts one at a time, with clear authorization boundaries for all financial actions. [file:3]
+
+
+**Process of Logging Into a Bank**
+
+1. **Login Command Parsing**
+    - The user enters a command: `login <bankId>`.
+    - The command is parsed and identified as `login` within the Parser class's switch-case structure.
+2. **Login Branch Logic**
+    - If the user is not already logged in (`User.isLoggedIn == false`):
+        - The provided `<bankId>` is parsed from the command arguments.
+        - The bank ID is validated against the available bank list (`User.banks`).
+        - If the bank exists, set `User.currBank` to that bank and `User.isLoggedIn = true`.
+        - Print a success message with the bank’s details.
+    - If the user is already logged in, print a message requesting logout before logging in to a different bank.
+    - If the bank is not found, a `FinanceException` is thrown and an error message shown. [file:3]
+
+---
+
+**Operations Allowed While Logged In**
+
+The following operations may only be performed after successful bank login, with checks for `User.isLoggedIn`:
+
+| Operation           | How It Is Performed (Command)   | Execution Logic                                                           |
+|---------------------|---------------------------------|---------------------------------------------------------------------------|
+| Add Transaction     | `add <args>`                    | Creates and executes `AddTransactionCommand`.                             |
+| Delete Transaction  | `delete <args>`                 | Creates and Executes `DeleteTransactionCommand`.                          |
+| List Budgets        | `listbudget`                    | Creates and Executes `ListBudgetsCommand` to show current bank’s budgets. |
+| Deposit Funds       | `deposit <args>`                | Creates and Executes `ATM` command in deposit mode for current bank.      |
+| Withdraw Funds      | `withdraw <args>`               | Creates and Executes `ATM` command in withdraw mode for current bank.     |
+| Summary             | `summary`                       | Creates and Executes `SummaryCommand` displaying bank-level summary.      |
+
+---
+
+**Special Notes**
+- Some commands are only available when not logged in (e.g., `listbanks`, which lists all banks to pick from before login). The Parser enforces this by checking login state before running those operations.
+- The `logout` command sets the user's state back to not logged in and clears the current bank context.
+
+---
+
+**Implementation Notes**
+
+- All commands relying on bank context include a check of `User.isLoggedIn` before execution.
+- When a user is logged in, transaction and budget operations always apply to the selected bank (`User.currBank`).
+- Error handling and state checks are performed for every operation in the Parser switch-case block, ensuring unauthorized actions are blocked and informative feedback is given.
+
+The following class diagram shows the relationships between the various classes involved in the user login mechanism:
+![uml_class_login.png](team/LoginFeature/uml_class_login.png)
+
+The following sequence diagram shows how various classes and methods interact together throughout the user login mechanism:
+![uml_sequence_login.png](team/LoginFeature/uml_sequence_login.png)
+
+---
+
+#### Deposit & Withdrawal Feature Developer Documentation
+
+**Purpose**
+
+The deposit and withdrawal feature allows users to modify the balance of their selected bank account securely and accurately. All operations are strictly performed in the context of the logged-in user and their active bank account, ensuring correct tracking of account transactions and maintaining financial integrity [file:3][file:12].
+
+---
+
+**Process: How Deposit & Withdrawal Work**
+
+1. **User Input Detection**
+    - The user enters a command: `deposit <amount>` or `withdraw <amount>`.
+    - The command is parsed by the `Parser` class and matched in a switch-case structure.
+
+2. **Command Validation**
+    - The parser checks `User.isLoggedIn`. If not, an error message is shown and the command is aborted.
+    - If logged in, the `ATM` command is instantiated:
+        - For deposit: `ATM(arguments, User.currBank, true, false)`
+        - For withdraw: `ATM(arguments, User.currBank, false, true)`
+
+3. **Execution Flow**
+    - `ATM.execute()` checks the type (deposit/withdrawal), validates the amount, and updates the bank account balance.
+    - The transaction may be recorded in the user's transaction history.
+    - Feedback is provided to the user (success, updated balance, or error message).
+    - Error conditions (invalid amount, insufficient funds) are caught, and a `FinanceException` may be thrown.
+
+---
+
+**Operations Carried out**
+
+| Operation        | Command                      | Execution Logic                                                                 |
+|------------------|-----------------------------|----------------------------------------------------------------------------------|
+| Deposit Funds    | `deposit <amount>`          | Creates and executes `ATM` in deposit mode for the logged-in bank. Updates balance if amount is valid. [file:3][file:12] |
+| Withdraw Funds   | `withdraw <amount>`         | Creates and executes `ATM` in withdrawal mode. Deducts funds if available; throws error if insufficient. [file:3][file:12] |
+
+---
+
+**Implementation Notes**
+
+- All operations must pass `User.isLoggedIn` check.
+- Only the bank currently referenced by `User.currBank` is affected.
+- The `ATM` class centrally handles both features and manages error handling for account balances.
+
+---
+
+The following class diagram shows the relationships between the various classes involved in the adding of budgets:
+![uml_class_atm.png](team/ATMFeature/uml_class_atm.png)
+
+The following sequence diagram shows how various classes and methods interact together throughout the adding of budget mechanism:
+![uml_sequence_atm.png](team/ATMFeature/uml_sequence_atm.png)
+
+---
+
+#### Adding of budgets feature
+**What it does**
+
+The add budget mechanism enables users to create a budget entry that specifies a spending limit for a given category in 
+a particular month within the context of a selected bank account. This helps users track, control, and manage their 
+finances by planning expenses ahead of time with category-specific monetary limits.
+
+**How it works**
+
+**1. Command Parsing**:
+
+When a user issues the command `addBudget <category> <amount> <month>`, in the application interface, the `Parser` class 
+detects this command, by its first argument `addBudget` in its switch-case structure.
+
+The command's arguments (expected: category, amount, and month) are extracted from the user input.
+
+**2.Command Initialization**:
+
+An instance of the `AddBudgetCommand` class is created with the parsed arguments.
+
+**3.Execution Flow in AddBudgetCommand**:
+
+**Argument Validation**: It checks that all required arguments are provided. If fewer than 3 arguments are present, an error (exception `FinanceException` will be thrown) with the correct usage instructions is returned.
+
+**Category Processing**: The first argument is converted into a valid Category enum. Invalid categories cause an error (exception `FinanceException` will be thrown) .
+
+**Amount Processing**: The second argument is parsed as a float representing the budget amount. It must be a non-negative valid number, or else an error (exception `FinanceException`) will be thrown
+
+**Month Processing**: The third argument is interpreted as a Month enum. Invalid month inputs are rejected with an error (exception `FinanceException` will be thrown)
+
+**Budget Object Creation**: Using the validated inputs and the currency from the currently logged-in bank, a new Budget object is initialized.
+
+**Budget Addition**: The new budget is added to the user's budget list through User.addBudget(), which also triggers persistent storage saving.
+
+**User Feedback**: Upon success, the user is notified with a message specifying the budget amount, currency, category, and month set.
+
+**4. Data Persistence and State Update**:
+
+The budget is stored in an internal list as `budgets` attribute in the `User` class and saved to persistent storage (text file named `budgets.txt`) to maintain state across sessions.
+
+***This modular, error-checked approach ensures that budget entries are valid, tied to a bank context, and immediately available for the user to manage their finances effectively***.
+
+The following class diagram shows the relationships between the various classes involved in the adding of budgets:
+![uml_class_add_budget.png](team/BudgetFeature/uml_class_add_budget.png)
+
+The following sequence diagram shows how various classes and methods interact together throughout the adding of budget mechanism:
+![uml_sequence_add_budget.png](team/BudgetFeature/uml_sequence_add_budget.png)
+
+---
+
 ## Product scope
 ### Target user profile
 
