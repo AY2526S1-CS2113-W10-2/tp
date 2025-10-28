@@ -6,7 +6,6 @@ import transaction.Transaction;
 import ui.FinanceException;
 import user.User;
 import utils.Category;
-import utils.Currency;
 import utils.Date;
 import utils.Month;
 
@@ -85,7 +84,7 @@ public class BankTest {
     }
 
     @Test
-    public void BankAddTransactionSuccess() throws FinanceException {
+    public void bank_addTransaction_success() throws FinanceException {
         float value = 9.8f;
         Category category = Category.FOOD;
         Date date = new Date(2, Month.APR, 2025);
@@ -96,17 +95,17 @@ public class BankTest {
     }
 
     @Test
-    public void BankAddTransactionFailureNegativeValue() {
+    public void bank_addTransactionNegativeValue_failure() {
         float value = -1 * 9.8f;
         Category category = Category.FOOD;
         Date date = new Date(2, Month.APR, 2025);
         assertThrows(FinanceException.class, () -> {
-                    new Transaction(value, category, date, SGD);
-                });
+            new Transaction(value, category, date, SGD);
+        });
     }
 
     @Test
-    public void BankAddTransactionFailureNullValues(){
+    public void bank_addTransactionNullValues_failure(){
         float value = 9.8f;
         Category category = null;
         Date date = null;
@@ -114,7 +113,4 @@ public class BankTest {
             new Transaction(value, category, date, null);
         });
     }
-
-
-
 }
