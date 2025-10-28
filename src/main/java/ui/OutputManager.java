@@ -155,7 +155,8 @@ public class OutputManager {
             if (t.getCategory().name().toLowerCase().contains(keyword)
                     || t.toString().toLowerCase().contains(keyword)) {
                 strb.append("\n  ")
-                        .append(t.getCategory()).append(" | ")
+                        .append(t.getTag()).append("(")
+                        .append(t.getCategory()).append(") | ")
                         .append(t.getDate().getLongDate()).append(" | ")
                         .append(t.getValue()).append(" ")
                         .append(t.getCurrency());
@@ -165,6 +166,29 @@ public class OutputManager {
 
         if (!isFound) {
             strb.append("\n  No matching transactions found.");
+        }
+
+        return strb.toString();
+    }
+
+    public static String listFilter(String filterType, ArrayList<Transaction> filtered) {
+        StringBuilder strb = new StringBuilder();
+        strb.append("Filtered transactions by ")
+                .append(filterType)
+                .append(":");
+
+        if (filtered == null || filtered.isEmpty()) {
+            strb.append("\n  No transactions match the filter criteria.");
+            return strb.toString();
+        }
+
+        for (Transaction t : filtered) {
+            strb.append("\n  ")
+                    .append(t.getTag()).append("(")
+                    .append(t.getCategory()).append(") | ")
+                    .append(t.getDate().getLongDate()).append(" | ")
+                    .append(t.getValue()).append(" ")
+                    .append(t.getCurrency());
         }
 
         return strb.toString();

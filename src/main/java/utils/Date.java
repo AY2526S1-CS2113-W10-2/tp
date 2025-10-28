@@ -1,6 +1,9 @@
 package utils;
 
 public class Date {
+    private static final int MAX_PARTS_LENGTH = 3;
+    private static final int MIN_YEAR = 1900;
+    private static final int MAX_YEAR = 2100;
     final int day;
     final Month month;
     final int year;
@@ -73,22 +76,62 @@ public class Date {
 
 
     public static Date toDate(String str) {
+        if (str == null || str.isEmpty()) {
+            throw new IllegalArgumentException("Date string cannot be empty");
+        }
+
+        String[] parts = str.split("/");
+        if (parts.length != MAX_PARTS_LENGTH) {
+            throw new IllegalArgumentException("Invalid date format. Expected DD/MM/YYYY");
+        }
+
         try {
-            String[] parts = str.split("/");
-            if (parts.length != 3) {
-                throw new IllegalArgumentException("Invalid date format. Expected DD/MM/YYYY");
-            }
             int day = Integer.parseInt(parts[0]);
             int monthNum = Integer.parseInt(parts[1]);
             int year = Integer.parseInt(parts[2]);
 
-            if (year < 1000 || year > 9999) {
-                throw new IllegalArgumentException("Year must be a 4-digit number (YYYY)");
+            if (year < MIN_YEAR || year > MAX_YEAR) {
+                throw new IllegalArgumentException("Year must be a 4-digit number (YYYY) " +
+                        "between " + MIN_YEAR + " and " + MAX_YEAR);
             }
             Month month = Month.fromNumber(monthNum);
             return new Date(day, month, year);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Date must contain only numbers: " + str);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid date: " + str + " Expected DD/MM/YYYY");
+            throw new IllegalArgumentException("Invalid date: " + str + " " + e.getMessage());
         }
+    }
+
+    public boolean isBefore(Date other) {
+        if (this.year < other.year) {
+            return true;
+        }
+        if (this.year > other.year) {
+            return false;
+        }
+        if (this.month.ordinal() < other.month.ordinal()) {
+            return true;
+        }
+        if (this.month.ordinal() > other.month.ordinal()) {
+            return false;
+        }
+        return this.day < other.day;
+    }
+
+    public boolean isAfter(Date other) {
+        if (this.year > other.year) {
+            return true;
+        }
+        if (this.year < other.year) {
+            return false;
+        }
+        if (this.month.ordinal() > other.month.ordinal()) {
+            return true;
+        }
+        if (this.month.ordinal() < other.month.ordinal()) {
+            return false;
+        }
+        return this.day > other.day;
     }
 }
