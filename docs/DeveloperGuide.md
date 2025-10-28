@@ -73,7 +73,7 @@ The showMonthlySummary("JAN") method is then called, which filters transactions 
 The computed totals are passed to OutputManager.printSummary() to format the output, followed by OutputManager.printMessage() to display the results to the user.
 
 
-The following sequence diagram shows how the summary command goes through the relevant components to display the output to the user.
+The following sequence diagram shows how the summary command goes through the relevant components to display the output to the user.  
 ![img_2.png](team/SummaryFeature/img_2.png)
 
 The following activity diagram summarises what happens when the user executes summary JAN  
@@ -83,8 +83,9 @@ The following activity diagram summarises what happens when the user executes su
 
 #### Delete Transaction Feature
 The DeleteTransaction feature allows users to remove a specific transaction from their financial record.
-This command improves user flexibility by enabling correction of mistakes or removal of outdated records.
-The command follows the syntax:
+This command improves user flexibility by enabling correction of mistakes or removal of outdated records.  
+**Note**: The user must be logged into a bank account to use this command.
+The command follows the syntax:  
 
 `delete <transaction-id>`
 
@@ -101,12 +102,17 @@ Given below is an example usage scenario and how the delete mechanism behaves at
 The user starts the program, and all previously saved transactions are 
 loaded from `transactions.txt` into memory by the `Storage` class.
 
-**Step 2: The user executes the delete command**  
-The user enters: `delete 2`. The Parser identifies `delete` as the command word 
-and passes control to the `DeleteTransactionCommand`, with `2` as the argument.
+**Step 2: The user logs into a bank account**
+The user executes the `login INDEX` command to select a bank account.
+All subsequent bank-specific commands, such as `delete`, will operate on this account.
 
-**Step 3: The command validates the input**    
-`DeleteTransactionCommand`  checks that: 
+**Step 3: The user executes the delete command**  
+The user enters: `delete 2`. The Parser identifies `delete` as the command word and checks if the user is logged in.
+If logged in, control is passed to the `DeleteTransactionCommand`, with `2` as the argument. 
+Otherwise, a `FinanceException` is thrown: `"Please login to a bank to execute this command."`
+
+**Step 4: The command validates the input**    
+`DeleteTransactionCommand` checks that: 
 - Only one argument is inputted
 - The argument is a valid integer. 
 - The transaction list is not empty.
@@ -115,8 +121,8 @@ If validation passes, execution proceeds.
 Otherwise, a FinanceException is thrown, e.g.:  
 `Error deleting transaction: Usage: delete <transaction_index>`
 
-**Step 4: The transaction is deleted**  
-DeleteTransactionCommand calls: `User.deleteTransaction(index)`  
+**Step 5: The transaction is deleted**  
+DeleteTransactionCommand calls: `User.deleteTransaction(index)` on the currently logged-in bank account.  
 This method removes the transaction at index 2 from the user’s list. 
 It then overwrites `transactions.txt` with the updated list, ensuring persistence across sessions. 
 At the same time, The user interface then prints: `"Deleted transaction: ..."`
