@@ -10,20 +10,25 @@ start
 
 :Parser parses command;
 if (command valid?) then (yes)
+
+    if (user logged in?) then (yes)
     :Create DeleteTransactionCommand;
     :Execute DeleteTransactionCommand;
-    if (valid input?) then (yes)
-        :Delete transaction from User's TransactionList;
-        if (transaction exists?) then (yes)
-            :Remove transaction;
-            :Update storage (saveTransactions);
-            :Print success message;
+        if (valid input?) then (yes)
+            if (transaction exists?) then (yes)
+                :Delete transaction from User's TransactionList;
+                :Update storage (saveTransactions);
+                :Print success message;
+            else (no)
+                :Print error "Invalid index";
+            endif
         else (no)
-            :Print error "Invalid index";
+            :Print error "Invalid input";
         endif
     else (no)
-        :Print error "Invalid input";
+        :Print error "Please login first!";
     endif
+
 else (no)
     :Print error "Unknown command";
 endif

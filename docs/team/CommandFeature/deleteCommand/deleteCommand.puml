@@ -1,8 +1,6 @@
 @startuml
 'https://plantuml.com/sequence-diagram
 
-'autonumber
-
 actor User as U
 
 participant ":UserInterface" as UserInterface #60A0BF
@@ -22,33 +20,43 @@ activate UserInterface
 UserInterface -> Parser : parseCommand(...)
 activate Parser
 
+Parser -> User : checkLoggedIn()
+activate User
+
+User --> Parser
+deactivate User
+alt User not logged in
+
+Parser -> OutputManager : print error "Please login first!"
+activate OutputManager
+
+OutputManager --> U
+deactivate OutputManager
+else User logged in
 Parser -> DeleteTransactionCommand : execute(...)
 activate DeleteTransactionCommand
 
 DeleteTransactionCommand -> User : deleteTransaction(2)
-deactivate DeleteTransactionCommand
 activate User
 
 User -> User : remove(index = 2) from TransactionList
-activate User
 User --> User : confirm deletion
-deactivate User
 
 User -> Storage : saveTransactions(...)
-activate Storage
-
-Storage --> User :
-deactivate Storage
+Storage --> User
 
 User -> OutputManager : print delete success message
-deactivate User
 activate OutputManager
 
-OutputManager --> U : ""Deleted transaction: ..."
+OutputManager --> U
 deactivate OutputManager
+deactivate User
+DeleteTransactionCommand --> Parser
+deactivate DeleteTransactionCommand
+end
+
 Parser --> UserInterface : return shouldExit = "false"
 deactivate Parser
 deactivate UserInterface
-
 
 @enduml
