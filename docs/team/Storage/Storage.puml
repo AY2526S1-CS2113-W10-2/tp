@@ -1,0 +1,91 @@
+@startuml
+scale 0.4
+title Storage Architecture Diagram
+
+' =======================
+' USER PACKAGE
+' =======================
+package "User" {
+    class User {
+        - transactions : ArrayList<Transaction>
+        - banks : ArrayList<Bank>
+        - budgets : ArrayList<Budget>
+        - isLoggedIn : boolean
+        - currBank : Bank
+        - storage : Storage
+        --
+        + initialise()
+        + addBank(bank : Bank)
+        + addBudget(budget : Budget)
+        + spendingByCategory() : Map<Category, Float>
+        + budgetByCategory() : Map<Category, Float>
+    }
+}
+
+' =======================
+' STORAGE PACKAGE
+' =======================
+package "Storage Package" {
+    class Storage {
+        - TRANSACTION_FILE : String
+        - BUDGET_FILE : String
+        - BANK_FILE : String
+        --
+        + saveTransactions(banks : ArrayList<Bank>)
+        + loadTransactions()
+        + saveBudgets(budgets : ArrayList<Budget>)
+        + loadBudgets() : ArrayList<Budget>
+        + saveBanks(banks : ArrayList<Bank>)
+        + loadBanks() : ArrayList<Bank>
+    }
+}
+
+' =======================
+' UTILS PACKAGE
+' =======================
+package "Utils" {
+    class Bank {
+        - id : int
+        - balance : float
+        - exchangeRate : float
+        - currency : Currency
+        - transactions : ArrayList<Transaction>
+    }
+
+    class Transaction {
+        - value : float
+        - category : Category
+        - date : Date
+        - currency : Currency
+    }
+
+    class Budget {
+        - category : Category
+        - month : Month
+        - amount : float
+        - bank : Bank
+        - currency : Currency
+    }
+
+    enum Category
+    enum Currency
+    enum Month
+    class Date
+}
+
+' =======================
+' RELATIONSHIPS
+' =======================
+User --> Storage : uses
+User --> Bank : accesses
+User --> Budget : manages
+User --> Transaction : manages
+
+Storage --> Bank : persists
+Storage --> Budget : persists
+Storage --> Transaction : persists
+
+Bank "1" --> "*" Transaction : contains
+Budget --> Bank : references
+
+@enduml
