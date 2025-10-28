@@ -18,91 +18,104 @@ As such, TrackStars can operate with foreign currencies that are from popular So
 
 {Give detailed description of each feature}
 
+---
+
 ### Adding a bank account: `addbank`
 Adds a new bank account to the user in the specified currency 
 
-Format: 'addbank a/AMOUNT c/CURRENCY'
+Format: `addbank a/AMOUNT c/CURRENCY`
 
-* The 'AMOUNT' must be a positive real number in the currency that you want the bank to be in
-* The 'CURRENCY' must be the three letter form of the currency you intend. For example, MYR for Malaysian Ringgit, THB for Thai Baht. 
+* The `AMOUNT` must be a positive real number in the currency that you want the bank to be in
+* The `CURRENCY` must be the three letter form of the currency you intend. 
+For example, MYR for Malaysian Ringgit, THB for Thai Baht. 
 
-Example of usage: 
-'addbank 5000 SGD'
+Example of usage:  
+`addbank 5000 SGD`  
+`addbank 250000 IDR`
 
-'addbank 250000 IDR'
+---
 
 ### Logging into a bank account: `login`
 Logs into a pre-existing bank account. If you do not have a bank account yet, you must create one by using 'addbank'.
-Logging into a bank account allows the user to do bank specific commands like adding transactions and setting budgets. Once logged in, there isn o need to specify the currency of the amounts as the 
+Logging into a bank account allows the user to do bank specific commands like adding transactions and setting budgets. Once logged in, there is no need to specify the currency of the amounts as the 
 currency is tied to that specific bank account you are logged into.
 
-Format: 'login INDEX'
-* The 'INDEX' refers to the index number of that bank account in 'listbanks'
+Format: `login INDEX`
+* The `INDEX` refers to the index number of that bank account in `listbanks`
 
 
 Example of usage:
 
-'listbanks' to see current bank accounts
-'login INDEX' to log into that specific bank account
+`listbanks` to see current bank accounts  
+`login INDEX` to log into that specific bank account
 
+---
 
 ### Logging out of a bank account: `logout`
 Logs out of the currently logged-in account. Does nothing of not currently logged into an account.
 
 
-Format: 'logout'
-* The 'INDEX' refers to the index number of that bank account in 'listbanks'
+Format: `logout`
 
+Example of usage:  
 
-Example of usage:
+`logout` to see log out of the currently logged-in bank
 
-'logout' to see log out of the currently logged-in bank
-
+---
 
 ### Listing recent transaction: `list`
 Lists the 10 most recent transactions, across all accounts.
 
-Format: 'list'
+Format: `list`
 
 Example of usage:
 
-'list' to see recent transactions
+`list` to see recent transactions
 
+---
 
 ### Listing owned Bank Accounts: `listBanks`
 Lists all registered bank accounts, with their balance and exchange rate
 
-Format: 'listBanks'
+Format: `listBanks`
 
 Example of usage:
 
-'listBanks' to see recent all bank accounts
+`listBanks` to see recent all bank accounts
 
+---
 
 ### Adding a transaction: `add`
-Adds a new transaction to the list of transactions. This works only when logged into a bank, and the transaction is tied to the currency of the bank 
+Adds a new transaction to the list of transactions. This works only when logged into a bank, 
+and the transaction is tied to the currency of the bank 
 
-Format: `add c/CATEGORY a/AMOUNT d/DATE`
+Format: `add t/TAG(optional) c/CATEGORY a/AMOUNT d/DATE`
 
+* The TAG is optional and can be used to describe the transaction (e.g., "Milo", "Lunch"). 
+If omitted, "unnamed" will be assigned as the default tag.
 * The `CATEGORY` must be one of these: food, transport, entertainment, recreation 
 * The `AMOUNT` must be a positive real number in the currency of the bank you are logged into.
 * The `DATE` must be in the form dd/mm/yyyy
 
 Example of usage: 
 
-`add transport 2.50 15/10/2025'
+`add transport 2.50 15/10/2025`  
+`add entertainment 15 25/12/2025`  
+`add 'Milo' food 1.2 01/11/2025`
 
-'add entertainment 15 25/12/2025'
+---
 
 ### Deleting a transaction: `delete`
 Deletes a previously keyed in transaction from the list. The 'delete' feature deletes the transaction at the specified index. This index refers to the index number shown in the transactions list.
 You can view this by using the command 'list'. You must be logged into a bank account to delete transactions from that bank. 
 
-Format: 'delete INDEX'
-* The 'INDEX' refers to the index of that transaction in 'list'
+Format: `delete INDEX`
+* The `INDEX` refers to the index of that transaction in 'list'
 
-Example of usage: 
-'list' followed by 'delete 2' to delete the 2nd transaction in that list
+Example of usage:  
+`list` followed by `delete 2` to delete the 2nd transaction in that list of that bank
+
+---
 
 ### Adding a Budget: `addBudget`
 Adds a new budget for a specific category of spending. Used to keep track of total amounts spent on different categories over time.
@@ -115,10 +128,10 @@ Format: `addBudget c/CATEGORY a/AMOUNT d/MONTH`
 
 Example of usage:
 
-`addBudget transport 40 JAN' to indicate a target of 40 Spent on transport in January.
+`addBudget transport 40 JAN` to indicate a target of 40 spent on transport in January.  
+`addBudget entertainment 75 MAR` to indicate a target of 75 spent on transport in March.
 
-'addBudget entertainment 75 MAR' to indicate a target of 75 Spent on transport in March.
-
+---
 
 ### Listing Budgets: `listBudget`
 Lists all budgets, and their current utilisation. Used as brief summary of spending by category.
@@ -129,47 +142,91 @@ Format: `listBudget d/MONTH`
 
 Example of usage:
 
-`listBudget  JAN' to indicate show budget utilisation for January
+`listBudget  JAN` to indicate show budget utilisation for January
+
+---
 
 ### Depositing money into current bank account: `deposit`
 Adds to the balance of a current signed in account. Used to track income.
 
-Format: 'deposit a/AMOUNT'
+Format: `deposit a/AMOUNT`
 
 * The `AMOUNT` must be a positive real number in the currency of the bank you are logged into.
 
 Example of usage:
 
-'deposit' deposits 1500 into the account, in whatever currency that account trades in
+`deposit` deposits 1500 into the account, in whatever currency that account trades in
 
+---
 
 ### Withdrawing money from current bank account: `withdraw`
 Subtracts from the balance of a current signed in account. Used to track outgoing payments not assigned to a specific category.
 
-Format: 'withdraw a/AMOUNT'
+Format: `withdraw a/AMOUNT`
 
 * The `AMOUNT` must be a positive real number in the currency of the bank you are logged into.
 
 Example of usage:
 
-'withdraw 1500' withdraws 1500 from the account, in whatever currency that account trades in
+`withdraw 1500` withdraws 1500 from the account, in whatever currency that account trades in
 
+---
+
+### Searching Transactions : `search`
+Searches for transactions containing a specific keyword in the category or tag/description.
+Works only when logged into a bank account.
+
+Format: `search <KEYWORD>`
+* The `search` command is **case-insensitive**.
+
+Example of usage:
+
+`search milo` to search for transactions with tag milo.  
+
+---
+
+### Filtering Transactions : `filter`
+Filters transactions by category, cost, or date range. Works only when logged into a bank account.
+
+Format: `filter <filter_type>`
+* `filter_type` includes `category`, `cost`, `date`
+* `category` filters and displays transactions based on selected category.
+  * Valid categories: `FOOD`, `TRANSPORT`, `ENTERTAINMENT`, `RECREATION`.
+  * Syntax: `filter category <CATEGORY>`.
+* `cost` filters and displays transactions where the value is between `MIN` and `MAX` (inclusive).
+  * Both `MIN` and `MAX` must be positive numbers. 
+  * `MAX` must not be smaller than `MIN`.
+  * Syntax `filter cost <MIN> <MAX>`.
+* `date` filters and displays transactions between `START_DATE` and `END_DATE` (inclusive).
+  * Dates must be in the format `DD/MM/YYYY`.
+  * Syntax `filter date <start(DD/MM/YYYY)> <end(DD/MM/YYYY)>`
+
+Example of usage:
+
+`filter category food` to filter by category  
+`filter cost 10 50` to filter by cost range  
+`filter date 01/01/2025 31/01/2025` to filter by date range  
+
+---
 
 ### View Summary of Recent Transactions and Usage: `summary`
-Prints a summary of individual transations and total values spent on different categories in the selected month.
+Prints a summary of individual transactions and total values spent on different categories in the selected month.
 
-Format: 'summary MONTH'
+Format: `summary MONTH`
 * The `MONTH` must be the shortened three letter form of each month. For example, JAN for January, FEB for February, APR for April.
 
 Example of usage:
 
-'summary FEB' to see summary from the mots recent february
+`summary FEB` to see summary from the mots recent February
 
+---
 
-### Exiting the programme
+### Exiting the programme: `exit`
 Exits the programme
 
-Format: 'exit'
+Format: `exit`
+
+---
 
 ### Saving the data
 TrackStars automatically stores the previously listed transactions, banks and budgets into the hard disk automatically. There is no need to manually key in a command to store data. 
@@ -197,41 +254,49 @@ Japan is not a South East Asian country, but is included since it is such a popu
 
 ## Command Summary
 
-Commands that work while logged into a bank account:
+Commands that work while **logged into** a bank account:
 
 * Add transaction `add c/CATEGORY a/AMOUNT d/DATE'
-* e.g, add food 25.50 10/1/2025
+  * e.g, add food 25.50 10/1/2025
 
 * Add budget 'addbudget a/AMOUNT m/MONTH'
-* e.g, addbudget 125 JAN
+  * e.g, addbudget 125 JAN
 
 * Deposit 'deposit a/AMOUNT'
-* e.g, deposit 5000
+  * e.g, deposit 5000
 
 * Withdraw 'withdraw a/AMOUNT'
-* e.g, withdraw 100 
+  * e.g, withdraw 100 
 
 * List transactions 'list'
 * Delete transaction 'delete INDEX'
-* e.g, delete 3 
+  * e.g, delete 3 
+
+* Search transactions 'search KEYWORD'
+  * e.g., search milo
+
+* Filter transactions by category, cost, or date 'filter <filter_type> ...'
+  * e.g., filter category food
+  * e.g., filter cost 10 50
+  * e.g., filter date 01/01/2025 31/01/2025
 
 * Summary Page 'summary m/MONTH'
-* e.g, summary JAN
+  * e.g, summary JAN
 
 * Exit programme 'exit'
 
-Commands that work while logged out of a bank account:
+Commands that work while **logged out** of a bank account:
 * Summary Page 'summary m/MONTH'
-* e.g, summary JAN 
+  * e.g, summary JAN 
 
 * Login to bank 'login INDEX'
-* e.g, login 0
+  * e.g, login 0
 
 * Summary Page for currency 'summary m/MONTH c/CURRENCY'
-* e.g, summary JAN MYR
+  * e.g, summary JAN MYR
 
 * Add bank account 'addbank i/INITIAL_DEPOSIT c/CURRENCY'
-* e.g, addbank 5000 THB
+  * e.g, addbank 5000 THB
 * List bank accounts 'listbanks'
 * Exit programme 'exit'
 
