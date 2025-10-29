@@ -49,14 +49,7 @@ public class Storage {
                 for (Transaction t : bank.getTransactions()) {
                     assert t != null : "Transaction object should not be null";
 
-                    pw.println(bank.getId() + "|" +
-                            t.getTag() + "|" +
-                            t.getCategory().name() + "|" +
-                            t.getValue() + "|" +
-                            t.getDate().getDay() + "|" +
-                            t.getDate().getMonth().name() + "|" +
-                            t.getDate().getYear() + "|" +
-                            t.getCurrency().name());
+                    writeTransactions(bank, t, pw);
                 }
 
                 logger.log(Level.INFO, "Saved {0} transactions for bank ID {1} to {2}",
@@ -67,7 +60,6 @@ public class Storage {
             e.printStackTrace();
         }
     }
-
 
 
     public void loadTransactions() {
@@ -100,18 +92,10 @@ public class Storage {
                     continue;
                 }
 
-                int day = Integer.parseInt(parts[4]);
-                Month month = Month.valueOf(parts[5]);
-                int year = Integer.parseInt(parts[6]);
-                Currency currency = Currency.valueOf(parts[7]);
+                ParsedTransactionInfo info = getParsedTransactionInfo(parts);
 
                 try {
-                    Transaction transaction = new Transaction(
-                            value,
-                            category,
-                            new Date(day, month, year),
-                            currency,
-                            tag);
+                    Transaction transaction = new Transaction(value, category, new Date(info.day(), info.month(), info.year()), info.currency(), tag);
 
                     Bank bankToBeLoadedTo = User.getBanks().get(bankId);
                     bankToBeLoadedTo.getTransactions().add(transaction);
@@ -126,15 +110,23 @@ public class Storage {
         }
     }
 
+    private static ParsedTransactionInfo getParsedTransactionInfo(String[] parts) {
+        int day = Integer.parseInt(parts[4]);
+        Month month = Month.valueOf(parts[5]);
+        int year = Integer.parseInt(parts[6]);
+        Currency currency = Currency.valueOf(parts[7]);
+        ParsedTransactionInfo info = new ParsedTransactionInfo(day, month, year, currency);
+        return info;
+    }
+
+    private record ParsedTransactionInfo(int day, Month month, int year, Currency currency) {
+    }
+
     public void saveBudgets(ArrayList<Budget> budgets) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(BUDGET_FILE))) {
             for (Budget b : budgets) {
                 int bankId = b.getBank() != null ? b.getBank().getId() : -1; // -1 for logged-out/global
-                pw.println(bankId + "|" +
-                        b.getCategory().name() + "|" +
-                        b.getMonth().name() + "|" +
-                        b.getBudget() + "|" +
-                        b.getCurrency().name());
+                writeBudgets(b, pw, bankId);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -161,23 +153,24 @@ public class Storage {
                 }
 
                 int bankId = Integer.parseInt(parts[0]);
-                Bank bank = bankId == -1 ? null : User.getBanks().stream()
-                        .filter(b -> b.getId() == bankId)
-                        .findFirst()
-                        .orElse(null);
+                Bank bank = bankId == -1 ? null : User.getBanks().stream().filter(b -> b.getId() == bankId).findFirst().orElse(null);
 
-                Category category = Category.toCategory(parts[1]);
-                Month month = Month.valueOf(parts[2]);
-                float amount = Float.parseFloat(parts[3]);
-                Currency currency = Currency.valueOf(parts[4]);
-
-                budgets.add(new Budget(category, amount, currency, month, bank));
+                parseBudgets(parts, budgets, bank);
             }
             return budgets;
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private static void parseBudgets(String[] parts, ArrayList<Budget> budgets, Bank bank) {
+        Category category = Category.toCategory(parts[1]);
+        Month month = Month.valueOf(parts[2]);
+        float amount = Float.parseFloat(parts[3]);
+        Currency currency = Currency.valueOf(parts[4]);
+
+        budgets.add(new Budget(category, amount, currency, month, bank));
     }
 
 
@@ -187,10 +180,7 @@ public class Storage {
         try (PrintWriter pw = new PrintWriter(new FileWriter(BANK_FILE))) {
             for (Bank b : banks) {
                 //    System.out.println(b.getBalance());
-                pw.println(b.getId() + "|" +
-                        b.getCurrency().name() + "|" +
-                        b.getBalance() + "|" +
-                        b.getExchangeRate());
+                writeBanks(b, pw);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -198,7 +188,6 @@ public class Storage {
     }
 
     public ArrayList<Bank> loadBanks() {
-        //banks.clear();
         File file = new File(BANK_FILE);
         if (!file.exists()) {
             logger.info("No bank file found. Returning null.");
@@ -217,12 +206,7 @@ public class Storage {
                     continue;
                 }
 
-                int id = Integer.parseInt(parts[0]);
-                Currency currency = Currency.valueOf(parts[1]);
-                float balance = Float.parseFloat(parts[2]);
-                float exchangeRate = Float.parseFloat(parts[3]);
-
-                banks.add(new Bank(id, currency, balance, exchangeRate));
+                parseBanks(parts, banks);
             }
             return banks;
         } catch (IOException e) {
@@ -230,5 +214,38 @@ public class Storage {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private static void parseBanks(String[] parts, ArrayList<Bank> banks) {
+        int id = Integer.parseInt(parts[0]);
+        Currency currency = Currency.valueOf(parts[1]);
+        float balance = Float.parseFloat(parts[2]);
+        float exchangeRate = Float.parseFloat(parts[3]);
+
+        banks.add(new Bank(id, currency, balance, exchangeRate));
+    }
+
+    private static void writeBanks(Bank b, PrintWriter pw) {
+        pw.println(b.getId() + "|" +
+                b.getCurrency().name() + "|" +
+                b.getBalance() + "|" +
+                b.getExchangeRate());
+    }
+    private static void writeBudgets(Budget b, PrintWriter pw, int bankId) {
+        pw.println(bankId + "|" +
+                b.getCategory().name() + "|" +
+                b.getMonth().name() + "|" +
+                b.getBudget() + "|" +
+                b.getCurrency().name());
+    }
+    private static void writeTransactions(Bank bank, Transaction t, PrintWriter pw) {
+        pw.println(bank.getId() + "|" +
+                t.getTag() + "|" +
+                t.getCategory().name() + "|" +
+                t.getValue() + "|" +
+                t.getDate().getDay() + "|" +
+                t.getDate().getMonth().name() + "|" +
+                t.getDate().getYear() + "|" +
+                t.getCurrency().name());
     }
 }

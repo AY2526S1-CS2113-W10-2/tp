@@ -30,15 +30,10 @@ public class Summary {
         logger.log(Level.INFO, "Summary instance created successfully.");
     }
 
-    public void showMonthlySummary(String month, Bank bank, Currency currency, boolean convertAll) {
+    public void showMonthlySummary(String month, Bank bank, Currency currency, boolean isConvertAll) {
         assert month != null && !month.isBlank() : "Month input cannot be null or empty";
 
-        logger.log(Level.INFO, "Generating summary for month: "
-                + month
-                + ", Currency: "
-                + currency.name()
-                + ", ConvertAll: "
-                + convertAll);
+        logger.log(Level.INFO, "Generating summary for month: " + month + ", Currency: " + currency.name() + ", ConvertAll: " + isConvertAll);
 
         Currency displayCurrency;
         List<Transaction> monthlyTransactions = new ArrayList<>();
@@ -49,31 +44,21 @@ public class Summary {
             // Logged in → show this bank only
             displayCurrency = bank.getCurrency();
 
-            monthlyTransactions = bank.getTransactions().stream()
-                    .filter(t -> t.getDate().getMonth() == monthEnum)
-                    .collect(Collectors.toList());
+            monthlyTransactions = getBankTransactions(bank, monthEnum);
         } else {
             // Logged out → aggregate banks based on convertAll flag
             displayCurrency = currency;
 
-            if (convertAll) {
+            if (isConvertAll) {
                 // summary JAN → include ALL banks, convert to SGD
                 for (Bank b : User.getBanks()) {
-                    monthlyTransactions.addAll(
-                            b.getTransactions().stream()
-                                    .filter(t -> t.getDate().getMonth() == monthEnum)
-                                    .collect(Collectors.toList())
-                    );
+                    getAllTransactions(b, monthlyTransactions, monthEnum);
                 }
             } else {
                 // summary JAN <currency> → include only banks of that currency
                 for (Bank b : User.getBanks()) {
                     if (b.getCurrency() == currency) {
-                        monthlyTransactions.addAll(
-                                b.getTransactions().stream()
-                                        .filter(t -> t.getDate().getMonth() == monthEnum)
-                                        .collect(Collectors.toList())
-                        );
+                        getAllTransactions(b, monthlyTransactions, monthEnum);
                     }
                 }
             }
@@ -90,11 +75,9 @@ public class Summary {
             float spent = 0f;
             for (Transaction t : monthlyTransactions) {
                 if (t.getCategory() == cat) {
-                    if (convertAll) {
+                    if (isConvertAll) {
                         // summary JAN (all banks): convert to SGD
-                        spent += t.getValue()
-                                * Currency.getExchangeRateToSGD(t.getCurrency())
-                                / Currency.getExchangeRateToSGD(displayCurrency);
+                        spent = getTotalSpend(t, spent, displayCurrency);
                     } else {
                         // Logged in OR specific currency: no conversion needed
                         spent += t.getValue();
@@ -111,17 +94,15 @@ public class Summary {
                     if (bank != null) {
                         // Logged in → bank-specific
                         if (b == bank) {
-                            budget += bgt.getBudget();
+                            budget = displayCurrencyBudget(budget, bgt);
                         }
                     } else {
-                        if (convertAll) {
+                        if (isConvertAll) {
                             // summary JAN → convert all budgets to SGD
-                            budget += bgt.getBudget()
-                                    * Currency.getExchangeRateToSGD(bgt.getCurrency())
-                                    / Currency.getExchangeRateToSGD(displayCurrency);
+                            budget = convertBudgets(budget, bgt, displayCurrency);
                         } else if (b.getCurrency() == currency) {
                             // summary JAN <currency> → budgets only of that currency (no conversion)
-                            budget += bgt.getBudget();
+                            budget = displayCurrencyBudget(budget, bgt);
                         }
                     }
                 }
@@ -129,15 +110,33 @@ public class Summary {
             budgetByCategory.put(cat, budget);
         }
 
-        String summaryOutput = OutputManager.printSummary(
-                month,
-                monthlyTransactions,
-                spendingByCategory,
-                budgetByCategory,
-                displayCurrency,
-                convertAll
-        );
+        String summaryOutput = OutputManager.printSummary(month, monthlyTransactions, spendingByCategory, budgetByCategory, displayCurrency, isConvertAll);
 
         OutputManager.printMessage(summaryOutput);
+    }
+
+    private static void getAllTransactions(Bank b, List<Transaction> monthlyTransactions, Month monthEnum) {
+        monthlyTransactions.addAll(b.getTransactions().stream().filter(t -> t.getDate().getMonth() == monthEnum).collect(Collectors.toList()));
+    }
+
+    private static List<Transaction> getBankTransactions(Bank bank, Month monthEnum) {
+        List<Transaction> monthlyTransactions;
+        monthlyTransactions = bank.getTransactions().stream().filter(t -> t.getDate().getMonth() == monthEnum).collect(Collectors.toList());
+        return monthlyTransactions;
+    }
+
+    private static float getTotalSpend(Transaction t, float spent, Currency displayCurrency) {
+        spent += t.getValue() * Currency.getExchangeRateToSGD(t.getCurrency()) / Currency.getExchangeRateToSGD(displayCurrency);
+        return spent;
+    }
+
+    private static float displayCurrencyBudget(float budget, Budget bgt) {
+        budget += bgt.getBudget();
+        return budget;
+    }
+
+    private static float convertBudgets(float budget, Budget bgt, Currency displayCurrency) {
+        budget += bgt.getBudget() * Currency.getExchangeRateToSGD(bgt.getCurrency()) / Currency.getExchangeRateToSGD(displayCurrency);
+        return budget;
     }
 }
