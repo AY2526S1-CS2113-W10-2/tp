@@ -35,94 +35,140 @@ public class Summary {
 
         logger.log(Level.INFO, "Generating summary for month: " + month + ", Currency: " + currency.name() + ", ConvertAll: " + isConvertAll);
 
-        Currency displayCurrency;
-        List<Transaction> monthlyTransactions = new ArrayList<>();
-
         Month monthEnum = Month.valueOf(month.toUpperCase());
 
-        if (bank != null) {
-            // Logged in → show this bank only
-            displayCurrency = bank.getCurrency();
+        Currency displayCurrency = determineDisplayCurrency(bank, currency);
+        List<Transaction> monthlyTransactions = getMonthlyTransactions(bank, monthEnum, currency, isConvertAll);
 
-            monthlyTransactions = getBankTransactions(bank, monthEnum);
-        } else {
-            // Logged out → aggregate banks based on convertAll flag
-            displayCurrency = currency;
-
-            if (isConvertAll) {
-                // summary JAN → include ALL banks, convert to SGD
-                for (Bank b : User.getBanks()) {
-                    getAllTransactions(b, monthlyTransactions, monthEnum);
-                }
-            } else {
-                // summary JAN <currency> → include only banks of that currency
-                for (Bank b : User.getBanks()) {
-                    if (b.getCurrency() == currency) {
-                        getAllTransactions(b, monthlyTransactions, monthEnum);
-                    }
-                }
-            }
-        }
-
-        // ===============================
-        // Category-based Spending & Budget
-        // ===============================
-        Map<Category, Float> spendingByCategory = new HashMap<>();
-        Map<Category, Float> budgetByCategory = new HashMap<>();
-
-        for (Category cat : Category.values()) {
-            // Spending
-            float spent = 0f;
-            for (Transaction t : monthlyTransactions) {
-                if (t.getCategory() == cat) {
-                    if (isConvertAll) {
-                        // summary JAN (all banks): convert to SGD
-                        spent = getTotalSpend(t, spent, displayCurrency);
-                    } else {
-                        // Logged in OR specific currency: no conversion needed
-                        spent += t.getValue();
-                    }
-                }
-            }
-            spendingByCategory.put(cat, spent);
-
-            // Budget
-            float budget = 0f;
-            for (Bank b : User.getBanks()) {
-                Budget bgt = User.getBudgetForBank(cat, monthEnum, b);
-                if (bgt != null) {
-                    if (bank != null) {
-                        // Logged in → bank-specific
-                        if (b == bank) {
-                            budget = displayCurrencyBudget(budget, bgt);
-                        }
-                    } else {
-                        if (isConvertAll) {
-                            // summary JAN → convert all budgets to SGD
-                            budget = convertBudgets(budget, bgt, displayCurrency);
-                        } else if (b.getCurrency() == currency) {
-                            // summary JAN <currency> → budgets only of that currency (no conversion)
-                            budget = displayCurrencyBudget(budget, bgt);
-                        }
-                    }
-                }
-            }
-            budgetByCategory.put(cat, budget);
-        }
+        Map<Category, Float> spendingByCategory = calculateSpendingByCategory(monthlyTransactions, displayCurrency, isConvertAll);
+        Map<Category, Float> budgetByCategory = calculateBudgetByCategory(monthEnum, bank, displayCurrency, currency, isConvertAll);
 
         String summaryOutput = OutputManager.printSummary(month, monthlyTransactions, spendingByCategory, budgetByCategory, displayCurrency, isConvertAll);
-
         OutputManager.printMessage(summaryOutput);
     }
 
+    private Currency determineDisplayCurrency(Bank bank, Currency currency) {
+        return (bank != null) ? bank.getCurrency() : currency;
+    }
+
+    private List<Transaction> getMonthlyTransactions(Bank bank, Month monthEnum, Currency currency, boolean isConvertAll) {
+        if (bank != null) {
+            return getBankTransactions(bank, monthEnum);
+        }
+
+        if (isConvertAll) {
+            return getAllBanksTransactions(monthEnum);
+        }
+
+        return getCurrencySpecificTransactions(monthEnum, currency);
+    }
+
+    private List<Transaction> getAllBanksTransactions(Month monthEnum) {
+        List<Transaction> monthlyTransactions = new ArrayList<>();
+        for (Bank b : User.getBanks()) {
+            getAllTransactions(b, monthlyTransactions, monthEnum);
+        }
+        return monthlyTransactions;
+    }
+
+    private List<Transaction> getCurrencySpecificTransactions(Month monthEnum, Currency currency) {
+        List<Transaction> monthlyTransactions = new ArrayList<>();
+        for (Bank b : User.getBanks()) {
+            if (b.getCurrency() == currency) {
+                getAllTransactions(b, monthlyTransactions, monthEnum);
+            }
+        }
+        return monthlyTransactions;
+    }
+
+    private Map<Category, Float> calculateSpendingByCategory(List<Transaction> monthlyTransactions, Currency displayCurrency, boolean isConvertAll) {
+        Map<Category, Float> spendingByCategory = new HashMap<>();
+
+        for (Category cat : Category.values()) {
+            float spent = calculateSpendingForCategory(cat, monthlyTransactions, displayCurrency, isConvertAll);
+            spendingByCategory.put(cat, spent);
+        }
+
+        return spendingByCategory;
+    }
+
+    private float calculateSpendingForCategory(Category category, List<Transaction> monthlyTransactions, Currency displayCurrency, boolean isConvertAll) {
+        float spent = 0f;
+
+        for (Transaction t : monthlyTransactions) {
+            if (t.getCategory() != category) {
+                continue;
+            }
+
+            if (isConvertAll) {
+                spent = getTotalSpend(t, spent, displayCurrency);
+            } else {
+                spent += t.getValue();
+            }
+        }
+
+        return spent;
+    }
+
+    private Map<Category, Float> calculateBudgetByCategory(Month monthEnum, Bank bank, Currency displayCurrency, Currency currency, boolean isConvertAll) {
+        Map<Category, Float> budgetByCategory = new HashMap<>();
+
+        for (Category cat : Category.values()) {
+            float budget = calculateBudgetForCategory(cat, monthEnum, bank, displayCurrency, currency, isConvertAll);
+            budgetByCategory.put(cat, budget);
+        }
+
+        return budgetByCategory;
+    }
+
+    private float calculateBudgetForCategory(Category category, Month monthEnum, Bank bank, Currency displayCurrency, Currency currency, boolean isConvertAll) {
+        float budget = 0f;
+
+        for (Bank b : User.getBanks()) {
+            Budget bgt = User.getBudgetForBank(category, monthEnum, b);
+            if (bgt == null) {
+                continue;
+            }
+
+            budget += calculateBudgetAmount(bgt, b, bank, displayCurrency, currency, isConvertAll);
+        }
+
+        return budget;
+    }
+
+    private float calculateBudgetAmount(Budget bgt, Bank b, Bank bank, Currency displayCurrency, Currency currency, boolean isConvertAll) {
+        if (bank != null) {
+            return calculateLoggedInBudget(bgt, b, bank);
+        }
+
+        if (isConvertAll) {
+            return convertBudgets(0f, bgt, displayCurrency);
+        }
+
+        if (b.getCurrency() == currency) {
+            return displayCurrencyBudget(0f, bgt);
+        }
+
+        return 0f;
+    }
+
+    private float calculateLoggedInBudget(Budget bgt, Bank b, Bank bank) {
+        if (b == bank) {
+            return displayCurrencyBudget(0f, bgt);
+        }
+        return 0f;
+    }
+
     private static void getAllTransactions(Bank b, List<Transaction> monthlyTransactions, Month monthEnum) {
-        monthlyTransactions.addAll(b.getTransactions().stream().filter(t -> t.getDate().getMonth() == monthEnum).collect(Collectors.toList()));
+        monthlyTransactions.addAll(b.getTransactions().stream()
+                .filter(t -> t.getDate().getMonth() == monthEnum)
+                .collect(Collectors.toList()));
     }
 
     private static List<Transaction> getBankTransactions(Bank bank, Month monthEnum) {
-        List<Transaction> monthlyTransactions;
-        monthlyTransactions = bank.getTransactions().stream().filter(t -> t.getDate().getMonth() == monthEnum).collect(Collectors.toList());
-        return monthlyTransactions;
+        return bank.getTransactions().stream()
+                .filter(t -> t.getDate().getMonth() == monthEnum)
+                .collect(Collectors.toList());
     }
 
     private static float getTotalSpend(Transaction t, float spent, Currency displayCurrency) {

@@ -33,14 +33,14 @@ public class SummaryCommand implements Command {
 
             if (User.isLoggedIn && User.currBank != null) {
                 // Logged in → show only this bank
-                summary.showMonthlySummary(monthInput, User.currBank, User.currBank.getCurrency(), false);
+                showMonthlySummaryForBank(summary, monthInput);
             } else if (arguments.size() >= 2) {
                 // Logged out WITH currency specified → show only that currency
                 Currency currency = parseCurrency();
-                summary.showMonthlySummary(monthInput, null, currency, false);
+                showMonthlySummaryForCurrency(summary, monthInput, currency);
             } else {
                 // Logged out WITHOUT currency → show ALL banks converted to SGD
-                summary.showMonthlySummary(monthInput, null, Currency.SGD, true);
+                showMonthlySummaryForAllTransactions(summary, monthInput);
             }
 
         } catch (IllegalArgumentException e) {
@@ -52,6 +52,18 @@ public class SummaryCommand implements Command {
         }
 
         return null;
+    }
+
+    private static void showMonthlySummaryForAllTransactions(Summary summary, String monthInput) {
+        summary.showMonthlySummary(monthInput, null, Currency.SGD, true);
+    }
+
+    private static void showMonthlySummaryForCurrency(Summary summary, String monthInput, Currency currency) {
+        summary.showMonthlySummary(monthInput, null, currency, false);
+    }
+
+    private static void showMonthlySummaryForBank(Summary summary, String monthInput) {
+        summary.showMonthlySummary(monthInput, User.currBank, User.currBank.getCurrency(), false);
     }
 
     private Currency parseCurrency() throws FinanceException {
