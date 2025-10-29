@@ -143,13 +143,14 @@ public class Parser {
             break;
         default:
             logger.log(Level.WARNING,"Unknown command entered: " + comm);
-            printMessage("Does not match any known command.");
             throw new FinanceException("Does not match any known command.");
         }
         if (cmd != null) {
             cmd.execute();
+            if (cmd.shouldExit()) {
+                return true;
+            }
             OutputManager.showCurrentBank(User.currBank);
-            return cmd.shouldExit();
         }
         return false;
     }
