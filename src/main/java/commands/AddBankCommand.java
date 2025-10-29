@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import static ui.OutputManager.printMessage;
 
+//@@author Mack34021
 public class AddBankCommand implements Command {
     private final ArrayList<String> arguments;
 
@@ -52,6 +53,4 @@ public class AddBankCommand implements Command {
 
         return null;
     }
-
-
 }
