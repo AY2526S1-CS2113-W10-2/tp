@@ -28,29 +28,19 @@ public class SummaryCommand implements Command {
                 throw new FinanceException("Please provide a month. Usage: summary <month> [currency]");
             }
 
-            String monthInput = arguments.get(0).toUpperCase();
-            try {
-                Month.valueOf(monthInput); // just to check validity
-            } catch (IllegalArgumentException e) {
-                throw new FinanceException("Invalid month name. Please try again (e.g., summary JAN).");
-            }
+            String monthInput = parseMonth();
             Summary summary = new Summary(User.getStorage());
 
             if (User.isLoggedIn && User.currBank != null) {
                 // Logged in → show only this bank
-                summary.showMonthlySummary(monthInput, User.currBank, User.currBank.getCurrency(), false);
+                showMonthlySummaryForBank(summary, monthInput);
             } else if (arguments.size() >= 2) {
                 // Logged out WITH currency specified → show only that currency
-                Currency currency;
-                try {
-                    currency = Currency.valueOf(arguments.get(1).toUpperCase());
-                } catch (IllegalArgumentException e) {
-                    throw new FinanceException("Invalid currency. Please provide a valid currency code.");
-                }
-                summary.showMonthlySummary(monthInput, null, currency, false);
+                Currency currency = parseCurrency();
+                showMonthlySummaryForCurrency(summary, monthInput, currency);
             } else {
                 // Logged out WITHOUT currency → show ALL banks converted to SGD
-                summary.showMonthlySummary(monthInput, null, Currency.SGD, true);
+                showMonthlySummaryForAllTransactions(summary, monthInput);
             }
 
         } catch (IllegalArgumentException e) {
@@ -62,6 +52,38 @@ public class SummaryCommand implements Command {
         }
 
         return null;
+    }
+
+    private static void showMonthlySummaryForAllTransactions(Summary summary, String monthInput) {
+        summary.showMonthlySummary(monthInput, null, Currency.SGD, true);
+    }
+
+    private static void showMonthlySummaryForCurrency(Summary summary, String monthInput, Currency currency) {
+        summary.showMonthlySummary(monthInput, null, currency, false);
+    }
+
+    private static void showMonthlySummaryForBank(Summary summary, String monthInput) {
+        summary.showMonthlySummary(monthInput, User.currBank, User.currBank.getCurrency(), false);
+    }
+
+    private Currency parseCurrency() throws FinanceException {
+        Currency currency;
+        try {
+            currency = Currency.valueOf(arguments.get(1).toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new FinanceException("Invalid currency. Please provide a valid currency code.");
+        }
+        return currency;
+    }
+
+    private String parseMonth() throws FinanceException {
+        String monthInput = arguments.get(0).toUpperCase();
+        try {
+            Month.valueOf(monthInput); // just to check validity
+        } catch (IllegalArgumentException e) {
+            throw new FinanceException("Invalid month name. Please try again (e.g., summary JAN).");
+        }
+        return monthInput;
     }
 
 }
