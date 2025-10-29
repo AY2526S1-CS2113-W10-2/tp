@@ -5,6 +5,7 @@ import ui.OutputManager;
 
 import static user.User.banks;
 
+//@@author Mack34021
 public class ListBanksCommand implements Command{
 
     @Override

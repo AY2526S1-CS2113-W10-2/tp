@@ -5,6 +5,7 @@ import utils.Currency;
 
 import java.util.ArrayList;
 
+//@@author Mack34021
 public class Bank {
     private final int id;
     private final Currency currency;        // The currency this bank trades in
