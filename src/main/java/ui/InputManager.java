@@ -6,8 +6,6 @@ import static ui.OutputManager.printMessage;
 
 public class InputManager {
 
-    public InputManager(Scanner scanner) {
-    }
 
     public static String getNextCommand(Scanner scanner) {
         String input;

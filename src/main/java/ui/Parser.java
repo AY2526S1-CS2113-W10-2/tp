@@ -150,8 +150,10 @@ public class Parser {
         }
         if (cmd != null) {
             cmd.execute();
+            if (cmd.shouldExit()) {
+                return true;
+            }
             OutputManager.showCurrentBank(User.currBank);
-            return cmd.shouldExit();
         }
         return false;
     }
