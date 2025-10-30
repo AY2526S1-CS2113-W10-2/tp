@@ -33,6 +33,7 @@ public class StorageTest {
     private Storage storage;
 
 
+//@@author kevinlokewy
     @BeforeEach
     public void setup() throws IOException {
         // Delete existing files to start fresh
@@ -48,6 +49,7 @@ public class StorageTest {
         storage = new Storage();
     }
 
+    //@@author kevinlokewy
     @AfterEach
     public void cleanup() throws IOException {
         Files.deleteIfExists(TX_FILE);
@@ -55,6 +57,7 @@ public class StorageTest {
         Files.deleteIfExists(BANK_FILE);
     }
 
+//@@author kevinlokewy
     @Test
     public void saveAndLoadBanks_shouldPersistBanks() {
         Bank bank = new Bank(0, Currency.THB, 100f, 0.04f);
@@ -70,6 +73,7 @@ public class StorageTest {
         assertEquals(bank.getCurrency(), loaded.get(0).getCurrency());
     }
 
+    //@@author kevinlokewy
     @Test
     public void saveAndLoadTransactions_shouldPersistTransactions() throws FinanceException {
         Bank bank = new Bank(0, Currency.THB, 100f, 0.04f);
@@ -93,6 +97,7 @@ public class StorageTest {
         assertEquals(tx.getCurrency(), loaded.getCurrency());
     }
 
+    //@@author kevinlokewy
     @Test
     public void saveAndLoadBudgets_shouldPersistBudgets() {
         Bank bank = new Bank(0, Currency.THB, 100f, 0.04f);

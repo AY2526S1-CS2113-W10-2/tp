@@ -18,7 +18,7 @@ import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.logging.Logger;
 
-
+//@@author kevinlokewy
 public class Summary {
     private static final Logger logger = Logger.getLogger(Summary.class.getName());
 
@@ -30,6 +30,7 @@ public class Summary {
         logger.log(Level.INFO, "Summary instance created successfully.");
     }
 
+    //@@author kevinlokewy
     public void showMonthlySummary(String month, Bank bank, Currency currency, boolean isConvertAll) {
         assert month != null && !month.isBlank() : "Month input cannot be null or empty";
 
@@ -53,6 +54,7 @@ public class Summary {
         OutputManager.printMessage(summaryOutput);
     }
 
+    //@@author kevinlokewy
     private Currency determineDisplayCurrency(Bank bank, Currency currency) {
         return (bank != null) ? bank.getCurrency() : currency;
     }
@@ -71,6 +73,7 @@ public class Summary {
         return getCurrencySpecificTransactions(monthEnum, currency);
     }
 
+    //@@author kevinlokewy
     private List<Transaction> getAllBanksTransactions(Month monthEnum) {
         List<Transaction> monthlyTransactions = new ArrayList<>();
         for (Bank b : User.getBanks()) {
@@ -79,6 +82,7 @@ public class Summary {
         return monthlyTransactions;
     }
 
+    //@@author kevinlokewy
     private List<Transaction> getCurrencySpecificTransactions(Month monthEnum, Currency currency) {
         List<Transaction> monthlyTransactions = new ArrayList<>();
         for (Bank b : User.getBanks()) {
@@ -166,6 +170,7 @@ public class Summary {
         return 0f;
     }
 
+    //@@author kevinlokewy
     private float calculateLoggedInBudget(Budget bgt, Bank b, Bank bank) {
         if (b == bank) {
             return displayCurrencyBudget(0f, bgt);
@@ -173,29 +178,34 @@ public class Summary {
         return 0f;
     }
 
+    //@@author kevinlokewy
     private static void getAllTransactions(Bank b, List<Transaction> monthlyTransactions, Month monthEnum) {
         monthlyTransactions.addAll(b.getTransactions().stream()
                 .filter(t -> t.getDate().getMonth() == monthEnum)
                 .toList());
     }
 
+    //@@author kevinlokewy
     private static List<Transaction> getBankTransactions(Bank bank, Month monthEnum) {
         return bank.getTransactions().stream()
                 .filter(t -> t.getDate().getMonth() == monthEnum)
                 .collect(Collectors.toList());
     }
 
+    //@@author kevinlokewy
     private static float getTotalSpend(Transaction t, float spent, Currency displayCurrency) {
         spent += t.getValue() * Currency.getExchangeRateToSGD(t.getCurrency())
                 / Currency.getExchangeRateToSGD(displayCurrency);
         return spent;
     }
 
+    //@@author kevinlokewy
     private static float displayCurrencyBudget(float budget, Budget bgt) {
         budget += bgt.getBudget();
         return budget;
     }
 
+    //@@author kevinlokewy
     private static float convertBudgets(float budget, Budget bgt, Currency displayCurrency) {
         budget += bgt.getBudget() * Currency.getExchangeRateToSGD(bgt.getCurrency())
                 / Currency.getExchangeRateToSGD(displayCurrency);
