@@ -4,7 +4,7 @@ import ui.FinanceException;
 import utils.Category;
 import utils.Currency;
 import utils.Date;
-//@@author Mack34021
+
 public class Transaction {
     private final float value;
     private final Category category;

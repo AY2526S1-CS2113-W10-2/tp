@@ -8,6 +8,8 @@ import utils.Month;
 import storage.Storage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static ui.OutputManager.showWelcomeMessage;
 
@@ -49,6 +51,35 @@ public class User {
     public static void addBudget(Budget budget) {
         budgets.add(budget);
         storage.saveBudgets(budgets);
+    }
+
+    /**
+     * Deletes a transaction from the user's record
+     *
+     */
+
+    public static Map<Category, Float> spendingByCategory() {
+        Map<Category, Float> spendingMap = new HashMap<>();
+
+        // Initialize all categories with 0 spending
+        for (Category category : Category.values()) {
+            float budgetSpent = category.getBudget().getBudget() - category.getBudget().getRemainingAmount();
+            spendingMap.put(category, budgetSpent);
+        }
+
+        return spendingMap;
+    }
+
+    public static Map<Category, Float> budgetByCategory() {
+        Map<Category, Float> budgetMap = new HashMap<>();
+
+        // Initialize all categories with 0 spending
+        for (Category category : Category.values()) {
+            float budget = category.getBudget().getBudget();
+            budgetMap.put(category, budget);
+        }
+
+        return budgetMap;
     }
 
     public static ArrayList<Transaction> getTransactions() {
