@@ -95,7 +95,8 @@ public class Storage {
                 ParsedTransactionInfo info = getParsedTransactionInfo(parts);
 
                 try {
-                    Transaction transaction = new Transaction(value, category, new Date(info.day(), info.month(), info.year()), info.currency(), tag);
+                    Transaction transaction = new Transaction(value, category, new Date(info.day(),
+                            info.month(), info.year()), info.currency(), tag);
 
                     Bank bankToBeLoadedTo = User.getBanks().get(bankId);
                     bankToBeLoadedTo.getTransactions().add(transaction);
@@ -153,7 +154,8 @@ public class Storage {
                 }
 
                 int bankId = Integer.parseInt(parts[0]);
-                Bank bank = bankId == -1 ? null : User.getBanks().stream().filter(b -> b.getId() == bankId).findFirst().orElse(null);
+                Bank bank = bankId == -1 ? null : User.getBanks().stream().filter(
+                        b -> b.getId() == bankId).findFirst().orElse(null);
 
                 parseBudgets(parts, budgets, bank);
             }
