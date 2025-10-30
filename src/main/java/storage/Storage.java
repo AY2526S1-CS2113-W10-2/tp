@@ -23,14 +23,18 @@ import java.util.logging.Logger;
 
 import static ui.OutputManager.printMessage;
 
+//@@author kevinlokey
 public class Storage {
     private static final Logger logger = Logger.getLogger(Storage.class.getName());
 
     private static final String TRANSACTION_FILE = "transactions.txt";
     private static final String BUDGET_FILE = "budgets.txt";
     private static final String BANK_FILE = "banks.txt";
+    public static final int TRANSACTION_DATA_LENGTH = 8;
+    public static final int BUDGET_DATA_LENGTH = 5;
+    public static final int BANK_DATA_LENGTH = 4;
 
-
+    //@@author kevinlokey
     public Storage() {
         logger.log(Level.INFO, "Initialising storage - loading saved data");
 
@@ -38,6 +42,7 @@ public class Storage {
 
     }
 
+    //@@author kevinlokey
     public void saveTransactions(ArrayList<Bank> banks) {
         assert banks != null : "Banks list should not be null";
 
@@ -62,11 +67,10 @@ public class Storage {
     }
 
 
+    //@@author kevinlokey
     public void loadTransactions() {
         File file = new File(TRANSACTION_FILE);
-        if (!file.exists()) {
-            logger.warning("No transaction file found. Returning null.");
-
+        if (transactionFileDoesNotExist(file)) {
             return;
         }
 
@@ -77,17 +81,14 @@ public class Storage {
             ArrayList<Transaction> transactions = new ArrayList<>();
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split("\\|");
-                if (parts.length != 8) {
+                if (parts.length != TRANSACTION_DATA_LENGTH) {
                     logger.warning("Skipping malformed transaction line: " + line);
 
                     continue;
                 }
 
-                int bankId = Integer.parseInt(parts[0]);
-                String tag = parts[1];
-                Category category = Category.toCategory(parts[2]);
-                float value = Float.parseFloat(parts[3]);
-                if (value < 0) {
+                ParseTransactionData data = getParseTransactionData(parts);
+                if (data.value() < 0) {
                     logger.log(Level.WARNING, "Skipping invalid transaction with negative value: " + line);
                     continue;
                 }
@@ -95,10 +96,9 @@ public class Storage {
                 ParsedTransactionInfo info = getParsedTransactionInfo(parts);
 
                 try {
-                    Transaction transaction = new Transaction(value, category, new Date(info.day(),
-                            info.month(), info.year()), info.currency(), tag);
+                    Transaction transaction = new Transaction(data.value(), data.category(), new Date(info.day(), info.month(), info.year()), info.currency(), data.tag());
 
-                    Bank bankToBeLoadedTo = User.getBanks().get(bankId);
+                    Bank bankToBeLoadedTo = User.getBanks().get(data.bankId());
                     bankToBeLoadedTo.getTransactions().add(transaction);
                 } catch (FinanceException | IllegalArgumentException e) {
                     logger.log(Level.WARNING, "Skipping invalid transaction: " + line, e);
@@ -111,6 +111,30 @@ public class Storage {
         }
     }
 
+    //@@author kevinlokewy
+    private static ParseTransactionData getParseTransactionData(String[] parts) {
+        int bankId = Integer.parseInt(parts[0]);
+        String tag = parts[1];
+        Category category = Category.toCategory(parts[2]);
+        float value = Float.parseFloat(parts[3]);
+        ParseTransactionData data = new ParseTransactionData(bankId, tag, category, value);
+        return data;
+    }
+
+    private record ParseTransactionData(int bankId, String tag, Category category, float value) {
+    }
+
+    //@@author kevinlokewy
+    private static boolean transactionFileDoesNotExist(File file) {
+        if (!file.exists()) {
+            logger.warning("No transaction file found. Returning null.");
+
+            return true;
+        }
+        return false;
+    }
+
+    //@@author kevinlokey
     private static ParsedTransactionInfo getParsedTransactionInfo(String[] parts) {
         int day = Integer.parseInt(parts[4]);
         Month month = Month.valueOf(parts[5]);
@@ -123,6 +147,7 @@ public class Storage {
     private record ParsedTransactionInfo(int day, Month month, int year, Currency currency) {
     }
 
+    //@@author kevinlokey
     public void saveBudgets(ArrayList<Budget> budgets) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(BUDGET_FILE))) {
             for (Budget b : budgets) {
@@ -135,10 +160,10 @@ public class Storage {
     }
 
 
+    //@@author kevinlokey
     public ArrayList<Budget> loadBudgets() {
         File file = new File(BUDGET_FILE);
-        if (!file.exists()) {
-            logger.log(Level.WARNING, "No budget file found. Returning null.");
+        if (budgetFileExists(file)) {
             return null;
         }
 
@@ -148,14 +173,13 @@ public class Storage {
             ArrayList<Budget> budgets = new ArrayList<>();
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split("\\|");
-                if (parts.length != 5) {
+                if (parts.length != BUDGET_DATA_LENGTH) {
                     logger.log(Level.WARNING, "Skipping malformed budget line: " + line);
                     continue;
                 }
 
                 int bankId = Integer.parseInt(parts[0]);
-                Bank bank = bankId == -1 ? null : User.getBanks().stream().filter(
-                        b -> b.getId() == bankId).findFirst().orElse(null);
+                Bank bank = bankId == -1 ? null : User.getBanks().stream().filter(b -> b.getId() == bankId).findFirst().orElse(null);
 
                 parseBudgets(parts, budgets, bank);
             }
@@ -166,6 +190,15 @@ public class Storage {
         return null;
     }
 
+    private static boolean budgetFileExists(File file) {
+        if (!file.exists()) {
+            logger.log(Level.WARNING, "No budget file found. Returning null.");
+            return true;
+        }
+        return false;
+    }
+
+    //@@author kevinlokey
     private static void parseBudgets(String[] parts, ArrayList<Budget> budgets, Bank bank) {
         Category category = Category.toCategory(parts[1]);
         Month month = Month.valueOf(parts[2]);
@@ -176,6 +209,7 @@ public class Storage {
     }
 
 
+    //@@author kevinlokey
     public void saveBanks(ArrayList<Bank> banks) {
         assert banks != null : "Banks list should not be null";
 
@@ -189,6 +223,7 @@ public class Storage {
         }
     }
 
+    //@@author kevinlokey
     public ArrayList<Bank> loadBanks() {
         File file = new File(BANK_FILE);
         if (!file.exists()) {
@@ -203,7 +238,7 @@ public class Storage {
             ArrayList<Bank> banks = new ArrayList<>();
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split("\\|");
-                if (parts.length != 4) {
+                if (parts.length != BANK_DATA_LENGTH) {
                     logger.log(Level.WARNING, "Skipping malformed bank line: " + line);
                     continue;
                 }
@@ -218,6 +253,7 @@ public class Storage {
         return null;
     }
 
+    //@@author kevinlokey
     private static void parseBanks(String[] parts, ArrayList<Bank> banks) {
         int id = Integer.parseInt(parts[0]);
         Currency currency = Currency.valueOf(parts[1]);
@@ -227,12 +263,15 @@ public class Storage {
         banks.add(new Bank(id, currency, balance, exchangeRate));
     }
 
+    //@@author kevinlokey
     private static void writeBanks(Bank b, PrintWriter pw) {
         pw.println(b.getId() + "|" +
                 b.getCurrency().name() + "|" +
                 b.getBalance() + "|" +
                 b.getExchangeRate());
     }
+
+    //@@author kevinlokey
     private static void writeBudgets(Budget b, PrintWriter pw, int bankId) {
         pw.println(bankId + "|" +
                 b.getCategory().name() + "|" +
@@ -240,6 +279,8 @@ public class Storage {
                 b.getBudget() + "|" +
                 b.getCurrency().name());
     }
+
+    //@@author kevinlokey
     private static void writeTransactions(Bank bank, Transaction t, PrintWriter pw) {
         pw.println(bank.getId() + "|" +
                 t.getTag() + "|" +

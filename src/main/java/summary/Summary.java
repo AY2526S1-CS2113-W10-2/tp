@@ -33,24 +33,17 @@ public class Summary {
     public void showMonthlySummary(String month, Bank bank, Currency currency, boolean isConvertAll) {
         assert month != null && !month.isBlank() : "Month input cannot be null or empty";
 
-        logger.log(Level.INFO, "Generating summary for month: " + month + ", Currency: "
-                + currency.name() + ", ConvertAll: " + isConvertAll);
+        logger.log(Level.INFO, "Generating summary for month: " + month + ", Currency: " + currency.name() + ", ConvertAll: " + isConvertAll);
 
         Month monthEnum = Month.valueOf(month.toUpperCase());
 
         Currency displayCurrency = determineDisplayCurrency(bank, currency);
         List<Transaction> monthlyTransactions = getMonthlyTransactions(bank, monthEnum, currency, isConvertAll);
 
-        Map<Category, Float> spendingByCategory = calculateSpendingByCategory(
-                monthlyTransactions, displayCurrency, isConvertAll
-        );
-        Map<Category, Float> budgetByCategory = calculateBudgetByCategory(
-                monthEnum, bank, displayCurrency, currency, isConvertAll
-        );
+        Map<Category, Float> spendingByCategory = calculateSpendingByCategory(monthlyTransactions, displayCurrency, isConvertAll);
+        Map<Category, Float> budgetByCategory = calculateBudgetByCategory(monthEnum, bank, displayCurrency, currency, isConvertAll);
 
-        String summaryOutput = OutputManager.printSummary(
-                month, monthlyTransactions, spendingByCategory, budgetByCategory, displayCurrency, isConvertAll
-        );
+        String summaryOutput = OutputManager.printSummary(month, monthlyTransactions, spendingByCategory, budgetByCategory, displayCurrency, isConvertAll);
         OutputManager.printMessage(summaryOutput);
     }
 
@@ -58,8 +51,7 @@ public class Summary {
         return (bank != null) ? bank.getCurrency() : currency;
     }
 
-    private List<Transaction> getMonthlyTransactions(
-            Bank bank, Month monthEnum, Currency currency, boolean isConvertAll) {
+    private List<Transaction> getMonthlyTransactions(Bank bank, Month monthEnum, Currency currency, boolean isConvertAll) {
         if (bank != null) {
             return getBankTransactions(bank, monthEnum);
         }
@@ -89,8 +81,7 @@ public class Summary {
         return monthlyTransactions;
     }
 
-    private Map<Category, Float> calculateSpendingByCategory(
-            List<Transaction> monthlyTransactions, Currency displayCurrency, boolean isConvertAll) {
+    private Map<Category, Float> calculateSpendingByCategory(List<Transaction> monthlyTransactions, Currency displayCurrency, boolean isConvertAll) {
         Map<Category, Float> spendingByCategory = new HashMap<>();
 
         for (Category cat : Category.values()) {
@@ -101,8 +92,7 @@ public class Summary {
         return spendingByCategory;
     }
 
-    private float calculateSpendingForCategory(
-            Category category, List<Transaction> monthlyTransactions, Currency displayCurrency, boolean isConvertAll) {
+    private float calculateSpendingForCategory(Category category, List<Transaction> monthlyTransactions, Currency displayCurrency, boolean isConvertAll) {
         float spent = 0f;
 
         for (Transaction t : monthlyTransactions) {
@@ -120,8 +110,7 @@ public class Summary {
         return spent;
     }
 
-    private Map<Category, Float> calculateBudgetByCategory(
-            Month monthEnum, Bank bank, Currency displayCurrency, Currency currency, boolean isConvertAll) {
+    private Map<Category, Float> calculateBudgetByCategory(Month monthEnum, Bank bank, Currency displayCurrency, Currency currency, boolean isConvertAll) {
         Map<Category, Float> budgetByCategory = new HashMap<>();
 
         for (Category cat : Category.values()) {
@@ -132,9 +121,7 @@ public class Summary {
         return budgetByCategory;
     }
 
-    private float calculateBudgetForCategory(
-            Category category, Month monthEnum, Bank bank,
-            Currency displayCurrency, Currency currency, boolean isConvertAll) {
+    private float calculateBudgetForCategory(Category category, Month monthEnum, Bank bank, Currency displayCurrency, Currency currency, boolean isConvertAll) {
         float budget = 0f;
 
         for (Bank b : User.getBanks()) {
@@ -149,9 +136,7 @@ public class Summary {
         return budget;
     }
 
-    private float calculateBudgetAmount(
-            Budget bgt, Bank b, Bank bank, Currency displayCurrency,
-            Currency currency, boolean isConvertAll) {
+    private float calculateBudgetAmount(Budget bgt, Bank b, Bank bank, Currency displayCurrency, Currency currency, boolean isConvertAll) {
         if (bank != null) {
             return calculateLoggedInBudget(bgt, b, bank);
         }
@@ -187,9 +172,7 @@ public class Summary {
     }
 
     private static float getTotalSpend(Transaction t, float spent, Currency displayCurrency) {
-        float tCurr = Currency.getExchangeRateToSGD(t.getCurrency());
-        float dispCurr = Currency.getExchangeRateToSGD(displayCurrency);
-        spent += t.getValue() * tCurr / dispCurr;
+        spent += t.getValue() * Currency.getExchangeRateToSGD(t.getCurrency()) / Currency.getExchangeRateToSGD(displayCurrency);
         return spent;
     }
 
@@ -199,9 +182,7 @@ public class Summary {
     }
 
     private static float convertBudgets(float budget, Budget bgt, Currency displayCurrency) {
-        float bgtCurr = Currency.getExchangeRateToSGD(bgt.getCurrency());
-        float dispCurr = Currency.getExchangeRateToSGD(displayCurrency);
-        budget += bgt.getBudget() * bgtCurr / dispCurr;
+        budget += bgt.getBudget() * Currency.getExchangeRateToSGD(bgt.getCurrency()) / Currency.getExchangeRateToSGD(displayCurrency);
         return budget;
     }
 }

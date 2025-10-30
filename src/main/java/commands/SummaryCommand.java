@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
+//@@author kevinlokewy
 public class SummaryCommand implements Command {
     private static final Logger logger = Logger.getLogger(Summary.class.getName());
     private final ArrayList<String> arguments;
@@ -20,6 +20,7 @@ public class SummaryCommand implements Command {
     }
 
     @Override
+    //@@author kevinlokewy
     public String execute() throws FinanceException {
         try {
             logger.log(Level.INFO, "Handling summary command with arguments: " + arguments);
@@ -53,19 +54,21 @@ public class SummaryCommand implements Command {
 
         return null;
     }
-
+//@@author kevinlokey
     private static void showMonthlySummaryForAllTransactions(Summary summary, String monthInput) {
         summary.showMonthlySummary(monthInput, null, Currency.SGD, true);
     }
-
+//@@author kevinlokey
     private static void showMonthlySummaryForCurrency(Summary summary, String monthInput, Currency currency) {
         summary.showMonthlySummary(monthInput, null, currency, false);
     }
 
+    //@@author kevinlokey
     private static void showMonthlySummaryForBank(Summary summary, String monthInput) {
         summary.showMonthlySummary(monthInput, User.currBank, User.currBank.getCurrency(), false);
     }
 
+    //@@author kevinlokey
     private Currency parseCurrency() throws FinanceException {
         Currency currency;
         try {
@@ -76,6 +79,7 @@ public class SummaryCommand implements Command {
         return currency;
     }
 
+    //@@author kevinlokey
     private String parseMonth() throws FinanceException {
         String monthInput = arguments.get(0).toUpperCase();
         try {

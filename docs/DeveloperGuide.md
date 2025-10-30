@@ -300,18 +300,20 @@ The following sequence diagram shows how various classes and methods interact to
 ## Product scope
 ### Target user profile
 
-{Describe the target user profile}
-
+The target user profile is incoming NUS exchangers. TrackStars is an application that will allow for easy, integrated financce tracking across multiple south east asian currencies, as 
+exchangers travel during their stint in Singapore
 ### Value proposition
 
-{Describe the value proposition: what problem does it solve?}
+TrackStars aims to solve the hassle of having multiple bank accounts for different currencies, wherein finance tracking is a hassle because these systems are not integrated.
+By allowing multiple currencies on one application, TrackStars aims to make finance tracking for exchange students convenient and comprehensive.
+
 
 ## User Stories
 
-|Version| As a ... | I want to ... | So that I can ...|
-|--------|----------|---------------|------------------|
-|v1.0|new user|see usage instructions|refer to them when I forget how to use the application|
-|v2.0|user|find a to-do item by name|locate a to-do without having to go through the entire list|
+|Version| As a ...             | I want to ...                                                       | So that I can ...                                                                  |
+|--------|----------------------|---------------------------------------------------------------------|------------------------------------------------------------------------------------|
+|v1.0| exchange student     | add transactions, bank accounts and budgets                         | easily track my finances                                                           |
+|v2.0| NUS exchange student | find, search, and summarize my spending across multiple currencies  | track my finances across multiple currencies while travelling SEA as an exchanger  |
 
 ## Non-Functional Requirements
 
@@ -324,3 +326,32 @@ The following sequence diagram shows how various classes and methods interact to
 ## Instructions for manual testing
 
 {Give instructions on how to do a manual product testing e.g., how to load sample data to be used for testing}
+### Initial Launch and Shutdown 
+1. Initial Launch 
+ * Download the JAR file and copy into an empty folder 
+ * Using the terminal, cd into that empty folder 
+ * run '-java TrackStars.jar' to run the programme
+
+2. Shutdown 
+ * Exit the application by typing 'exit' and then entering it
+
+### Adding Bank Accounts 
+ * Add bank accounts to the application via the command 'addbank a/AMOUNT c/CURRENCY'
+ * Test Case 1: addbank 5000 SGD 
+ * Expected: The programme will inform the user that this bank account with deposit of $5000 SGD is identified as Bank 0
+ * Test Case 2: addbank 12000 THB
+ * Expected: The programme will inform the user that this bank account with deposit of ฿12000 THB is identified as Bank 1
+
+### Adding Budgets 
+ * Adding budgets to a bank is a bank-specific action, and thus, the user must login to a bank account to perform this action
+ * First login to Bank 0 by using the command 'login 0'
+ * Test Case 1: addBudget food 150 JAN
+ * Expected: The programme will inform the user that this action was successful 
+ * Then logout via command 'logout', and login to bank 1 through the command 'login 1'
+ * Test Case 2: addBudget transport 1500 JAN
+ * Expected: The programme will inform the user that this action was successful 
+
+### Adding Transactions 
+
+### Monthly Summary 
+
