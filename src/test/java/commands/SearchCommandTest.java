@@ -28,18 +28,20 @@ public class SearchCommandTest {
         Files.deleteIfExists(TX_FILE);
         User.initialise();
 
-        User.banks = new ArrayList<>();
-        User.budgets = new ArrayList<>();
+        User.getBanks().clear();
+        User.getBudgets().clear();
 
         Bank testBank = new Bank(1, Currency.SGD, 1000f, 1.0f);
         User.addBank(testBank);
-        User.currBank = testBank;
+        User.setCurrBank(testBank);
 
-        User.currBank.addTransactionToBank(new Transaction(10.0f, Category.FOOD,
+        Bank currBank = User.getCurrBank();
+
+        currBank.addTransactionToBank(new Transaction(10.0f, Category.FOOD,
                 new Date(5, Month.JAN, 2025), Currency.SGD, "Chicken Rice"));
-        User.currBank.addTransactionToBank(new Transaction(25.0f, Category.ENTERTAINMENT,
+        currBank.addTransactionToBank(new Transaction(25.0f, Category.ENTERTAINMENT,
                 new Date(10, Month.JAN, 2025), Currency.SGD, "Movie"));
-        User.currBank.addTransactionToBank(new Transaction(5.0f, Category.FOOD,
+        currBank.addTransactionToBank(new Transaction(5.0f, Category.FOOD,
                 new Date(12, Month.JAN, 2025), Currency.SGD, "Bubble Tea"));
     }
 
@@ -51,7 +53,7 @@ public class SearchCommandTest {
         SearchCommand searchCommand = new SearchCommand(args);
         searchCommand.execute();
 
-        ArrayList<Transaction> txs = User.currBank.getTransactions();
+        ArrayList<Transaction> txs = User.getCurrBank().getTransactions();
 
         boolean matchFound = txs.stream().anyMatch(
                 t -> t.getCategory().name().toLowerCase().contains("food")
@@ -60,7 +62,7 @@ public class SearchCommandTest {
     }
 
     @Test
-    void searchCommand_twoArguments_throwsFinanceException() throws FinanceException {
+    void searchCommand_twoArguments_throwsFinanceException() {
         ArrayList<String> args = new ArrayList<>();
         args.add("foo");
         args.add("bar");

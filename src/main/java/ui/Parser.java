@@ -48,13 +48,16 @@ public class Parser {
 
         ArrayList<String> arguments = new ArrayList<>(commandList.subList(1, commandList.size()));
 
-        Command cmd = null;
+        Command cmd;
+        boolean showLoggedBank = true;      // Whether to end  response with a message of bank logged into
         switch (comm){
         case "login":
             cmd = new LoginCommand(arguments);
+            showLoggedBank = false;
             break;
         case "logout":
             cmd = new LogoutCommand();
+            showLoggedBank = false;
             break;
         case "exit":
             logger.info("Executing 'exit' command");
@@ -63,37 +66,41 @@ public class Parser {
         case "summary":
             logger.info("Executing 'summary' command");
             cmd = new SummaryCommand(arguments);
+            showLoggedBank = false;
             break;
         case "addbank":
             logger.info("Executing 'addbank' command");
             cmd = new AddBankCommand(arguments);
+            showLoggedBank = false;
             break;
         case "add":
             logger.info("Executing 'add' command");
-            if(User.isLoggedIn) {
+            if(User.isLoggedIn()) {
                 cmd = new AddTransactionCommand(arguments);
             } else{
                 logger.info("Please login to a bank to execute this command");
                 throw new FinanceException("Please login to a bank to execute this command");
             }
+            showLoggedBank = false;
             break;
         case "list":
             logger.info("Executing 'list' command");
             cmd = new ListRecentTransactionsCommand(); // always execute
+            showLoggedBank = false;
             break;
-
         case "listbanks":
             logger.info("Executing 'listbanks' command");
-            if(!User.isLoggedIn) {
+            if(!User.isLoggedIn()) {
                 cmd = new ListBanksCommand();
-            } else{
+            } else {
                 logger.info("Please logout to execute this command");
                 throw new FinanceException("Please logout to execute this command");
             }
+            showLoggedBank = false;
             break;
         case "delete":
             logger.info("Executing 'delete' command");
-            if(User.isLoggedIn) {
+            if(User.isLoggedIn()) {
                 cmd = new DeleteTransactionCommand(arguments);
             } else{
                 logger.info("Please login to a bank to execute this command");
@@ -102,58 +109,69 @@ public class Parser {
             break;
         case "addbudget":
             logger.info("Executing 'addbudget' command");
-            cmd = new AddBudgetCommand(arguments);
+            if (User.isLoggedIn()) {
+                cmd = new AddBudgetCommand(arguments);
+            } else {
+                logger.info("Please login to a bank to execute this command");
+                throw new FinanceException("Please login to a bank to execute this command");
+            }
+            showLoggedBank = false;
             break;
         case "listbudget":
             logger.info("Executing 'listbudget' command");
             cmd = new ListBudgetsCommand(arguments);
+            showLoggedBank = false;
             break;
         case "deposit":
             logger.info("Executing 'deposit' command");
-            if(User.isLoggedIn) {
-                cmd = new ATM(arguments, User.currBank, true, false);
-            } else{
+            if(User.isLoggedIn()) {
+                cmd = new ATM(arguments, User.getCurrBank(), true, false);
+                showLoggedBank = false;
+            } else {
                 logger.info("Please login to a bank to execute this command");
                 throw new FinanceException("Please login to a bank to execute this command");
             }
             break;
         case "withdraw":
             logger.info("Executing 'withdraw' command");
-            if(User.isLoggedIn) {
-                cmd = new ATM(arguments, User.currBank, false, true);
-            } else{
+            if(User.isLoggedIn()) {
+                cmd = new ATM(arguments, User.getCurrBank(), false, true);
+                showLoggedBank = false;
+            } else {
                 logger.info("Please login to a bank to execute this command");
                 throw new FinanceException("Please login to a bank to execute this command");
             }
             break;
         case "search":
             logger.info("Executing 'search' command");
-            if (User.isLoggedIn) {
+            if (User.isLoggedIn()) {
                 cmd = new SearchCommand(arguments);
             } else {
                 logger.info("Please login to a bank to execute this command");
                 throw new FinanceException("Please login to a bank to execute this command");
             }
+            showLoggedBank = false;
             break;
         case "filter":
             logger.info("Executing 'filter' command");
-            if (User.isLoggedIn) {
+            if (User.isLoggedIn()) {
                 cmd = new FilterCommand(arguments);
             } else {
                 logger.info("Please login to a bank to execute this command");
                 throw new FinanceException("Please login to a bank to execute this command");
             }
+            showLoggedBank = false;
             break;
         default:
             logger.log(Level.WARNING,"Unknown command entered: " + comm);
             throw new FinanceException("Does not match any known command.");
         }
-        if (cmd != null) {
-            cmd.execute();
-            if (cmd.shouldExit()) {
-                return true;
-            }
-            OutputManager.showCurrentBank(User.currBank);
+        cmd.execute();
+        if (cmd.shouldExit()) {
+            return true;
+        }
+        if (showLoggedBank){
+            OutputManager.showCurrentBank(User.getCurrBank());
         }
         return false;
     }

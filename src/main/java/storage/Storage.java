@@ -25,14 +25,13 @@ import static ui.OutputManager.printMessage;
 
 //@@author kevinlokey
 public class Storage {
-    private static final Logger logger = Logger.getLogger(Storage.class.getName());
-
-    private static final String TRANSACTION_FILE = "transactions.txt";
-    private static final String BUDGET_FILE = "budgets.txt";
-    private static final String BANK_FILE = "banks.txt";
     public static final int TRANSACTION_DATA_LENGTH = 8;
     public static final int BUDGET_DATA_LENGTH = 5;
     public static final int BANK_DATA_LENGTH = 4;
+    private static final Logger logger = Logger.getLogger(Storage.class.getName());
+    private static final String TRANSACTION_FILE = "transactions.txt";
+    private static final String BUDGET_FILE = "budgets.txt";
+    private static final String BANK_FILE = "banks.txt";
 
     //@@author kevinlokey
     public Storage() {
@@ -78,7 +77,6 @@ public class Storage {
             logger.info("Loading transactions from file...");
 
             String line;
-            ArrayList<Transaction> transactions = new ArrayList<>();
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split("\\|");
                 if (parts.length != TRANSACTION_DATA_LENGTH) {
@@ -96,7 +94,8 @@ public class Storage {
                 ParsedTransactionInfo info = getParsedTransactionInfo(parts);
 
                 try {
-                    Transaction transaction = new Transaction(data.value(), data.category(), new Date(info.day(), info.month(), info.year()), info.currency(), data.tag());
+                    Transaction transaction = new Transaction(data.value(), data.category(), new Date(info.day(),
+                            info.month(), info.year()), info.currency(), data.tag());
 
                     Bank bankToBeLoadedTo = User.getBanks().get(data.bankId());
                     bankToBeLoadedTo.getTransactions().add(transaction);
@@ -179,7 +178,8 @@ public class Storage {
                 }
 
                 int bankId = Integer.parseInt(parts[0]);
-                Bank bank = bankId == -1 ? null : User.getBanks().stream().filter(b -> b.getId() == bankId).findFirst().orElse(null);
+                Bank bank = bankId == -1 ? null : User.getBanks().stream().filter(b ->
+                        b.getId() == bankId).findFirst().orElse(null);
 
                 parseBudgets(parts, budgets, bank);
             }

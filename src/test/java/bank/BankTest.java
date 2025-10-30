@@ -25,29 +25,36 @@ public class BankTest {
     public void setUp() throws IOException {
         Files.deleteIfExists(TX_FILE);
         User.initialise();
+
+        User.getBanks().clear();
+        User.getBudgets().clear();
+
         Bank b1 = new Bank(0, SGD, 100, 0.4f);
         Bank b2 = new Bank(0, JPY, 1000, 2f);
         User.addBank(b1);
         User.addBank(b2);
-        User.currBank = b2;
+        User.setCurrBank(b2);
 
     }
 
     @Test
     public void bank_setBalance_success(){
-        float b1 = User.currBank.getBalance();
-        User.currBank.setBalance(110);
-        float b2 = User.currBank.getBalance();
+        Bank currBank = User.getCurrBank();
+        float b1 = currBank.getBalance();
+        assertEquals(1000, b1);
+        currBank.setBalance(110);
+        float b2 = currBank.getBalance();
         assertEquals(110, b2);
     }
 
     @Test
     public void bank_setNegativeBalance_exceptionThrown(){
-        float b1 = User.currBank.getBalance();
+        Bank currBank = User.getCurrBank();
+        float b1 = currBank.getBalance();
         assertThrows(IllegalArgumentException.class, () -> {
-            User.currBank.setBalance(-10);
+            currBank.setBalance(-10);
         });
-        float b2 = User.currBank.getBalance();
+        float b2 = currBank.getBalance();
         assertEquals(b1, b2);
     }
 
@@ -60,19 +67,22 @@ public class BankTest {
 
     @Test
     public void bank_setExchangeRate_success(){
-        float b1 = User.currBank.getExchangeRate();
-        User.currBank.setExchangeRate(0.5f);
-        float b2 = User.currBank.getExchangeRate();
+        Bank currBank = User.getCurrBank();
+        float b1 = currBank.getExchangeRate();
+        assertEquals(2f, b1);
+        currBank.setExchangeRate(0.5f);
+        float b2 = currBank.getExchangeRate();
         assertEquals(0.5f, b2);
     }
 
     @Test
     public void bank_setNegativeExchangeRate_exceptionThrown(){
-        float b1 = User.currBank.getExchangeRate();
+        Bank currBank = User.getCurrBank();
+        float b1 = currBank.getExchangeRate();
         assertThrows(IllegalArgumentException.class, () -> {
-            User.currBank.setExchangeRate(-0.3f);
+            currBank.setExchangeRate(-0.3f);
         });
-        float b2 = User.currBank.getExchangeRate();
+        float b2 = currBank.getExchangeRate();
         assertEquals(b1, b2);
     }
 
@@ -85,13 +95,14 @@ public class BankTest {
 
     @Test
     public void bank_addTransaction_success() throws FinanceException {
+        Bank currBank = User.getCurrBank();
         float value = 9.8f;
         Category category = Category.FOOD;
         Date date = new Date(2, Month.APR, 2025);
         String tag = "Milo";
         Transaction transaction = new Transaction(value, category, date, SGD, tag);
-        User.currBank.addTransactionToBank(transaction);
-        Transaction addedTransaction = User.currBank.getTransactions().get(0);
+        currBank.addTransactionToBank(transaction);
+        Transaction addedTransaction = currBank.getTransactions().get(0);
         assertEquals(addedTransaction, transaction);
     }
 

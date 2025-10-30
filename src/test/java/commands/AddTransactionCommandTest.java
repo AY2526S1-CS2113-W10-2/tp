@@ -13,7 +13,6 @@ import utils.Currency;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -28,14 +27,14 @@ public class AddTransactionCommandTest {
         User.initialise();
 
         // Completely reset lists to avoid leftover file data
-        User.banks = new ArrayList<>();
-        User.budgets = new ArrayList<>();
+        User.getBanks().clear();
+        User.getBudgets().clear();
 
         // Set up a test bank
         Bank testBank = new Bank(1, Currency.SGD, 1000f, 1.0f);
         User.addBank(testBank);
-        User.currBank = testBank;
-        User.isLoggedIn = true;
+        User.setCurrBank(testBank);
+        User.setIsLoggedIn(true);
     }
 
     @Test
@@ -43,8 +42,8 @@ public class AddTransactionCommandTest {
         Parser.parseCommand("add food 10.50 10/4/2024");
 
 
-        assertEquals(1, User.currBank.getTransactions().size());
-        Transaction t = User.currBank.getTransactions().get(0);
+        assertEquals(1, User.getCurrBank().getTransactions().size());
+        Transaction t = User.getCurrBank().getTransactions().get(0);
         assertEquals(Category.FOOD, t.getCategory());
         assertEquals(10.5f, t.getValue());
     }

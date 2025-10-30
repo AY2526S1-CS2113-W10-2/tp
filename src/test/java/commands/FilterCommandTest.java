@@ -28,14 +28,14 @@ class FilterCommandTest {
     public void setUp() throws IOException, FinanceException {
         Files.deleteIfExists(TX_FILE);
         User.initialise();
-        User.banks = new ArrayList<>();
-        User.budgets = new ArrayList<>();
+        User.getBanks().clear();
+        User.getBudgets().clear();
 
         // Set up a test bank
         bank0 = new Bank(0, Currency.SGD, 1000f, 1.0f);
         User.addBank(bank0);
-        User.currBank = bank0;
-        User.isLoggedIn = true;
+        User.setCurrBank(bank0);
+        User.setIsLoggedIn(true);
 
         // Add test transactions
         Transaction t1 = new Transaction(

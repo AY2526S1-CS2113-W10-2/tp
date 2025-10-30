@@ -18,14 +18,21 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
-//@@author kevinlokewy
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+
+/**
+ * Tests for Storage persistence: addTransaction, save/load transactions.
+ */
 public class StorageTest {
     private static final Path TX_FILE = Path.of("transactions.txt");
     private static final Path BUD_FILE = Path.of("budgets.txt");
     private static final Path BANK_FILE = Path.of("banks.txt");
 
     private Storage storage;
+
+
 //@@author kevinlokewy
     @BeforeEach
     public void setup() throws IOException {
@@ -34,10 +41,10 @@ public class StorageTest {
         Files.deleteIfExists(BUD_FILE);
         Files.deleteIfExists(BANK_FILE);
 
+        User.initialise();
         // Initialize User static fields
-        User.banks = new ArrayList<>();
-        User.transactions = new ArrayList<>();
-        User.budgets = new ArrayList<>();
+        User.getBanks().clear();
+        User.getBudgets().clear();
 
         storage = new Storage();
     }
@@ -54,9 +61,9 @@ public class StorageTest {
     @Test
     public void saveAndLoadBanks_shouldPersistBanks() {
         Bank bank = new Bank(0, Currency.THB, 100f, 0.04f);
-        User.banks.add(bank);
+        User.getBanks().add(bank);
 
-        storage.saveBanks(User.banks);
+        storage.saveBanks(User.getBanks());
         ArrayList<Bank> loaded = storage.loadBanks();
 
         assertNotNull(loaded);
@@ -70,17 +77,15 @@ public class StorageTest {
     @Test
     public void saveAndLoadTransactions_shouldPersistTransactions() throws FinanceException {
         Bank bank = new Bank(0, Currency.THB, 100f, 0.04f);
-        User.banks.add(bank);
+        User.getBanks().add(bank);
 
         Transaction tx = new Transaction(50f, Category.FOOD, new Date(15, Month.JAN, 2025), Currency.THB, "Lunch");
         bank.getTransactions().add(tx);
-        User.transactions.add(tx); // keep User.transactions consistent
 
-        storage.saveTransactions(User.banks);
+        storage.saveTransactions(User.getBanks());
 
         // Reset transactions to test load
         bank.getTransactions().clear();
-        User.transactions.clear();
 
         storage.loadTransactions();
 
@@ -96,15 +101,15 @@ public class StorageTest {
     @Test
     public void saveAndLoadBudgets_shouldPersistBudgets() {
         Bank bank = new Bank(0, Currency.THB, 100f, 0.04f);
-        User.banks.add(bank);
+        User.getBanks().add(bank);
 
         Budget budget = new Budget(Category.FOOD, 200f, Currency.THB, Month.JAN, bank);
-        User.budgets.add(budget);
+        User.getBudgets().add(budget);
 
-        storage.saveBudgets(User.budgets);
+        storage.saveBudgets(User.getBudgets());
 
         // Reset budgets to test load
-        User.budgets.clear();
+        User.getBudgets().clear();
 
         ArrayList<Budget> loaded = storage.loadBudgets();
         assertNotNull(loaded);

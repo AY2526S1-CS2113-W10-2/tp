@@ -21,7 +21,7 @@ public class ListRecentTransactionsCommand implements Command{
         List<Transaction> transactionsToDisplay = new ArrayList<>();
 
         // Step 1: Check if user is logged in to a bank
-        Bank loggedInBank = User.currBank;
+        Bank loggedInBank = User.getCurrBank();
 
         if (loggedInBank != null) {
             // User logged in → show transactions from this bank only
