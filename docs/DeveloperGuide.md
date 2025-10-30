@@ -300,18 +300,18 @@ The following sequence diagram shows how various classes and methods interact to
 ## Product scope
 ### Target user profile
 
-{Describe the target user profile}
-
+The target user profile is incoming NUS exchangers. TrackStars is an application that will allow for easy, integrated financce tracking across multiple south east asian currencies, as 
+exchangers travel during their stint in Singapore
 ### Value proposition
 
 {Describe the value proposition: what problem does it solve?}
 
 ## User Stories
 
-|Version| As a ... | I want to ... | So that I can ...|
-|--------|----------|---------------|------------------|
-|v1.0|new user|see usage instructions|refer to them when I forget how to use the application|
-|v2.0|user|find a to-do item by name|locate a to-do without having to go through the entire list|
+|Version| As a ...             | I want to ...                                                       | So that I can ...                                                                  |
+|--------|----------------------|---------------------------------------------------------------------|------------------------------------------------------------------------------------|
+|v1.0| exchange student     | add transactions, bank accounts and budgets                         | easily track my finances                                                           |
+|v2.0| NUS exchange student | find, search, and summarize my spending across multiple currencies  | track my finances across multiple currencies while travelling SEA as an exchanger  |
 
 ## Non-Functional Requirements
 

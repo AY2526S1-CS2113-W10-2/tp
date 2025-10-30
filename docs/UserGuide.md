@@ -128,8 +128,8 @@ Format: `addBudget c/CATEGORY a/AMOUNT d/MONTH`
 
 Example of usage:
 
-`addBudget transport 40 JAN` to indicate a target of 40 spent on transport in January.  
-`addBudget entertainment 75 MAR` to indicate a target of 75 spent on transport in March.
+`addBudget transport 40 JAN` to indicate a target spend of 40 on transport in January.  
+`addBudget entertainment 75 MAR` to indicate a target spend of 75 on transport in March.
 
 ---
 
@@ -142,7 +142,7 @@ Format: `listBudget d/MONTH`
 
 Example of usage:
 
-`listBudget  JAN` to indicate show budget utilisation for January
+`listBudget JAN` to indicate show budget utilisation for January
 
 ---
 
@@ -155,7 +155,7 @@ Format: `deposit a/AMOUNT`
 
 Example of usage:
 
-`deposit` deposits 1500 into the account, in whatever currency that account trades in
+`deposit 1500` deposits 1500 into the account, in whatever currency that account trades in
 
 ---
 
