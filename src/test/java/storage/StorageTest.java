@@ -33,7 +33,7 @@ public class StorageTest {
     private Storage storage;
 
 
-//@@author kevinlokewy
+    //@@author kevinlokewy
     @BeforeEach
     public void setup() throws IOException {
         // Delete existing files to start fresh
@@ -57,7 +57,7 @@ public class StorageTest {
         Files.deleteIfExists(BANK_FILE);
     }
 
-//@@author kevinlokewy
+    //@@author kevinlokewy
     @Test
     public void saveAndLoadBanks_shouldPersistBanks() {
         Bank bank = new Bank(0, Currency.THB, 100f, 0.04f);

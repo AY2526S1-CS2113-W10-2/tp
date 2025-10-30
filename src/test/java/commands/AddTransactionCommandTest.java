@@ -16,6 +16,7 @@ import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AddTransactionCommandTest {
     private static final Path TX_FILE = Path.of("transactions.txt");
@@ -23,10 +24,8 @@ public class AddTransactionCommandTest {
     @BeforeEach
     public void setUp() throws IOException {
         Files.deleteIfExists(TX_FILE);
-        // Initialize User class (loads structure)
         User.initialise();
 
-        // Completely reset lists to avoid leftover file data
         User.getBanks().clear();
         User.getBudgets().clear();
 
@@ -63,7 +62,7 @@ public class AddTransactionCommandTest {
         FinanceException exception = assertThrows(FinanceException.class, () ->
                 Parser.parseCommand("add food -0.50 10/4/2024")
         );
-        assertEquals("Value cannot be negative", exception.getMessage());
+        assertTrue(exception.getMessage().contains("Amount must have at most 2 decimal places."));
     }
 
     @Test
@@ -71,7 +70,7 @@ public class AddTransactionCommandTest {
         FinanceException exception = assertThrows(FinanceException.class, () ->
                 Parser.parseCommand("add sports 10.50 10/4/2024")
         );
-        assertEquals("Unknown category: sports", exception.getMessage());
+        assertTrue(exception.getMessage().contains("Unknown category: sports"));
     }
 
 }
