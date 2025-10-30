@@ -19,14 +19,14 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+//@@author kevinlokewy
 public class StorageTest {
     private static final Path TX_FILE = Path.of("transactions.txt");
     private static final Path BUD_FILE = Path.of("budgets.txt");
     private static final Path BANK_FILE = Path.of("banks.txt");
 
     private Storage storage;
-
+//@@author kevinlokewy
     @BeforeEach
     public void setup() throws IOException {
         // Delete existing files to start fresh
@@ -42,6 +42,7 @@ public class StorageTest {
         storage = new Storage();
     }
 
+    //@@author kevinlokewy
     @AfterEach
     public void cleanup() throws IOException {
         Files.deleteIfExists(TX_FILE);
@@ -49,6 +50,7 @@ public class StorageTest {
         Files.deleteIfExists(BANK_FILE);
     }
 
+//@@author kevinlokewy
     @Test
     public void saveAndLoadBanks_shouldPersistBanks() {
         Bank bank = new Bank(0, Currency.THB, 100f, 0.04f);
@@ -64,6 +66,7 @@ public class StorageTest {
         assertEquals(bank.getCurrency(), loaded.get(0).getCurrency());
     }
 
+    //@@author kevinlokewy
     @Test
     public void saveAndLoadTransactions_shouldPersistTransactions() throws FinanceException {
         Bank bank = new Bank(0, Currency.THB, 100f, 0.04f);
@@ -89,6 +92,7 @@ public class StorageTest {
         assertEquals(tx.getCurrency(), loaded.getCurrency());
     }
 
+    //@@author kevinlokewy
     @Test
     public void saveAndLoadBudgets_shouldPersistBudgets() {
         Bank bank = new Bank(0, Currency.THB, 100f, 0.04f);
