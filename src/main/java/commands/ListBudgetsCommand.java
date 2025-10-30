@@ -24,6 +24,10 @@ public class ListBudgetsCommand implements Command {
                     "e.g. 'listBudget JAN'");
         }
 
+        if (User.currBank == null){
+            throw new FinanceException("You must be logged into a bank account to see its budgets! Try login command!");
+        }
+
         try {
             Month month = Month.fromString(arguments.get(0).toUpperCase());
             ArrayList<Budget> budgets = User.getBudgets();

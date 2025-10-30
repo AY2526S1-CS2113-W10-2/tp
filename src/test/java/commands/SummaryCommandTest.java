@@ -13,7 +13,9 @@ import ui.FinanceException;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 
 public class SummaryCommandTest {
     private Storage storage;

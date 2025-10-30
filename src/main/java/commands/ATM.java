@@ -6,6 +6,8 @@ import user.User;
 
 import java.util.ArrayList;
 
+import static ui.OutputManager.printMessage;
+
 public class ATM implements Command{
     private float amount;
     private Bank currBank;
@@ -25,14 +27,14 @@ public class ATM implements Command{
         if(this.deposit && !this.withdraw){
             newBalance = this.currBank.getBalance() + this.amount;
             this.currBank.setBalance(newBalance);
-            System.out.println("Successful deposit! Your bank balance is now: "
+            printMessage("Successful deposit! Your balance for bank " + this.currBank.getId() + " is now: "
                     + this.currBank.getCurrency().getSymbol()
                     + this.currBank.getBalance());
         }
         if(this.withdraw && !this.deposit){
             newBalance = this.currBank.getBalance() - this.amount;
             this.currBank.setBalance(newBalance);
-            System.out.println("Successful withdrawal! Your bank balance is now: "
+            printMessage("Successful withdrawal! Your balance for bank " + this.currBank.getId() + " is now: "
                     + this.currBank.getCurrency().getSymbol()
                     + this.currBank.getBalance());
         }
