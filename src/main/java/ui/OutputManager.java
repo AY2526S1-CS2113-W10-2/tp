@@ -46,7 +46,8 @@ public class OutputManager {
         return strb.toString();
     }
 
-    private static void appendTotalSpend(List<Transaction> transactions, Currency displayCurrency, boolean isConvertAll, StringBuilder strb) {
+    private static void appendTotalSpend(
+            List<Transaction> transactions, Currency displayCurrency, boolean isConvertAll, StringBuilder strb) {
         float totalSpend = 0f;
         for (Transaction t : transactions) {
             if (isConvertAll) {
@@ -63,7 +64,9 @@ public class OutputManager {
                 .append("\n");
     }
 
-    private static void appendCategoryTotals(Map<Category, Float> spendingByCategory, Map<Category, Float> budgetByCategory, Currency displayCurrency, StringBuilder strb) {
+    private static void appendCategoryTotals(
+            Map<Category, Float> spendingByCategory, Map<Category, Float> budgetByCategory,
+            Currency displayCurrency, StringBuilder strb) {
         strb.append("\n--- Category Totals (Spent / Budget) ---\n");
         for (Category cat : Category.values()) {
             float spent = spendingByCategory.getOrDefault(cat, 0f);
@@ -81,7 +84,8 @@ public class OutputManager {
         }
     }
 
-    private static void appendRecentTransactions(List<Transaction> transactions, Currency displayCurrency, boolean isConvertAll, StringBuilder strb) {
+    private static void appendRecentTransactions(
+            List<Transaction> transactions, Currency displayCurrency, boolean isConvertAll, StringBuilder strb) {
         strb.append("--- Recent Transactions ---\n");
         if (transactions.isEmpty()) {
             strb.append("No transactions this month.\n");

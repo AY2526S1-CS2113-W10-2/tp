@@ -118,7 +118,7 @@ Example of usage:
 ---
 
 ### Adding a Budget: `addBudget`
-Adds a new budget for a specific category of spending. Used to keep track of total amounts spent on different categories over time.
+Adds a new budget for a specific category of spending. Used to keep track of total amounts spent on different categories over time from a single bank account.
 
 Format: `addBudget c/CATEGORY a/AMOUNT d/MONTH`
 
