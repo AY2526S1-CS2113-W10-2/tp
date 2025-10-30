@@ -1,5 +1,6 @@
 package commands;
 
+import bank.Bank;
 import transaction.Transaction;
 import ui.FinanceException;
 import user.User;
@@ -10,7 +11,6 @@ import utils.Date;
 import java.util.ArrayList;
 
 import static ui.OutputManager.printMessage;
-import static user.User.currBank;
 
 public class AddTransactionCommand implements Command {
     private static final String ERROR_INVALID_FORMAT =
@@ -18,7 +18,7 @@ public class AddTransactionCommand implements Command {
         + "e.g. 'add food 4.50 10/4/2024' or 'add 'groceries' food 4.50 10/4/2024'";
     private static final int MIN_ALLOWED_ARGUMENTS_LENGTH = 3;
     private static final int MAX_ALLOWED_ARGUMENTS_LENGTH = 4;
-    private static final double MIN_VALUE = 0.0;
+    private static final float MIN_VALUE = 0f;
     private final ArrayList<String> arguments;
 
     public AddTransactionCommand(ArrayList<String> arguments) {
@@ -37,7 +37,7 @@ public class AddTransactionCommand implements Command {
         String valueString;
         String dateString;
 
-        if (arguments.size() == 4) {
+        if (arguments.size() == MAX_ALLOWED_ARGUMENTS_LENGTH) {
             // Tag provided
             tag = arguments.get(0);
             categoryString = arguments.get(1);
@@ -57,12 +57,18 @@ public class AddTransactionCommand implements Command {
                 throw new FinanceException("Invalid category");
             }
 
+            //Checks if value input is within 2 decimal points
+            if (!valueString.matches("\\d+(\\.\\d{1,2})?")) {
+                throw new FinanceException("Amount must have at most 2 decimal places.");
+            }
+
             float value = Float.parseFloat(valueString);
             if (value < MIN_VALUE) {
                 throw new FinanceException("Value cannot be negative");
             }
 
             Date date = Date.toDate(dateString);
+            Bank currBank = User.getCurrBank();
 
             Currency currency = currBank.getCurrency();
 
@@ -70,13 +76,13 @@ public class AddTransactionCommand implements Command {
             currBank.addTransactionToBank(trans);
             currBank.setBalance(currBank.getBalance() - value);
             User.getStorage().saveTransactions(User.getBanks());
-            User.getStorage().saveBanks(User.banks); // save updated balance
+            User.getStorage().saveBanks(User.getBanks()); // save updated balance
             printMessage("Added Transaction: " + trans);
 
         } catch (FinanceException e) {
             throw e;
         } catch (Exception e) {
-            throw new FinanceException(e.getMessage());
+            throw new FinanceException("Error deleting transaction: " + e.getMessage());
         }
         return null;
     }

@@ -13,7 +13,9 @@ import ui.FinanceException;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 
 public class SummaryCommandTest {
     private Storage storage;
@@ -21,20 +23,20 @@ public class SummaryCommandTest {
     @BeforeEach
     public void setup() {
         // Initialize User static fields
-        User.banks = new ArrayList<>();
-        User.transactions = new ArrayList<>();
-        User.budgets = new ArrayList<>();
-        User.isLoggedIn = false;
-        User.currBank = null;
+        User.initialise();
 
-        storage = new Storage();
+        User.getBanks().clear();
+        User.getBudgets().clear();
+        User.setIsLoggedIn(false);
+        User.setCurrBank(null);
+
 
         // Add one bank and one budget for testing
         Bank bank = new Bank(0, Currency.SGD, 1000f, 1.0f);
-        User.banks.add(bank);
+        User.getBanks().add(bank);
 
         Budget budget = new Budget(Category.FOOD, 200f, Currency.SGD, Month.JAN, bank);
-        User.budgets.add(budget);
+        User.getBudgets().add(budget);
     }
 
     @Test
@@ -60,8 +62,8 @@ public class SummaryCommandTest {
 
     @Test
     public void execute_loggedInWithBank_shouldNotThrow() {
-        User.isLoggedIn = true;
-        User.currBank = User.banks.get(0);
+        User.setIsLoggedIn(true);
+        User.setCurrBank(User.getBanks().get(0));
 
         ArrayList<String> args = new ArrayList<>();
         args.add("JAN");

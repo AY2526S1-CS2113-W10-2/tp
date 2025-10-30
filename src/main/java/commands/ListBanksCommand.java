@@ -2,8 +2,8 @@ package commands;
 
 import ui.FinanceException;
 import ui.OutputManager;
+import user.User;
 
-import static user.User.banks;
 
 public class ListBanksCommand implements Command{
 
@@ -11,8 +11,8 @@ public class ListBanksCommand implements Command{
     public String execute() throws FinanceException {
         StringBuilder strb = new StringBuilder();
         strb.append("  Your Bank Accounts are:");
-        for (int i = 0; i < banks.size(); i++){
-            strb.append("\n  ").append(banks.get(i).toString());
+        for (int i = 0; i < User.getBanks().size(); i++){
+            strb.append("\n  ").append(User.getBanks().get(i).toString());
         }
         OutputManager.printMessage(strb.toString());
         return "";

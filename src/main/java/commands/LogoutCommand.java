@@ -9,12 +9,12 @@ public class LogoutCommand implements Command {
 
     @Override
     public String execute() throws FinanceException {
-        if (!User.isLoggedIn) {
+        if (!User.isLoggedIn()) {
             printMessage("You are not logged into any bank.");
             return null;
         }
-        User.currBank = null;
-        User.isLoggedIn = false;
+        User.setCurrBank(null);
+        User.setIsLoggedIn(false);
         printMessage("Logged out successfully.");
         return null;
     }

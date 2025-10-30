@@ -1,24 +1,20 @@
 package user;
 
 import bank.Bank;
-import transaction.Transaction;
 import utils.Budget;
 import utils.Category;
 import utils.Month;
 import storage.Storage;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import static ui.OutputManager.showWelcomeMessage;
 
 public class User {
-    public static ArrayList<Transaction> transactions;
-    public static ArrayList<Bank> banks;
-    public static ArrayList<Budget> budgets;
-    public static boolean isLoggedIn;
-    public static Bank currBank;
+    private static ArrayList<Bank> banks;
+    private static ArrayList<Budget> budgets;
+    private static boolean isLoggedIn;
+    private static Bank currBank;
     private static Storage storage = new Storage(); // single shared storage
 
     public static void initialise() {
@@ -53,38 +49,6 @@ public class User {
         storage.saveBudgets(budgets);
     }
 
-    /**
-     * Deletes a transaction from the user's record
-     *
-     */
-
-    public static Map<Category, Float> spendingByCategory() {
-        Map<Category, Float> spendingMap = new HashMap<>();
-
-        // Initialize all categories with 0 spending
-        for (Category category : Category.values()) {
-            float budgetSpent = category.getBudget().getBudget() - category.getBudget().getRemainingAmount();
-            spendingMap.put(category, budgetSpent);
-        }
-
-        return spendingMap;
-    }
-
-    public static Map<Category, Float> budgetByCategory() {
-        Map<Category, Float> budgetMap = new HashMap<>();
-
-        // Initialize all categories with 0 spending
-        for (Category category : Category.values()) {
-            float budget = category.getBudget().getBudget();
-            budgetMap.put(category, budget);
-        }
-
-        return budgetMap;
-    }
-
-    public static ArrayList<Transaction> getTransactions() {
-        return transactions;
-    }
 
     public static ArrayList<Bank> getBanks() {
         return banks;
@@ -94,20 +58,24 @@ public class User {
         return budgets;
     }
 
-    public static Storage getStorage() {
-        return storage;
+    public static Bank getCurrBank() {
+        return currBank;
     }
 
-    public static float getBudgetAmount(Category category, Month month, Bank bank) {
-        float total = 0f;
-        for (Budget b : budgets) {
-            if (b.getCategory() == category && b.getMonth() == month) {
-                if (bank == null || b.getBank() == bank) {
-                    total += b.getBudget();
-                }
-            }
-        }
-        return total;
+    public static void setCurrBank(Bank currBank) {
+        User.currBank = currBank;
+    }
+
+    public static boolean isLoggedIn() {
+        return isLoggedIn;
+    }
+
+    public static void setIsLoggedIn(boolean isLoggedIn) {
+        User.isLoggedIn = isLoggedIn;
+    }
+
+    public static Storage getStorage() {
+        return storage;
     }
 
     public static Budget getBudgetForBank(Category category, Month month, Bank bank) {

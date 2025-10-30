@@ -32,7 +32,7 @@ public class SummaryCommand implements Command {
             String monthInput = parseMonth();
             Summary summary = new Summary(User.getStorage());
 
-            if (User.isLoggedIn && User.currBank != null) {
+            if (User.isLoggedIn() && User.getCurrBank() != null) {
                 // Logged in → show only this bank
                 showMonthlySummaryForBank(summary, monthInput);
             } else if (arguments.size() >= 2) {
@@ -54,18 +54,18 @@ public class SummaryCommand implements Command {
 
         return null;
     }
-//@@author kevinlokey
+    //@@author kevinlokey
     private static void showMonthlySummaryForAllTransactions(Summary summary, String monthInput) {
         summary.showMonthlySummary(monthInput, null, Currency.SGD, true);
     }
-//@@author kevinlokey
+    //@@author kevinlokey
     private static void showMonthlySummaryForCurrency(Summary summary, String monthInput, Currency currency) {
         summary.showMonthlySummary(monthInput, null, currency, false);
     }
 
     //@@author kevinlokey
     private static void showMonthlySummaryForBank(Summary summary, String monthInput) {
-        summary.showMonthlySummary(monthInput, User.currBank, User.currBank.getCurrency(), false);
+        summary.showMonthlySummary(monthInput, User.getCurrBank(), User.getCurrBank().getCurrency(), false);
     }
 
     //@@author kevinlokey

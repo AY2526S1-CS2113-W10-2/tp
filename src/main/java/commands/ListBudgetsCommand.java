@@ -11,6 +11,7 @@ import static ui.OutputManager.listBudget;
 import static ui.OutputManager.printMessage;
 
 public class ListBudgetsCommand implements Command {
+    private static final int REQUIRED_ARGUMENTS_LENGTH = 1;
     private final ArrayList<String> arguments;
 
     public ListBudgetsCommand(ArrayList<String> arguments) {
@@ -19,9 +20,13 @@ public class ListBudgetsCommand implements Command {
 
     @Override
     public String execute() throws FinanceException {
-        if (arguments.size() != 1) {
+        if (arguments.size() != REQUIRED_ARGUMENTS_LENGTH) {
             throw new FinanceException(" Sorry! Wrong format. Try 'listBudget <month>'\n" +
                     "e.g. 'listBudget JAN'");
+        }
+
+        if (User.getCurrBank() == null){
+            throw new FinanceException("You must be logged into a bank account to see its budgets! Try login command!");
         }
 
         try {

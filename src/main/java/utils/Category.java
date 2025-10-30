@@ -2,6 +2,7 @@ package utils;
 
 import user.User;
 
+//@@author Mack34021
 public enum Category {
     FOOD,
     TRANSPORT,
@@ -12,7 +13,7 @@ public enum Category {
 
     // call this after all enums are created
     public void initBudget(float amount, Currency currency, Month month) {
-        this.budget = new Budget(this, amount, currency, month, User.currBank);
+        this.budget = new Budget(this, amount, currency, month, User.getCurrBank());
     }
 
     public Budget getBudget() {

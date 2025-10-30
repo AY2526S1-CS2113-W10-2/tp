@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import static ui.OutputManager.printMessage;
 
 public class AddBankCommand implements Command {
+    private static final int REQUIRED_ARGUMENTS_LENGTH = 2;
+    private static final float MIN_VALUE = 0f;
     private final ArrayList<String> arguments;
 
     public AddBankCommand(ArrayList<String> arguments) {
@@ -18,7 +20,7 @@ public class AddBankCommand implements Command {
 
     @Override
     public String execute() throws FinanceException {
-        if (arguments.size() < 2) {
+        if (arguments.size() < REQUIRED_ARGUMENTS_LENGTH) {
             throw new FinanceException(
                     "  Sorry! Wrong format. Try 'addBank <balance> <currency>' \n" +
                             "  e.g. 'addBank 1000.00 JPY'"
@@ -29,7 +31,7 @@ public class AddBankCommand implements Command {
         float balance;
         try {
             balance = Float.parseFloat(arguments.get(0));
-            if (balance < 0) {
+            if (balance < MIN_VALUE) {
                 throw new FinanceException("Balance cannot be negative. You entered: " + arguments.get(0));
             }
         } catch (NumberFormatException e) {

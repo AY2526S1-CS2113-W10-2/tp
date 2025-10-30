@@ -12,6 +12,7 @@ import static ui.OutputManager.listFilter;
 import static ui.OutputManager.printMessage;
 
 public class FilterCommand implements Command {
+    private static final int MIN_ARGUMENTS_LENGTH = 2;
     private final ArrayList<String> arguments;
 
     public FilterCommand(ArrayList<String> arguments) {
@@ -25,12 +26,12 @@ public class FilterCommand implements Command {
         }
 
         String filterType = arguments.get(0).toLowerCase();
-        ArrayList<Transaction> allTrans = User.currBank.getTransactions();
+        ArrayList<Transaction> allTrans = User.getCurrBank().getTransactions();
         ArrayList<Transaction> filteredTrans = new ArrayList<>();
 
         switch (filterType) {
         case "category":
-            if (arguments.size() < 2) {
+            if (arguments.size() < MIN_ARGUMENTS_LENGTH) {
                 throw new FinanceException("Usage: filter category <CATEGORY>");
             }
             try {

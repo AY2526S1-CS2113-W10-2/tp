@@ -11,7 +11,6 @@ import utils.Currency;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,47 +27,47 @@ public class ParserTest {
         Files.deleteIfExists(TX_FILE);
         User.initialise();
 
-        User.banks = new ArrayList<>();
-        User.budgets = new ArrayList<>();
+        User.getBanks().clear();
+        User.getBudgets().clear();
 
         // Set up a test bank
         Bank bank0 = new Bank(0, Currency.SGD, 1000f, 1.0f);
         Bank bank1 = new Bank(1, Currency.SGD, 2000f, 1.0f);
         User.addBank(bank0);
         User.addBank(bank1);
-        User.currBank = bank0;
-        User.isLoggedIn = true;
+        User.setCurrBank(bank0);
+        User.setIsLoggedIn(true);
     }
 
     @Test
     public void parseCommand_login_success() throws FinanceException {
-        User.isLoggedIn = false;
+        User.setIsLoggedIn(false);
         boolean result = Parser.parseCommand("login 1");
         assertFalse(result);
-        assertTrue(User.isLoggedIn);
-        assertEquals(1, User.currBank.getId());
+        assertTrue(User.isLoggedIn());
+        assertEquals(1, User.getCurrBank().getId());
     }
 
     @Test
     public void parseCommand_logout_success() throws FinanceException {
         boolean result = Parser.parseCommand("logout");
         assertFalse(result);
-        assertFalse(User.isLoggedIn);
-        assertNull(User.currBank);
+        assertFalse(User.isLoggedIn());
+        assertNull(User.getCurrBank());
     }
 
     @Test
-    public void parseCommand_addValidInput_transactionAdded() throws FinanceException {
+    public void parseCommand_addValidInput_transactionAdded() {
         assertDoesNotThrow(() -> Parser.parseCommand("add food 10.50 10/4/2024"));
-        assertEquals(1, User.currBank.getTransactions().size());
-        Transaction t = User.currBank.getTransactions().get(0);
+        assertEquals(1, User.getCurrBank().getTransactions().size());
+        Transaction t = User.getCurrBank().getTransactions().get(0);
         assertEquals(Category.FOOD, t.getCategory());
         assertEquals(10.5f, t.getValue());
     }
 
     @Test
     public void parseCommand_addWhenNotLoggedIn_throwsFinanceException() {
-        User.isLoggedIn = false;
+        User.setIsLoggedIn(false);
 
         FinanceException e = assertThrows(FinanceException.class,
                 () -> Parser.parseCommand("add food 10 01/01/2025"));
@@ -99,7 +98,7 @@ public class ParserTest {
 
     @Test
     public void parseCommand_listBanksWhenNotLoggedIn_returnsBanks() {
-        User.isLoggedIn = false;
+        User.setIsLoggedIn(false);
 
         assertDoesNotThrow(() -> Parser.parseCommand("listbanks"),
                 "ListBanks command should execute without exception when not logged in");
@@ -116,10 +115,10 @@ public class ParserTest {
     @Test
     public void parseCommand_deleteValidIndexWhenLoggedIn_success() throws FinanceException {
         Parser.parseCommand("add food 10.0 01/01/2025");
-        assertEquals(1, User.currBank.getTransactions().size());
+        assertEquals(1, User.getCurrBank().getTransactions().size());
 
         Parser.parseCommand("delete 1");
-        assertEquals(0, User.currBank.getTransactions().size(), "Transaction should be deleted");
+        assertEquals(0, User.getCurrBank().getTransactions().size(), "Transaction should be deleted");
     }
 
     @Test
@@ -133,9 +132,9 @@ public class ParserTest {
     @Test
     public void parseCommand_deleteWhenNotLoggedIn_throwsFinanceException() throws FinanceException {
         Parser.parseCommand("add food 10.0 01/01/2025");
-        assertEquals(1, User.currBank.getTransactions().size());
+        assertEquals(1, User.getCurrBank().getTransactions().size());
 
-        User.isLoggedIn = false;
+        User.setIsLoggedIn(false);
         FinanceException e = assertThrows(FinanceException.class,
                 () -> Parser.parseCommand("delete 4"));
         assertEquals("Please login to a bank to execute this command", e.getMessage());
@@ -155,14 +154,14 @@ public class ParserTest {
 
     @Test
     public void parseCommand_depositWhenValidInput_success() throws FinanceException {
-        float prevBalance = User.currBank.getBalance();
+        float prevBalance = User.getCurrBank().getBalance();
         Parser.parseCommand("deposit 200");
-        assertEquals(prevBalance + 200f, User.currBank.getBalance(), 0.001);
+        assertEquals(prevBalance + 200f, User.getCurrBank().getBalance(), 0.001);
     }
 
     @Test
-    public void parseCommand_depositWhenNotLoggedIn_throwsFinanceException() throws FinanceException {
-        User.isLoggedIn = false;
+    public void parseCommand_depositWhenNotLoggedIn_throwsFinanceException() {
+        User.setIsLoggedIn(false);
         FinanceException e = assertThrows(FinanceException.class,
                 () -> Parser.parseCommand("deposit 200"));
         assertEquals("Please login to a bank to execute this command", e.getMessage());
@@ -170,45 +169,45 @@ public class ParserTest {
 
     @Test
     public void parseCommand_withdrawWhenValidInput_success() throws FinanceException {
-        float prevBalance = User.currBank.getBalance();
+        float prevBalance = User.getCurrBank().getBalance();
         Parser.parseCommand("withdraw 300");
-        assertEquals(prevBalance - 300f, User.currBank.getBalance(), 0.001);
+        assertEquals(prevBalance - 300f, User.getCurrBank().getBalance(), 0.001);
     }
 
     @Test
-    public void parseCommand_withdrawWhenNotLoggedIn_throwsFinanceException() throws FinanceException {
-        User.isLoggedIn = false;
+    public void parseCommand_withdrawWhenNotLoggedIn_throwsFinanceException() {
+        User.setIsLoggedIn(false);
         FinanceException e = assertThrows(FinanceException.class,
                 () -> Parser.parseCommand("withdraw 200"));
         assertEquals("Please login to a bank to execute this command", e.getMessage());
     }
 
     @Test
-    public void addBank_initialiseBank_success() throws FinanceException {
+    public void addBank_initialiseBank_success() {
         assertDoesNotThrow(() ->
                 Parser.parseCommand("addBank 150 JPY"));
     }
 
     @Test
-    public void addBank_initialiseBankWrongFormat_throwsFinanceException() throws FinanceException {
+    public void addBank_initialiseBankWrongFormat_throwsFinanceException() {
         assertThrows(FinanceException.class, () ->
                 Parser.parseCommand("addBank Fake Input"));
     }
 
     @Test
-    public void addBank_initialiseBankNegativeBalance_throwsFinanceException() throws FinanceException {
+    public void addBank_initialiseBankNegativeBalance_throwsFinanceException() {
         assertThrows(FinanceException.class, () ->
                 Parser.parseCommand("addBank -1 USD"));
     }
 
     @Test
-    public void addBank_initialiseBankStringBalance_throwsFinanceException() throws FinanceException {
+    public void addBank_initialiseBankStringBalance_throwsFinanceException() {
         assertThrows(FinanceException.class, () ->
                 Parser.parseCommand("addBank NOT_A_NUMBER JPY"));
     }
 
     @Test
-    public void addBank_initialiseBankInvalidCurrency_throwsFinanceException() throws FinanceException {
+    public void addBank_initialiseBankInvalidCurrency_throwsFinanceException() {
         assertThrows(FinanceException.class, () ->
                 Parser.parseCommand("addBank Fake_Input"));
     }

@@ -14,12 +14,12 @@ import java.util.Map;
 
 public class OutputManager {
 
+    //@@author kevinlokewy
     /**
      * Prints a summary of the user's recent activity
      *
      * @return String representing the user's activity
      */
-    //@@author kevinlokewy
     public static String printSummary(String month, List<Transaction> transactions,
                                       Map<Category, Float> spendingByCategory,
                                       Map<Category, Float> budgetByCategory,
@@ -45,8 +45,11 @@ public class OutputManager {
 
         return strb.toString();
     }
-//@@author kevinlokewy
-    private static void appendTotalSpend(List<Transaction> transactions, Currency displayCurrency, boolean isConvertAll, StringBuilder strb) {
+
+    //@@author kevinlokewy
+    private static void appendTotalSpend(
+            List<Transaction> transactions, Currency displayCurrency, boolean isConvertAll, StringBuilder strb) {
+
         float totalSpend = 0f;
         for (Transaction t : transactions) {
             if (isConvertAll) {
@@ -57,15 +60,22 @@ public class OutputManager {
         }
         displayMonthlySpending(displayCurrency, strb, totalSpend);
     }
-//@@author kevinlokewy
-    private static StringBuilder displayMonthlySpending(Currency displayCurrency, StringBuilder strb, float totalSpend) {
+
+    //@@author kevinlokewy
+    private static StringBuilder displayMonthlySpending(
+            Currency displayCurrency, StringBuilder strb, float totalSpend) {
+
         return strb.append("\nTotal spend this month: ")
                 .append(displayCurrency.getSymbol())
                 .append(String.format("%.2f", totalSpend))
                 .append("\n");
     }
-//@@author kevinlokewy
-    private static void appendCategoryTotals(Map<Category, Float> spendingByCategory, Map<Category, Float> budgetByCategory, Currency displayCurrency, StringBuilder strb) {
+
+    //@@author kevinlokewy
+    private static void appendCategoryTotals(
+            Map<Category, Float> spendingByCategory, Map<Category, Float> budgetByCategory,
+            Currency displayCurrency, StringBuilder strb) {
+
         strb.append("\n--- Category Totals (Spent / Budget) ---\n");
         for (Category cat : Category.values()) {
             float spent = spendingByCategory.getOrDefault(cat, 0f);
@@ -79,15 +89,19 @@ public class OutputManager {
             strb.append("\n");
         }
     }
-//@@author kevinlokewy
-    private static StringBuilder formatSpendingAndBudget(Currency displayCurrency, StringBuilder strb, Category cat, float spent, float budget) {
+
+    //@@author kevinlokewy
+    private static StringBuilder formatSpendingAndBudget(
+            Currency displayCurrency, StringBuilder strb, Category cat, float spent, float budget) {
         return strb.append(String.format("%-12s : %s%.2f / %s%.2f",
                 cat.name(),
                 displayCurrency.getSymbol(), spent,
                 displayCurrency.getSymbol(), budget));
     }
-//@@author kevinlokewy
-    private static void appendRecentTransactions(List<Transaction> transactions, Currency displayCurrency, boolean isConvertAll, StringBuilder strb) {
+
+    //@@author kevinlokewy
+    private static void appendRecentTransactions(
+            List<Transaction> transactions, Currency displayCurrency, boolean isConvertAll, StringBuilder strb) {
         strb.append("--- Recent Transactions ---\n");
         if (transactions.isEmpty()) {
             strb.append("No transactions this month.\n");
@@ -106,7 +120,8 @@ public class OutputManager {
             }
         }
     }
-//@@author kevinlokewy
+
+    //@@author kevinlokewy
     private static float convertToSGD(Currency displayCurrency, Transaction t) {
         float convertedValue;
         convertedValue = t.getValue()
@@ -114,8 +129,10 @@ public class OutputManager {
                 / Currency.getExchangeRateToSGD(displayCurrency);
         return convertedValue;
     }
-//@@author kevinlokewy
-    private static void formatTransactions(Currency displayCurrency, StringBuilder strb, int i, float convertedValue, Transaction t) {
+
+    //@@author kevinlokewy
+    private static void formatTransactions(
+            Currency displayCurrency, StringBuilder strb, int i, float convertedValue, Transaction t) {
         strb.append("[")
                 .append(i + 1)
                 .append("] ")
@@ -131,7 +148,7 @@ public class OutputManager {
                 .append(t.getDate().getYear())
                 .append("\n");
     }
-//@@author kevinlokewy
+    //@@author kevinlokewy
     private static void appendCurrencyInfo(Currency displayCurrency, boolean isConvertAll, StringBuilder strb) {
         if (isConvertAll) {
             strb.append("All transactions, spending, and budgets are converted to SGD.\n");
@@ -139,7 +156,7 @@ public class OutputManager {
             strb.append("Amounts are displayed in ").append(displayCurrency.name()).append(".\n");
         }
     }
-//@@author kevinlokewy
+    //@@author kevinlokewy
     private static void appendCentreTitle(String month, StringBuilder strb) {
         String title = "Summary for " + month;
         int width = 40;
@@ -148,6 +165,7 @@ public class OutputManager {
     }
 
 
+    //@@author XuHh03
     /**
      * Prints a list of the budgets the user has set for the month
      *
@@ -179,6 +197,7 @@ public class OutputManager {
         return strb.toString();
     }
 
+    //@@author XuHh03
     public static String listSearch(String keyword, ArrayList<Transaction> transactions) {
         StringBuilder strb = new StringBuilder();
         strb.append("Search results for keyword '")
@@ -207,6 +226,7 @@ public class OutputManager {
         return strb.toString();
     }
 
+    //@@author XuHh03
     public static String listFilter(String filterType, ArrayList<Transaction> filtered) {
         StringBuilder strb = new StringBuilder();
         strb.append("Filtered transactions by ")
@@ -241,7 +261,7 @@ public class OutputManager {
         System.out.println("  ====== USER ======");
     }
 
-//@@author kevinlokewy
+    //@@author kevinlokewy
     public static void showWelcomeMessage(ArrayList<Bank> banks) {
         StringBuilder sb = new StringBuilder();
         sb.append("Welcome to Finance Manager V1.0!\n");
@@ -255,7 +275,7 @@ public class OutputManager {
         printMessage(sb.toString());
     }
 
-    //@@author kevinlokewy\
+    //@@author kevinlokewy
     private static void appendBanksList(ArrayList<Bank> banks, StringBuilder sb) {
         sb.append("You have the following banks linked:\n");
         for (Bank b : banks) {

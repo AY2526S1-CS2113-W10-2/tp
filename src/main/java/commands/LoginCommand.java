@@ -1,5 +1,6 @@
 package commands;
 
+import bank.Bank;
 import ui.FinanceException;
 import user.User;
 
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import static ui.OutputManager.printMessage;
 
 public class LoginCommand implements Command {
+    private static final int REQUIRED_ARGUMENTS_LENGTH = 1;
     private final ArrayList<String> arguments;
 
     public LoginCommand(ArrayList<String> arguments) {
@@ -17,22 +19,23 @@ public class LoginCommand implements Command {
 
     @Override
     public String execute() throws FinanceException {
-        if (User.isLoggedIn) {
+        if (User.isLoggedIn()) {
             printMessage("Already logged into a bank. Please logout first.");
             return null;
         }
-        if (arguments.size() != 1) {
+        if (arguments.size() != REQUIRED_ARGUMENTS_LENGTH) {
             throw new FinanceException("Please specify a bank ID. Usage: login <bank_id>");
         }
 
         int bankId = parseBankId(arguments.get(0));
+        ArrayList<Bank> banks = User.getBanks();
 
-        if (bankId >= User.banks.size() || User.banks.get(bankId).getId() != bankId) {
-            throw new FinanceException("Bank not found. Try bank with index 0 - " + (User.banks.size() - 1));
+        if (bankId >= banks.size() || banks.get(bankId).getId() != bankId) {
+            throw new FinanceException("Bank not found. Try bank with index 0 - " + (banks.size() - 1));
         }
 
-        User.currBank = User.banks.get(bankId);
-        User.isLoggedIn = true;
+        User.setCurrBank(banks.get(bankId));
+        User.setIsLoggedIn(true);
         printMessage("Successfully logged into bank " + bankId);
         return null;
     }
