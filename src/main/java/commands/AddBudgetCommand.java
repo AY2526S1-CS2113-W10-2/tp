@@ -4,6 +4,7 @@ import ui.FinanceException;
 import user.User;
 import utils.Budget;
 import utils.Category;
+import utils.Currency;
 import utils.Month;
 
 import java.util.ArrayList;
@@ -29,37 +30,46 @@ public class AddBudgetCommand implements Command {
                     "  e.g. 'addBudget food 200 JAN'");
         }
 
+        // Ensure that commands are parsable as correct type and order
         try {
-            // Determine category
-            Category category = Category.toCategory(arguments.get(0));
-            if (category == null) {
-                throw new FinanceException("Invalid category: " + arguments.get(0));
-            }
+            Category.toCategory(arguments.get(0));
+            Float.parseFloat(arguments.get(1));
+            Month.fromString(arguments.get(2));
+        } catch(Exception e){
+            throw new FinanceException("  Sorry! Wrong format. " +
+                    "Try 'addBudget <category> <amount> <month>'\n" +
+                    "  e.g. 'addBudget food 200 JAN'");
+        }
 
-            // Parse amount
-            float amount = Float.parseFloat(arguments.get(1));
-            if (amount < 0) {
-                throw new FinanceException("Amount cannot be negative: " + arguments.get(1));
-            }
+        // Determine category
+        Category category = Category.toCategory(arguments.get(0));
+        if (category == null) {
+            throw new FinanceException("Invalid category: " + arguments.get(0));
+        }
 
-            // Parse month
-            Month month = Month.fromString(arguments.get(2));
-            if (month == null) {
-                throw new FinanceException("Invalid month: " + arguments.get(2));
-            }
+        // Parse amount
+        float amount = Float.parseFloat(arguments.get(1));
+        if (amount < 0) {
+            throw new FinanceException("Amount cannot be negative: " + arguments.get(1));
+        }
 
-            // Use the currency of the currently logged-in bank
-            var currency = User.currBank.getCurrency();
+        // Parse month
+        Month month = Month.fromString(arguments.get(2));
+        if (month == null) {
+            throw new FinanceException("Invalid month: " + arguments.get(2));
+        }
 
+        // Use the currency of the currently logged-in bank. Handle error if not signed in to a particular bank.
+        if (User.currBank == null){
+            throw new FinanceException("You must be logged into a bank account to set a budget! Try login command!");
+        }else{
+            Currency currency = User.currBank.getCurrency();
             // Create and add budget
             Budget budget = new Budget(category, amount, User.currBank.getCurrency(), month, User.currBank);
             User.addBudget(budget);
 
             printMessage("Added budget of " + amount + " " + currency.getSymbol() +
                     " for " + category + " in " + month);
-
-        } catch (NumberFormatException e) {
-            throw new FinanceException("Amount must be a valid number. You entered: " + arguments.get(1));
         }
 
         return null;
