@@ -10,6 +10,26 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Represents the "summary" command which generates a financial summary
+ * for a specified month and currency scope (bank, currency, or all).
+ * <p>
+ * This command intelligently determines the summary type based on the user’s
+ * login state and provided arguments:
+ * <ul>
+ *   <li>If logged in → show summary for the logged-in bank only.</li>
+ *   <li>If logged out with currency specified → show summary for that currency.</li>
+ *   <li>If logged out without currency → show summary for all banks converted to SGD.</li>
+ * </ul>
+ * </p>
+ *
+ * Usage examples:
+ * <pre>
+ * summary JAN
+ * summary FEB USD
+ * </pre>
+ */
+
 //@@author kevinlokewy
 public class SummaryCommand implements Command {
     private static final Logger logger = Logger.getLogger(Summary.class.getName());
@@ -18,6 +38,21 @@ public class SummaryCommand implements Command {
     public SummaryCommand(ArrayList<String> arguments) {
         this.arguments = arguments;
     }
+
+    /**
+     * Executes the "summary" command to display a financial summary.
+     * <p>
+     * The behavior depends on the user's login state:
+     * <ul>
+     *   <li>If logged in → generates summary for the current bank.</li>
+     *   <li>If logged out and a currency is provided → generates summary for that currency.</li>
+     *   <li>If logged out and no currency is provided → aggregates all banks (converted to SGD).</li>
+     * </ul>
+     * </p>
+     *
+     * @return always returns {@code null}, as summary output is handled by {@link summary.Summary}
+     * @throws FinanceException if the arguments are invalid or if a summary cannot be generated
+     */
 
     @Override
     //@@author kevinlokewy
@@ -54,20 +89,47 @@ public class SummaryCommand implements Command {
 
         return null;
     }
+    /**
+     * Displays a combined summary for all banks, converting all values to SGD.
+     *
+     * @param summary     the {@link Summary} instance handling output
+     * @param monthInput  the month to generate summary for
+     */
+
     //@@author kevinlokey
     private static void showMonthlySummaryForAllTransactions(Summary summary, String monthInput) {
         summary.showMonthlySummary(monthInput, null, Currency.SGD, true);
     }
+
+    /**
+     * Displays a summary for all banks with transactions in the specified currency.
+     *
+     * @param summary     the {@link Summary} instance handling output
+     * @param monthInput  the target month
+     * @param currency    the currency to display
+     */
     //@@author kevinlokey
     private static void showMonthlySummaryForCurrency(Summary summary, String monthInput, Currency currency) {
         summary.showMonthlySummary(monthInput, null, currency, false);
     }
 
+    /**
+     * Displays a summary for the logged-in user's current bank only.
+     *
+     * @param summary     the {@link Summary} instance handling output
+     * @param monthInput  the target month
+     */
     //@@author kevinlokey
     private static void showMonthlySummaryForBank(Summary summary, String monthInput) {
         summary.showMonthlySummary(monthInput, User.getCurrBank(), User.getCurrBank().getCurrency(), false);
     }
 
+    /**
+     * Parses the currency argument from the command input.
+     *
+     * @return a valid {@link Currency} enum value
+     * @throws FinanceException if the provided currency code is invalid
+     */
     //@@author kevinlokey
     private Currency parseCurrency() throws FinanceException {
         Currency currency;
@@ -78,6 +140,13 @@ public class SummaryCommand implements Command {
         }
         return currency;
     }
+
+    /**
+     * Parses and validates the month argument from the command input.
+     *
+     * @return a valid month string in uppercase (e.g., "JAN")
+     * @throws FinanceException if the month name is invalid or unrecognized
+     */
 
     //@@author kevinlokey
     private String parseMonth() throws FinanceException {
