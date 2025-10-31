@@ -106,6 +106,7 @@ public class Parser {
                 logger.info("Please login to a bank to execute this command");
                 throw new FinanceException("Please login to a bank to execute this command");
             }
+            showLoggedBank = false;
             break;
         case "addbudget":
             logger.info("Executing 'addbudget' command");
