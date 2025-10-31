@@ -330,7 +330,7 @@ By allowing multiple currencies on one application, TrackStars aims to make fina
 1. Initial Launch 
  * Download the JAR file and copy into an empty folder 
  * Using the terminal, cd into that empty folder 
- * run '-java TrackStars.jar' to run the programme
+ * run '-java jar TrackStars.jar' to run the programme
 
 2. Shutdown 
  * Exit the application by typing 'exit' and then entering it
