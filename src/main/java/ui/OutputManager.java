@@ -12,14 +12,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Handles all formatted outputs to the console for the Finance Manager application.
+ * <p>
+ * The {@code OutputManager} centralizes all message formatting, summaries, and
+ * output presentation for user interaction. This includes displaying summaries,
+ * search and filter results, budget listings, and welcome messages.
+ * </p>
+ *
+ * <p>All methods in this class are static since output does not maintain internal state.</p>
+ */
+
 public class OutputManager {
 
-    //@@author kevinlokewy
     /**
      * Prints a summary of the user's recent activity
      *
      * @return String representing the user's activity
      */
+
+    //@@author kevinlokewy
     public static String printSummary(String month, List<Transaction> transactions,
                                       Map<Category, Float> spendingByCategory,
                                       Map<Category, Float> budgetByCategory,
@@ -121,6 +133,14 @@ public class OutputManager {
         }
     }
 
+    /**
+     * Converts a transaction's value to SGD relative to the display currency.
+     *
+     * @param displayCurrency the target display currency
+     * @param t               the transaction to convert
+     * @return converted value in display currency
+     */
+
     //@@author kevinlokewy
     private static float convertToSGD(Currency displayCurrency, Transaction t) {
         float convertedValue;
@@ -129,6 +149,10 @@ public class OutputManager {
                 / Currency.getExchangeRateToSGD(displayCurrency);
         return convertedValue;
     }
+
+    /**
+     * Formats a single transaction for display.
+     */
 
     //@@author kevinlokewy
     private static void formatTransactions(
@@ -148,6 +172,10 @@ public class OutputManager {
                 .append(t.getDate().getYear())
                 .append("\n");
     }
+    /**
+     * Appends a note indicating what currency the summary page is showing
+     */
+
     //@@author kevinlokewy
     private static void appendCurrencyInfo(Currency displayCurrency, boolean isConvertAll, StringBuilder strb) {
         if (isConvertAll) {
@@ -261,6 +289,13 @@ public class OutputManager {
         System.out.println("  ====== USER ======");
     }
 
+    /**
+     * Displays the welcome message upon application startup.
+     * Lists available banks if any exist, otherwise suggests adding one.
+     *
+     * @param banks list of linked banks
+     */
+
     //@@author kevinlokewy
     public static void showWelcomeMessage(ArrayList<Bank> banks) {
         StringBuilder sb = new StringBuilder();
@@ -313,6 +348,12 @@ public class OutputManager {
         sb.append("You have not added any banks yet.\n")
                 .append("Use the 'addbank' command to link a bank or 'login' to access an existing one.");
     }
+
+    /**
+     * Displays information about the currently logged-in bank.
+     *
+     * @param currBank the currently active {@link Bank}; may be null
+     */
 
     //@@author kevinlokewy
     public static void showCurrentBank(Bank currBank) {

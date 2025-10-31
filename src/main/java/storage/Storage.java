@@ -33,6 +33,24 @@ public class Storage {
     private static final String BUDGET_FILE = "budgets.txt";
     private static final String BANK_FILE = "banks.txt";
 
+
+    /**
+     * Handles all persistent storage operations for the Finance application.
+     * <p>
+     * This class is responsible for saving and loading {@link Transaction},
+     * {@link Budget}, and {@link Bank} objects from text files. Each type of data
+     * is stored in its own file (transactions.txt, budgets.txt, banks.txt)
+     * using a simple delimiter-separated format.
+     * </p>
+     *
+     * <p>File layout examples:</p>
+     * <ul>
+     *     <li><b>Transaction:</b> bankId|tag|category|value|day|month|year|currency</li>
+     *     <li><b>Budget:</b> bankId|category|month|amount|currency</li>
+     *     <li><b>Bank:</b> id|currency|balance|exchangeRate</li>
+     * </ul>
+     */
+
     //@@author kevinlokey
     public Storage() {
         logger.log(Level.INFO, "Initialising storage - loading saved data");
@@ -40,6 +58,12 @@ public class Storage {
         logger.log(Level.INFO, "Storage initialized successfully.");
 
     }
+
+    /**
+     * Saves all transactions from the given list of banks to disk.
+     *
+     * @param banks The list of {@link Bank} objects whose transactions will be saved.
+     */
 
     //@@author kevinlokey
     public void saveTransactions(ArrayList<Bank> banks) {
@@ -65,6 +89,14 @@ public class Storage {
         }
     }
 
+
+    /**
+     * Loads all transactions from the transaction file into their corresponding banks.
+     * <p>
+     * Transactions are matched to banks based on their stored bank ID. If a transaction
+     * refers to a non-existent bank or contains invalid data, it is skipped with a warning.
+     * </p>
+     */
 
     //@@author kevinlokey
     public void loadTransactions() {
@@ -109,6 +141,12 @@ public class Storage {
             e.printStackTrace();
         }
     }
+    /**
+     * Parses transaction metadata (bank ID, tag, category, and value) from a line of text.
+     *
+     * @param parts The split string array representing a transaction.
+     * @return A record containing parsed transaction data.
+     */
 
     //@@author kevinlokewy
     private static ParseTransactionData getParseTransactionData(String[] parts) {
@@ -123,6 +161,13 @@ public class Storage {
     private record ParseTransactionData(int bankId, String tag, Category category, float value) {
     }
 
+    /**
+     * Checks whether the transaction file exists.
+     *
+     * @param file The file object representing the transaction file.
+     * @return {@code true} if the file does not exist; {@code false} otherwise.
+     */
+
     //@@author kevinlokewy
     private static boolean transactionFileDoesNotExist(File file) {
         if (!file.exists()) {
@@ -132,6 +177,13 @@ public class Storage {
         }
         return false;
     }
+
+    /**
+     * Parses the remaining transaction information (date and currency) from a line of text.
+     *
+     * @param parts The split string array representing a transaction.
+     * @return A record containing parsed transaction date and currency information.
+     */
 
     //@@author kevinlokey
     private static ParsedTransactionInfo getParsedTransactionInfo(String[] parts) {
@@ -145,6 +197,12 @@ public class Storage {
 
     private record ParsedTransactionInfo(int day, Month month, int year, Currency currency) {
     }
+
+    /**
+     * Saves all budgets to disk.
+     *
+     * @param budgets The list of {@link Budget} objects to save.
+     */
 
     //@@author kevinlokey
     public void saveBudgets(ArrayList<Budget> budgets) {
@@ -190,6 +248,15 @@ public class Storage {
         return null;
     }
 
+
+    /**
+     * Checks whether the budget file exists.
+     *
+     * @param file The file object representing the budget file.
+     * @return {@code true} if the file does not exist; {@code false} otherwise.
+     */
+
+    //@@author kevinlokewy
     private static boolean budgetFileExists(File file) {
         if (!file.exists()) {
             logger.log(Level.WARNING, "No budget file found. Returning null.");
@@ -197,6 +264,14 @@ public class Storage {
         }
         return false;
     }
+
+    /**
+     * Parses and creates a {@link Budget} from the given string array, then adds it to the provided list.
+     *
+     * @param parts   The split string array representing a budget line.
+     * @param budgets The list to add the parsed budget to.
+     * @param bank    The associated bank, or {@code null} for global budgets.
+     */
 
     //@@author kevinlokey
     private static void parseBudgets(String[] parts, ArrayList<Budget> budgets, Bank bank) {
@@ -253,6 +328,13 @@ public class Storage {
         return null;
     }
 
+    /**
+     * Parses and creates a {@link Bank} from the given string array, then adds it to the provided list.
+     *
+     * @param parts The split string array representing a bank line.
+     * @param banks The list to add the parsed bank to.
+     */
+
     //@@author kevinlokey
     private static void parseBanks(String[] parts, ArrayList<Bank> banks) {
         int id = Integer.parseInt(parts[0]);
@@ -263,6 +345,13 @@ public class Storage {
         banks.add(new Bank(id, currency, balance, exchangeRate));
     }
 
+    /**
+     * Writes a single bank entry to file.
+     *
+     * @param b  The {@link Bank} to write.
+     * @param pw The {@link PrintWriter} used to write the line.
+     */
+
     //@@author kevinlokey
     private static void writeBanks(Bank b, PrintWriter pw) {
         pw.println(b.getId() + "|" +
@@ -270,6 +359,14 @@ public class Storage {
                 b.getBalance() + "|" +
                 b.getExchangeRate());
     }
+
+    /**
+     * Writes a single budget entry to file.
+     *
+     * @param b      The {@link Budget} to write.
+     * @param pw     The {@link PrintWriter} used to write the line.
+     * @param bankId The associated bank ID, or -1 for global budgets.
+     */
 
     //@@author kevinlokey
     private static void writeBudgets(Budget b, PrintWriter pw, int bankId) {
