@@ -44,8 +44,8 @@ public class Bank {
         this.transactions.add(transaction);
     }
 
-    public void deleteTransactionFromBank(int index) {
-        this.transactions.remove(index);
+    public Transaction deleteTransactionFromBank(int index) {
+        return this.transactions.remove(index);
     }
 
     public void setBalance(float balance) {
