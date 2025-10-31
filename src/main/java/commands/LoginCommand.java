@@ -30,6 +30,10 @@ public class LoginCommand implements Command {
         int bankId = parseBankId(arguments.get(0));
         ArrayList<Bank> banks = User.getBanks();
 
+        if (banks.isEmpty()) {
+            throw new FinanceException("There are no banks in the system. Please add a bank first.");
+        }
+
         if (bankId >= banks.size() || banks.get(bankId).getId() != bankId) {
             throw new FinanceException("Bank not found. Try bank with index 0 - " + (banks.size() - 1));
         }
