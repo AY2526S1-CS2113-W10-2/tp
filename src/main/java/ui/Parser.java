@@ -49,7 +49,7 @@ public class Parser {
         ArrayList<String> arguments = new ArrayList<>(commandList.subList(1, commandList.size()));
 
         Command cmd;
-        boolean showLoggedBank = true;      // Whether to end  response with a message of bank logged into
+        boolean showLoggedBank = true;
         switch (comm){
         case "login":
             cmd = new LoginCommand(arguments);
