@@ -370,13 +370,12 @@ By allowing multiple currencies on one application, TrackStars aims to make fina
 * Test Case 2: summary DEC JPY
 * Expected: The programme will inform the user of their total spending in Japanese Yen ONLY.
 
-### Withdrawing from a bank 
+### Withdrawing from a bank
 * This withdrawing feature is bank specific, and thus requires the user to be logged into a specific bank.
 * The preparatory work of setting up bank accounts is that of other bank-specific commands.
 * Test Case 1: withdraw 500 
 * Expected: The programme will inform the user that the withdrawal was successful 
 * Test Case 2: withdraw -500 
 * Expected: The programme will inform the user that the withdrawal is unsuccessful, as the amount must be a positive number.
-* 
 ### Depositing into a bank 
 

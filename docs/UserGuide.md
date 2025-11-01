@@ -5,8 +5,9 @@
 TrackStars is a financial tracker targeted towards incoming NUS exchangers to enable them to keep track of their finances not only in Singapore, but also while travelling around South East Asia. 
 As such, TrackStars can operate with foreign currencies that are from popular South East Asian travel destinations. 
 
-{Give steps to get started quickly}
+#### How To Get Started
 
+---
 1. Ensure that you have Java 17 or above installed.
 2. Download the latest JAR file of `TrackStars` from [here](http://link.to/duke).
 3. Copy the JAR file into an empty folder 
