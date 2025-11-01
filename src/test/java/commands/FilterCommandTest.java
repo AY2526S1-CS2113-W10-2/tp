@@ -88,7 +88,7 @@ class FilterCommandTest {
 
     @Test
     void filterByDate_jan1ToJan2_returnsMatchingTransactions() throws FinanceException {
-        FilterCommand cmd = new FilterCommand(new ArrayList<>(List.of("date", "01/01/2025", "02/01/2025")));
+        FilterCommand cmd = new FilterCommand(new ArrayList<>(List.of("date", "01/01", "02/01")));
         cmd.execute();
 
         long count = bank0.getTransactions().stream()

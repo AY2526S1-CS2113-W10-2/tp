@@ -2,8 +2,8 @@ package utils;
 
 public class Date {
     private static final int MAX_PARTS_LENGTH = 2;
-  //  private static final int MIN_YEAR = 1900;
-   // private static final int MAX_YEAR = 2100;
+    //  private static final int MIN_YEAR = 1900;
+    // private static final int MAX_YEAR = 2100;
     final int day;
     final Month month;
     final int year;
@@ -90,7 +90,7 @@ public class Date {
             int monthNum = Integer.parseInt(parts[1]);
             int year = java.time.LocalDate.now().getYear();
 
-         /*   if (year < MIN_YEAR || year > MAX_YEAR) {
+            /*   if (year < MIN_YEAR || year > MAX_YEAR) {
                 throw new IllegalArgumentException("Year must be a 4-digit number (YYYY) " +
                         "between " + MIN_YEAR + " and " + MAX_YEAR);
             } */

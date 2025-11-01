@@ -175,7 +175,7 @@ public class Summary {
      * @param isConvertAll        whether conversion should be applied across currencies
      * @return a map of {@link Category} to total spending amount
      */
-//@@author kevinlokewy
+    //@@author kevinlokewy
     private float calculateSpendingForCategory(
             Category category, List<Transaction> monthlyTransactions, Currency displayCurrency, boolean isConvertAll) {
         float spent = 0f;
@@ -206,7 +206,6 @@ public class Summary {
      * @return a map of {@link Category} to allocated budget
      */
     //@@author kevinlokewy
-
     private Map<Category, Float> calculateBudgetByCategory(
             Month monthEnum, Bank bank, Currency displayCurrency, Currency currency, boolean isConvertAll) {
         Map<Category, Float> budgetByCategory = new HashMap<>();

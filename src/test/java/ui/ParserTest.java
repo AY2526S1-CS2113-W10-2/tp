@@ -90,7 +90,7 @@ public class ParserTest {
 
     @Test
     public void parseCommand_listCommand_returnsTransactions() throws FinanceException {
-        Parser.parseCommand("add food 5.0 01/01/2025");
+        Parser.parseCommand("add food 5.0 01/01");
 
         assertDoesNotThrow(() -> Parser.parseCommand("list"),
                 "List command should not throw exception");
@@ -114,7 +114,7 @@ public class ParserTest {
 
     @Test
     public void parseCommand_deleteValidIndexWhenLoggedIn_success() throws FinanceException {
-        Parser.parseCommand("add food 10.0 01/01/2025");
+        Parser.parseCommand("add food 10.0 01/01");
         assertEquals(1, User.getCurrBank().getTransactions().size());
 
         Parser.parseCommand("delete 1");
@@ -123,7 +123,7 @@ public class ParserTest {
 
     @Test
     public void parseCommand_deleteInvalidIndexWhenLoggedIn_throwsFinanceException() throws FinanceException {
-        Parser.parseCommand("add food 10.0 01/01/2025");
+        Parser.parseCommand("add food 10.0 01/01");
         FinanceException e = assertThrows(FinanceException.class,
                 () -> Parser.parseCommand("delete 5"));
         assertTrue(e.getMessage().contains("Error deleting transaction"));
@@ -131,7 +131,7 @@ public class ParserTest {
 
     @Test
     public void parseCommand_deleteWhenNotLoggedIn_throwsFinanceException() throws FinanceException {
-        Parser.parseCommand("add food 10.0 01/01/2025");
+        Parser.parseCommand("add food 10.0 01/01");
         assertEquals(1, User.getCurrBank().getTransactions().size());
 
         User.setIsLoggedIn(false);

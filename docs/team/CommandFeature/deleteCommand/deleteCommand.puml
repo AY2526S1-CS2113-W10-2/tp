@@ -3,16 +3,16 @@
 
 actor User as U
 
-participant ":UserInterface" as UserInterface #60A0BF
-participant ":Parser" as Parser #A378AA
-participant ":DeleteTransactionCommand" as DeleteTransactionCommand #3EA33B
-participant ":User" as User #D4D442
-participant ":Storage" as Storage #D142D4
-participant ":OutputManager" as OutputManager #24D6B6
+participant ":UserInterface" as UserInterface
+participant ":Parser" as Parser
+participant ":DeleteTransactionCommand" as DeleteTransactionCommand
+participant ":User" as User
+participant ":Storage" as Storage
+participant ":OutputManager" as OutputManager
+
 
 title Delete Transaction Sequence Diagram
 
-== User deletes a transaction ==
 
 U -> UserInterface : Enters "delete 2" command
 activate UserInterface
@@ -20,39 +20,46 @@ activate UserInterface
 UserInterface -> Parser : parseCommand(...)
 activate Parser
 
-Parser -> User : checkLoggedIn()
+Parser -> User : check LoggedIn
 activate User
 
 User --> Parser
 deactivate User
-alt User not logged in
 
-Parser -> OutputManager : print error "Please login first!"
-activate OutputManager
+alt User logged in
+    create DeleteTransactionCommand
+    Parser -> DeleteTransactionCommand: new DeleteTransactionCommand(...)
+    activate DeleteTransactionCommand
 
-OutputManager --> U
-deactivate OutputManager
-else User logged in
-Parser -> DeleteTransactionCommand : execute(...)
-activate DeleteTransactionCommand
+    DeleteTransactionCommand --> Parser
+    deactivate DeleteTransactionCommand
+    Parser -> DeleteTransactionCommand : execute(...)
+    activate DeleteTransactionCommand
 
-DeleteTransactionCommand -> User : deleteTransaction(2)
-activate User
+    DeleteTransactionCommand -> User : deleteTransaction(2)
+    activate User
 
-User -> User : remove(index = 2) from TransactionList
-User --> User : confirm deletion
+    User -> User : remove(index = 2) from TransactionList
+    User --> User : confirm deletion
 
-User -> Storage : saveTransactions(...)
-Storage --> User
+    User -> Storage : saveTransactions(...)
+    Storage --> User
 
-User -> OutputManager : print delete success message
-activate OutputManager
+    User -> OutputManager : print delete success message and balance
+    activate OutputManager
 
-OutputManager --> U
-deactivate OutputManager
-deactivate User
-DeleteTransactionCommand --> Parser
-deactivate DeleteTransactionCommand
+    OutputManager --> U
+    deactivate OutputManager
+    deactivate User
+    DeleteTransactionCommand --> Parser
+    deactivate DeleteTransactionCommand
+
+else User not logged in
+
+    Parser -> OutputManager : print error "Please log in first!"
+    activate OutputManager
+    OutputManager --> U
+    deactivate OutputManager
 end
 
 Parser --> UserInterface : return shouldExit = "false"
