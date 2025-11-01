@@ -9,14 +9,16 @@ public class Budget {
     private final Currency currency;
     private final Month month;
     private final Bank bank;
+    private int year;
 
-    public Budget(Category category, float initialAmount, Currency currency, Month month, Bank bank) {
+    public Budget(Category category, float initialAmount, Currency currency, Month month, Bank bank, int year) {
         this.category = category;
         this.initialAmount = initialAmount;
         this.balance = initialAmount; // initialize balance
         this.currency = currency;
         this.month = month;
         this.bank = bank;
+        this.year = year;
     }
 
     /**
@@ -34,6 +36,10 @@ public class Budget {
 
     public Month getMonth() {
         return month;
+    }
+
+    public int getYear(){
+        return year;
     }
 
     public Bank getBank() {

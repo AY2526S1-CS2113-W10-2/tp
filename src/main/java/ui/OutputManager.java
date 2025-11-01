@@ -41,7 +41,7 @@ public class OutputManager {
         StringBuilder strb = new StringBuilder();
 
         // Center the title
-        appendCentreTitle(month, strb);
+        appendCentreTitle(month, year, strb);
 
         // Add note about conversion based on convertAll flag
         appendCurrencyInfo(displayCurrency, isConvertAll, strb);
@@ -185,8 +185,11 @@ public class OutputManager {
         }
     }
     //@@author kevinlokewy
-    private static void appendCentreTitle(String month, StringBuilder strb) {
+    private static void appendCentreTitle(String month, Integer year StringBuilder strb) {
         String title = "Summary for " + month;
+        if (year != null) {
+            title += " " + year;
+        } else {
         int width = 40;
         int padding = (width - title.length()) / 2;
         strb.append(" ".repeat(Math.max(0, padding))).append(title).append("\n");
