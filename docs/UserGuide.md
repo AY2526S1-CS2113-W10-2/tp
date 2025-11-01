@@ -5,6 +5,31 @@
 TrackStars is a financial tracker targeted towards incoming NUS exchangers to enable them to keep track of their finances not only in Singapore, but also while travelling around South East Asia. 
 As such, TrackStars can operate with foreign currencies that are from popular South East Asian travel destinations. 
 
+---
+#### Table of Contents
+
+- [How To Get Started](#how-to-get-started)
+- [Features](#features)
+  - [Adding a Bank Account: `addbank`](#adding-a-bank-account-addbank)
+  - [Logging Into a Bank Account: `login`](#logging-into-a-bank-account-login)
+  - [Logging Out of a Bank Account: `logout`](#logging-out-of-a-bank-account-logout)
+  - [Listing Recent Transactions: `list`](#listing-recent-transaction-list)
+  - [Listing Owned Bank Accounts: `listBanks`](#listing-owned-bank-accounts-listbanks)
+  - [Adding a Transaction: `add`](#adding-a-transaction-add)
+  - [Deleting a Transaction: `delete`](#deleting-a-transaction-delete)
+  - [Adding a Budget: `addBudget`](#adding-a-budget-addbudget)
+  - [Listing Budgets: `listBudget`](#listing-budgets-listbudget)
+  - [Depositing Money: `deposit`](#depositing-money-into-current-bank-account-deposit)
+  - [Withdrawing Money: `withdraw`](#withdrawing-money-from-current-bank-account-withdraw)
+  -  [Searching Transactions: `search`](#searching-transactions-search)
+  - [Filtering Transactions: `filter`](#filtering-transactions-filter)
+  - [Viewing Summary of Recent Transactions: `summary`](#view-summary-of-recent-transactions-and-usage-summary)
+  - [Exiting the Programme: `exit`](#exiting-the-programme-exit)
+  - [Saving the Data](#saving-the-data)
+- [FAQ](#faq)
+- [Command Summary](#command-summary)
+
+
 #### How To Get Started
 
 ---
@@ -15,7 +40,7 @@ As such, TrackStars can operate with foreign currencies that are from popular So
 5. Start typing commands into the terminal and execute it by pressing Enter
 6. 'exit' will exit the program
 
-## Features 
+## Features
 
 ---
 
@@ -171,7 +196,7 @@ Example of usage:
 
 ---
 
-### Searching Transactions : `search`
+### Searching Transactions: `search`
 Searches for transactions containing a specific keyword in the category or tag/description.
 Works only when logged into a bank account.
 
@@ -184,7 +209,7 @@ Example of usage:
 
 ---
 
-### Filtering Transactions : `filter`
+### Filtering Transactions: `filter`
 Filters transactions by category, cost, or date range. Works only when logged into a bank account.
 
 Format: `filter <filter_type>`
@@ -229,6 +254,8 @@ Format: `exit`
 
 ### Saving the data
 TrackStars automatically stores the previously listed transactions, banks and budgets into the hard disk automatically. There is no need to manually key in a command to store data. 
+
+---
 
 ## FAQ
 
