@@ -209,9 +209,9 @@ public class OutputManager {
                     strb.append("\n  ")
                             .append(category.name().toLowerCase())
                             .append(": ")
-                            .append(budget.getBudget())
-                            .append(" ")
-                            .append(budget.getCurrency());
+                            .append(budget.getCurrency().getSymbol())
+                            .append(budget.getBudget());
+
                     isFound = true;
                     break;
                 }

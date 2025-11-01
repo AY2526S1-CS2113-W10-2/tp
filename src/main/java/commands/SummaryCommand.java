@@ -136,7 +136,7 @@ public class SummaryCommand implements Command {
         try {
             currency = Currency.valueOf(arguments.get(1).toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new FinanceException("Invalid currency. Please provide a valid currency code.");
+            throw new FinanceException("Invalid currency. Please provide a valid currency code: MYR, VND, JPY, IDR, SGD, THB.");
         }
         return currency;
     }

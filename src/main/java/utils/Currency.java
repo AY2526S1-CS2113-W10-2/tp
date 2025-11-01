@@ -3,10 +3,10 @@ package utils;
 public enum Currency {
     MYR("Malaysian Ringgit", "RM", false),
     VND("Vietnamese Dong", "d", false),
-    JPY("Japanese Yen", "¥", true),
-    IDR("Indonesian Rupiah", "£", false),
-    SGD("Singapore Dollar", "$",true),
-    THB("Thai Baht", "฿", true);
+    JPY("Japanese Yen", "¥", false),
+    IDR("Indonesian Rupiah", "Rp", false),
+    SGD("Singapore Dollar", "$",false),
+    THB("Thai Baht", "฿", false);
 
 
     private final String longName;

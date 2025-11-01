@@ -15,7 +15,7 @@ import static ui.OutputManager.printMessage;
 public class AddTransactionCommand implements Command {
     private static final String ERROR_INVALID_FORMAT =
             "Sorry! Wrong format. Try 'add <tag(optional)> <category> <value> <date>' \n"
-        + "e.g. 'add food 4.50 10/4/2024' or 'add 'groceries' food 4.50 10/4/2024'";
+        + "e.g. 'add food 4.50 10/4' or 'add 'groceries' food 4.50 10/4'";
     private static final int MIN_ALLOWED_ARGUMENTS_LENGTH = 3;
     private static final int MAX_ALLOWED_ARGUMENTS_LENGTH = 4;
     private static final float MIN_VALUE = 0f;
@@ -52,9 +52,15 @@ public class AddTransactionCommand implements Command {
         }
 
         try {
+            float value = Float.parseFloat(valueString);
+
             Category category = Category.toCategory(categoryString);
             if (category == null) {
                 throw new FinanceException("Invalid category");
+            }
+
+            if (value <= MIN_VALUE) {
+                throw new FinanceException("Transaction value cannot be negative or zero");
             }
 
             //Checks if value input is within 2 decimal points
@@ -62,22 +68,25 @@ public class AddTransactionCommand implements Command {
                 throw new FinanceException("Amount must have at most 2 decimal places.");
             }
 
-            float value = Float.parseFloat(valueString);
-            if (value < MIN_VALUE) {
-                throw new FinanceException("Value cannot be negative");
-            }
-
             Date date = Date.toDate(dateString);
             Bank currBank = User.getCurrBank();
 
             Currency currency = currBank.getCurrency();
+
+            if (value > currBank.getBalance()) {
+                throw new FinanceException("Insufficient funds. Your balance is "+ currency.getSymbol() + currBank.getBalance());
+            }
 
             Transaction trans = new Transaction(value, category, date, currency, tag);
             currBank.addTransactionToBank(trans);
             currBank.setBalance(currBank.getBalance() - value);
             User.getStorage().saveTransactions(User.getBanks());
             User.getStorage().saveBanks(User.getBanks()); // save updated balance
-            printMessage("Added Transaction: " + trans);
+
+
+            String output = "Added Transaction: " + trans + "\n" +
+                    "Updated bank balance: " + currency.getSymbol() + String.format("%.2f", currBank.getBalance());
+            printMessage(output);
 
         } catch (FinanceException e) {
             throw e;

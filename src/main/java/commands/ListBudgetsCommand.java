@@ -25,17 +25,18 @@ public class ListBudgetsCommand implements Command {
                     "e.g. 'listBudget JAN'");
         }
 
-        if (User.getCurrBank() == null){
+        if (User.getCurrBank() == null) {
             throw new FinanceException("You must be logged into a bank account to see its budgets! Try login command!");
         }
 
-        try {
-            Month month = Month.fromString(arguments.get(0).toUpperCase());
-            ArrayList<Budget> budgets = User.getBudgets();
-            printMessage(listBudget(budgets, month));
-        } catch (IllegalArgumentException e) {
+        Month month = Month.fromString(arguments.get(0).toUpperCase());
+        if (month == null) {
             throw new FinanceException("Invalid month! Use e.g., JAN, FEB, etc.");
         }
+
+        ArrayList<Budget> budgets = User.getBudgets();
+        printMessage(listBudget(budgets, month));
+
         return null;
     }
 }

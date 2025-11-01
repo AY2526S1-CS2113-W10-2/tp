@@ -1,28 +1,52 @@
 @startuml
-scale 1
-
+scale 0.5
+hide footbox
 title Sequence Diagram: summary <month> command
 
-actor User
-participant Parser
-participant Summary
-participant UserData as "User (data)"
-participant Storage
-participant OutputManager
+actor user as ":User"
+participant parser as ":Parser"
+participant summary as ":Summary"
+participant userdata as ":User"
+participant storage as ":Storage"
+participant output as ":OutputManager"
 
-User -> Parser: types "summary JAN"
-Parser -> Summary: handleSummary(commandList)
-Summary -> Summary: validate input month
-Summary -> Summary: create new Summary(User.getStorage())
-Summary -> Storage: loadTransactions()
-Storage --> Summary: return transaction list
-Summary -> Storage: loadBanks()
-Storage --> Summary: return bank list
-Summary -> Storage: loadBudgets()
-Storage --> Summary: return budget list
-Summary -> UserData: getBudgetAmount(category, Month.JAN)
-Summary -> OutputManager: printSummary(transactions, budgets)
-OutputManager -> OutputManager: format output
-OutputManager -> User: printMessage(formatted summary)
+user -> parser : types "summary JAN"
+activate parser
+
+parser -> summary : handleSummary(commandList)
+activate summary
+
+summary -> summary : validate input month
+summary -> summary : create new Summary(User.getStorage())
+
+summary -> storage : loadTransactions()
+activate storage
+storage --> summary : transaction list
+deactivate storage
+
+summary -> storage : loadBanks()
+activate storage
+storage --> summary : bank list
+deactivate storage
+
+summary -> storage : loadBudgets()
+activate storage
+storage --> summary : budget list
+deactivate storage
+
+summary -> userdata : getBudgetAmount(category, Month.JAN)
+activate userdata
+userdata --> summary : budget amount
+deactivate userdata
+
+summary -> output : printSummary(transactions, budgets)
+activate output
+output -> output : format output
+output -> output : printMessage(formatted summary)
+output --> summary : printMessage(formatted summary)
+deactivate output
+
+deactivate summary
+deactivate parser
 
 @enduml

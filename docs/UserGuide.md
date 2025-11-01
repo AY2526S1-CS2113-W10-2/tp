@@ -23,11 +23,11 @@ As such, TrackStars can operate with foreign currencies that are from popular So
 ### Adding a bank account: `addbank`
 Adds a new bank account to the user in the specified currency 
 
-Format: `addbank a/AMOUNT c/CURRENCY`
+Format: `addbank AMOUNT CURRENCY`
 
 * The `AMOUNT` must be a positive real number in the currency that you want the bank to be in
 * The `CURRENCY` must be the three letter form of the currency you intend. 
-For example, MYR for Malaysian Ringgit, THB for Thai Baht. 
+For example, MYR for Malaysian Ringgit, THB for Thai Baht. Please see the Glossary within the DeveloperGuide for the full list of supported currencies. 
 
 Example of usage:  
 `addbank 5000 SGD`  
@@ -89,19 +89,19 @@ Example of usage:
 Adds a new transaction to the list of transactions. This works only when logged into a bank, 
 and the transaction is tied to the currency of the bank 
 
-Format: `add t/TAG(optional) c/CATEGORY a/AMOUNT d/DATE`
+Format: `add TAG(optional) CATEGORY AMOUNT DATE`
 
 * The TAG is optional and can be used to describe the transaction (e.g., "Milo", "Lunch"). 
 If omitted, "unnamed" will be assigned as the default tag.
 * The `CATEGORY` must be one of these: food, transport, entertainment, recreation 
 * The `AMOUNT` must be a positive real number in the currency of the bank you are logged into.
-* The `DATE` must be in the form dd/mm/yyyy
+* The `DATE` must be in the form dd/mm
 
 Example of usage: 
 
-`add transport 2.50 15/10/2025`  
-`add entertainment 15 25/12/2025`  
-`add 'Milo' food 1.2 01/11/2025`
+`add transport 2.50 15/10`  
+`add entertainment 15 25/12`  
+`add 'Milo' food 1.2 01/11`
 
 ---
 
@@ -120,7 +120,7 @@ Example of usage:
 ### Adding a Budget: `addBudget`
 Adds a new budget for a specific category of spending. Used to keep track of total amounts spent on different categories over time.
 
-Format: `addBudget c/CATEGORY a/AMOUNT d/MONTH`
+Format: `addBudget CATEGORY AMOUNT MONTH`
 
 * The `CATEGORY` must be one of these: food, transport, entertainment, recreation
 * The `AMOUNT` must be a positive real number in the currency of the bank you are logged into.
@@ -136,7 +136,7 @@ Example of usage:
 ### Listing Budgets: `listBudget`
 Lists all budgets, and their current utilisation. Used as brief summary of spending by category.
 
-Format: `listBudget d/MONTH`
+Format: `listBudget MONTH`
 
 * The `MONTH` must be the shortened three letter form of each month. For example, JAN for January, FEB for February, APR for April.
 
@@ -149,7 +149,7 @@ Example of usage:
 ### Depositing money into current bank account: `deposit`
 Adds to the balance of a current signed in account. Used to track income.
 
-Format: `deposit a/AMOUNT`
+Format: `deposit AMOUNT`
 
 * The `AMOUNT` must be a positive real number in the currency of the bank you are logged into.
 
@@ -162,7 +162,7 @@ Example of usage:
 ### Withdrawing money from current bank account: `withdraw`
 Subtracts from the balance of a current signed in account. Used to track outgoing payments not assigned to a specific category.
 
-Format: `withdraw a/AMOUNT`
+Format: `withdraw AMOUNT`
 
 * The `AMOUNT` must be a positive real number in the currency of the bank you are logged into.
 
@@ -210,14 +210,14 @@ Example of usage:
 ---
 
 ### View Summary of Recent Transactions and Usage: `summary`
-Prints a summary of individual transactions and total values spent on different categories in the selected month.
+Prints a summary of individual transactions and total values spent on different categories in the selected month of the current year.
 
 Format: `summary MONTH`
 * The `MONTH` must be the shortened three letter form of each month. For example, JAN for January, FEB for February, APR for April.
 
 Example of usage:
 
-`summary FEB` to see summary from the mots recent February
+`summary FEB` to see summary from the most recent February
 
 ---
 
@@ -248,24 +248,28 @@ Japan is not a South East Asian country, but is included since it is such a popu
 
 **A** No, the parameters of the commands must be input in the specific order that the User Guide mentions.
 
-**Q** When keying in transactions, must the dates be in the format dd/mm/yyyy? 
+**Q** When keying in transactions, must the dates be in the format dd/mm? 
 
-**A** Yes, the dates must be in that specific format (dd/mm/yyyy). The programme is not able to convert 10 Janaury 2025 to 10/1/2025.
+**A** Yes, the dates must be in that specific format (dd/mm). The programme is not able to convert 10 January to 10/1/.
+
+**Q** Why can't I input the year in my transactions? Why am I relegated to only transactions in the current year?
+
+**A** This is a reasonable question, but consider the targeted user of TrackStars. TrackStars aims to serve NUS Exchangers to aggregate financial data into a single application. The NUS academic semester is from either August - December (Sem 1) or January - May (sem 2). As such, it seemed redundant to the developers to include a year, as NUS Exchangers stay at NUS for at most, 6 months, and never crosses into a new year. Meaning, it is expected that if an NUS exchanger joins in 2025, they will leave by 2025.
 
 ## Command Summary
 
 Commands that work while **logged into** a bank account:
 
-* Add transaction `add c/CATEGORY a/AMOUNT d/DATE'
-  * e.g, add food 25.50 10/1/2025
+* Add transaction `add CATEGORY AMOUNT DATE'
+  * e.g, add food 25.50 10/1
 
-* Add budget 'addbudget a/AMOUNT m/MONTH'
+* Add budget 'addbudget AMOUNT MONTH'
   * e.g, addbudget 125 JAN
 
-* Deposit 'deposit a/AMOUNT'
+* Deposit 'deposit AMOUNT'
   * e.g, deposit 5000
 
-* Withdraw 'withdraw a/AMOUNT'
+* Withdraw 'withdraw AMOUNT'
   * e.g, withdraw 100 
 
 * List transactions 'list'
@@ -280,22 +284,22 @@ Commands that work while **logged into** a bank account:
   * e.g., filter cost 10 50
   * e.g., filter date 01/01/2025 31/01/2025
 
-* Summary Page 'summary m/MONTH'
+* Summary Page 'summary MONTH'
   * e.g, summary JAN
 
 * Exit programme 'exit'
 
 Commands that work while **logged out** of a bank account:
-* Summary Page 'summary m/MONTH'
+* Summary Page 'summary MONTH'
   * e.g, summary JAN 
 
 * Login to bank 'login INDEX'
   * e.g, login 0
 
-* Summary Page for currency 'summary m/MONTH c/CURRENCY'
+* Summary Page for currency 'summary MONTH CURRENCY'
   * e.g, summary JAN MYR
 
-* Add bank account 'addbank i/INITIAL_DEPOSIT c/CURRENCY'
+* Add bank account 'addbank INITIAL_DEPOSIT CURRENCY'
   * e.g, addbank 5000 THB
 * List bank accounts 'listbanks'
 * Exit programme 'exit'

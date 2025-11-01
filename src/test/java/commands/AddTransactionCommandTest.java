@@ -38,7 +38,7 @@ public class AddTransactionCommandTest {
 
     @Test
     public void execute_validInput_transactionAddedSuccessfully() throws FinanceException {
-        Parser.parseCommand("add food 10.50 10/4/2024");
+        Parser.parseCommand("add food 10.50 10/4");
 
 
         assertEquals(1, User.getCurrBank().getTransactions().size());
@@ -50,27 +50,27 @@ public class AddTransactionCommandTest {
     @Test
     public void execute_invalidInput_throwsException() {
         FinanceException exception = assertThrows(FinanceException.class, () ->
-                Parser.parseCommand("add food 10/4/2024")
+                Parser.parseCommand("add food 10/4")
         );
         assertEquals("Sorry! Wrong format. Try 'add <tag(optional)> <category> <value> <date>' \n" +
-                "e.g. 'add food 4.50 10/4/2024' or 'add 'groceries' food 4.50 10/4/2024'", exception.getMessage());
+                "e.g. 'add food 4.50 10/4' or 'add 'groceries' food 4.50 10/4'", exception.getMessage());
     }
 
 
     @Test
     public void execute_negativeValue_throwsException() {
         FinanceException exception = assertThrows(FinanceException.class, () ->
-                Parser.parseCommand("add food -0.50 10/4/2024")
+                Parser.parseCommand("add food -0.50 10/4")
         );
-        assertTrue(exception.getMessage().contains("Amount must have at most 2 decimal places."));
+        assertTrue(exception.getMessage().contains("Transaction value cannot be negative"));
     }
 
     @Test
     public void execute_nullCategory_throwsException() {
         FinanceException exception = assertThrows(FinanceException.class, () ->
-                Parser.parseCommand("add sports 10.50 10/4/2024")
+                Parser.parseCommand("add sports 10.50 10/4")
         );
-        assertTrue(exception.getMessage().contains("Unknown category: sports"));
+        assertTrue(exception.getMessage().contains("Invalid category"));
     }
 
 }

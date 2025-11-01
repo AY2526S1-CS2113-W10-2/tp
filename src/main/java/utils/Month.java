@@ -37,7 +37,7 @@ public enum Month {
                 return m;
             }
         }
-        throw new IllegalArgumentException("Invalid month: " + input);
+        return null;
     }
 
     public static Month fromNumber(int number) {

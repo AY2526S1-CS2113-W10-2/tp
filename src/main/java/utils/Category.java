@@ -37,7 +37,7 @@ public enum Category {
         case "transport" -> TRANSPORT;
         case "recreation" -> RECREATION;
         case "entertainment" -> ENTERTAINMENT;
-        default -> throw new IllegalArgumentException("Unknown category: " + str);
+        default -> null;
         };
     }
 }

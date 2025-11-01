@@ -38,9 +38,17 @@ public class LoginCommand implements Command {
             throw new FinanceException("Bank not found. Try bank with index 0 - " + (banks.size() - 1));
         }
 
+        Bank currBank = banks.get(bankId);
         User.setCurrBank(banks.get(bankId));
         User.setIsLoggedIn(true);
-        printMessage("Successfully logged into bank " + bankId);
+        String message = String.format(
+                "Successfully logged into bank %d | Current balance: %s%.2f",
+                currBank.getId(),
+                currBank.getCurrency().getSymbol(),
+                currBank.getBalance()
+        );
+        printMessage(message);
+
         return null;
     }
 

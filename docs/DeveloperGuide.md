@@ -28,7 +28,7 @@ Storage: Reads data from, and writes data to the hard disk.
 API: UserInterface.java
 #### Storage component
 API: Storage.java 
-![img_1.png](team/Storage/img_1.png)
+![img.png](team/Storage/img.png)
 
 * The Storage component is responsible for saving and loading user financial data, including banks, budgets, and transactions, from text files.
 * Can read the stored data from plain-text (.txt) files (e.g., banks.txt, budgets.txt, transactions.txt) and reconstruct the corresponding Java objects (Bank, Budget, Transaction) during program initialization.
@@ -74,7 +74,7 @@ The computed totals are passed to OutputManager.printSummary() to format the out
 
 
 The following sequence diagram shows how the summary command goes through the relevant components to display the output to the user.  
-![img_2.png](team/SummaryFeature/img_2.png)
+![img.png](team/SummaryFeature/img_2.png)
 
 The following activity diagram summarises what happens when the user executes summary JAN  
 ![img_3.png](team/SummaryFeature/img_3.png)
@@ -322,6 +322,7 @@ By allowing multiple currencies on one application, TrackStars aims to make fina
 ## Glossary
 
 * *glossary item* - Definition
+* *list of supported currencies* - Malaysian Ringgit (MYR), Vietnamese Dong (VND), Thai Baht (THB), Singapore Dollar (SGD), Japanese Yen (JPY), Indonesian Rupiah (IDR).
 
 ## Instructions for manual testing
 

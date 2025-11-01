@@ -16,6 +16,7 @@ public class DeleteTransactionCommand implements Command {
     public DeleteTransactionCommand(ArrayList<String> arguments) {
         this.arguments = arguments;
     }
+
     @Override
     public String execute() throws FinanceException {
 
@@ -24,8 +25,15 @@ public class DeleteTransactionCommand implements Command {
                 throw new FinanceException(" Sorry! Wrong format. Try delete <transaction_index>");
             }
             int index = Integer.parseInt(arguments.get(0));
-            Transaction deleted = User.getCurrBank().deleteTransactionFromBank(index-1);
-            printMessage("Deleted Transaction: " + deleted);
+            Transaction deleted = User.getCurrBank().deleteTransactionFromBank(index - 1);
+
+            String output = "Deleted Transaction: " + deleted + "\n" +
+                    "Updated bank balance: "
+                    + User.getCurrBank().getCurrency().getSymbol()
+                    + String.format("%.2f", User.getCurrBank().getBalance());
+
+            printMessage(output);
+
             User.getStorage().saveTransactions(User.getBanks());
         } catch (NumberFormatException e) {
             throw new FinanceException("Invalid input. Please enter a numeric transaction index.");
