@@ -41,15 +41,16 @@ public class AddBudgetCommand implements Command {
                 throw new FinanceException("Invalid month: " + arguments.get(2));
             }
 
-            String amountString = arguments.get(1);
-            if (!amountString.matches("\\d+(\\.\\d{1,2})?")) {
-                throw new FinanceException("Amount must have at most 2 decimal places.");
-            }
 
+            String amountString = arguments.get(1);
             float amount = Float.parseFloat(amountString);
 
             if (amount < MIN_VALUE) {
                 throw new FinanceException("Amount cannot be negative: " + amountString);
+            }
+
+            if (!amountString.matches("\\d+(\\.\\d{1,2})?")) {
+                throw new FinanceException("Amount must have at most 2 decimal places.");
             }
 
             Bank currBank = User.getCurrBank();

@@ -12,8 +12,18 @@ public class ATM implements Command{
     private boolean deposit;
     private boolean withdraw;
 
-    public ATM(ArrayList<String> arguments, Bank currBank, boolean deposit, boolean withdraw){
-        this.amount = Float.parseFloat(arguments.get(0));
+    public ATM(ArrayList<String> arguments, Bank currBank, boolean deposit, boolean withdraw) throws FinanceException {
+
+        if (arguments.size() != 1) {
+            throw new FinanceException("Invalid format! Usage: withdraw <amount>");
+        }
+        try {
+            this.amount = Float.parseFloat(arguments.get(0));
+        } catch (NumberFormatException e) {
+            throw new FinanceException("Amount must be a valid number. Your input: " + arguments.get(0));
+        } if (this.amount <= 0) {
+            throw new FinanceException("Amount withdrawn or deposited must be a positive value");
+        }
         this.currBank = currBank;
         this.deposit = deposit;
         this.withdraw = withdraw;
@@ -30,6 +40,9 @@ public class ATM implements Command{
                     + this.currBank.getBalance());
         }
         if(this.withdraw && !this.deposit){
+            if (this.amount > this.currBank.getBalance()) {
+                throw new FinanceException("Insufficient funds. Your balance is " + this.currBank.getCurrency().getSymbol() + this.currBank.getBalance());
+            }
             newBalance = this.currBank.getBalance() - this.amount;
             this.currBank.setBalance(newBalance);
             System.out.println("Successful withdrawal! Your bank balance is now: "

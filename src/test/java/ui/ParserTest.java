@@ -58,7 +58,7 @@ public class ParserTest {
 
     @Test
     public void parseCommand_addValidInput_transactionAdded() {
-        assertDoesNotThrow(() -> Parser.parseCommand("add food 10.50 10/4/2024"));
+        assertDoesNotThrow(() -> Parser.parseCommand("add food 10.50 10/4"));
         assertEquals(1, User.getCurrBank().getTransactions().size());
         Transaction t = User.getCurrBank().getTransactions().get(0);
         assertEquals(Category.FOOD, t.getCategory());

@@ -41,7 +41,7 @@ public class OutputManager {
         StringBuilder strb = new StringBuilder();
 
         // Center the title
-        appendCentreTitle(month, year, strb);
+        appendCentreTitle(month, strb);
 
         // Add note about conversion based on convertAll flag
         appendCurrencyInfo(displayCurrency, isConvertAll, strb);
@@ -185,11 +185,8 @@ public class OutputManager {
         }
     }
     //@@author kevinlokewy
-    private static void appendCentreTitle(String month, Integer year StringBuilder strb) {
+    private static void appendCentreTitle(String month, StringBuilder strb) {
         String title = "Summary for " + month;
-        if (year != null) {
-            title += " " + year;
-        } else {
         int width = 40;
         int padding = (width - title.length()) / 2;
         strb.append(" ".repeat(Math.max(0, padding))).append(title).append("\n");
@@ -212,9 +209,9 @@ public class OutputManager {
                     strb.append("\n  ")
                             .append(category.name().toLowerCase())
                             .append(": ")
-                            .append(budget.getBudget())
-                            .append(" ")
-                            .append(budget.getCurrency());
+                            .append(budget.getCurrency().getSymbol())
+                            .append(budget.getBudget());
+
                     isFound = true;
                     break;
                 }

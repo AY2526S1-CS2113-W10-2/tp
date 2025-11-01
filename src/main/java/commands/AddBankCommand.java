@@ -41,8 +41,10 @@ public class AddBankCommand implements Command {
         // Parse currency
         Currency currency = Currency.toCurrency(arguments.get(1));
         if (currency == null) {
-            throw new FinanceException("Invalid currency. You entered: " + arguments.get(1));
+            throw new FinanceException("Invalid currency. Only the following currencies work: MYR, VND, JPY, IDR, SGD, THB  You entered: " + arguments.get(1));
         }
+
+
 
         // Set exchange rate automatically
         float exchangeRate = Currency.getExchangeRateToSGD(currency);
@@ -50,7 +52,8 @@ public class AddBankCommand implements Command {
         // Create and save bank
         Bank bank = new Bank(User.getBanks().size(), currency, balance, exchangeRate);
         User.addBank(bank);
-        printMessage("  Added " + bank + " | Exchange rate to SGD: " + exchangeRate);
+        String formattedExchangeRate = String.format("%.6f", exchangeRate);
+        printMessage("  Added " + bank + " | Exchange rate to SGD: " + formattedExchangeRate);
 
         return null;
     }

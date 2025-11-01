@@ -1,6 +1,6 @@
 @startuml
 scale 0.4
-title Storage Architecture Diagram
+title Storage Architecture Diagram (Revised)
 
 ' =======================
 ' USER PACKAGE
@@ -86,6 +86,12 @@ Storage --> Budget : persists
 Storage --> Transaction : persists
 
 Bank "1" --> "*" Transaction : contains
-Budget --> Bank : references
+Budget --> Bank
+
+' Added per feedback
+Transaction --> Date
+Budget --> Category
+Budget --> Currency
+Budget --> Month
 
 @enduml

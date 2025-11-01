@@ -36,17 +36,28 @@ public class Bank {
         return exchangeRate;
     }
 
-    public ArrayList<Transaction> getTransactions(){
+    public ArrayList<Transaction> getTransactions() {
         return transactions;
     }
 
-    public void addTransactionToBank(Transaction transaction){
+    public void addTransactionToBank(Transaction transaction) {
         this.transactions.add(transaction);
     }
 
     public Transaction deleteTransactionFromBank(int index) {
-        return this.transactions.remove(index);
+        if (index < 0 || index >= transactions.size()) {
+            throw new IllegalArgumentException("Transaction index out of range");
+        }
+
+        Transaction removed = transactions.remove(index);
+
+        // Restore balance
+        float newBalance = this.balance + removed.getValue();
+        this.setBalance(newBalance);
+
+        return removed;
     }
+
 
     public void setBalance(float balance) {
         if (balance < 0) {
@@ -64,9 +75,13 @@ public class Bank {
 
     @Override
     public String toString() {
-        return "Bank Account " + id +
-                " in " + currency.getSymbolVerbose() +
-                " with balance " + this.getCurrency().getSymbol() + balance +
-                " and exchangeRate " + exchangeRate;
+        return String.format(
+                "Bank Account %d in %s with balance %s%.2f and exchangeRate %.6f",
+                id,
+                currency,
+                currency.getSymbol(),
+                balance,
+                exchangeRate
+        );
     }
 }
