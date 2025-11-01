@@ -74,7 +74,8 @@ public class AddTransactionCommand implements Command {
             Currency currency = currBank.getCurrency();
 
             if (value > currBank.getBalance()) {
-                throw new FinanceException("Insufficient funds. Your balance is "+ currency.getSymbol() + currBank.getBalance());
+                throw new FinanceException("Insufficient funds. Your balance is "
+                        + currency.getSymbol() + currBank.getBalance());
             }
 
             Transaction trans = new Transaction(value, category, date, currency, tag);

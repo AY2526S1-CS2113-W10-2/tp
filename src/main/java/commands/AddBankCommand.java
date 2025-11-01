@@ -41,7 +41,8 @@ public class AddBankCommand implements Command {
         // Parse currency
         Currency currency = Currency.toCurrency(arguments.get(1));
         if (currency == null) {
-            throw new FinanceException("Invalid currency. Only the following currencies work: MYR, VND, JPY, IDR, SGD, THB  You entered: " + arguments.get(1));
+            throw new FinanceException("Invalid currency. Only the following currencies work: " +
+                    "MYR, VND, JPY, IDR, SGD, THB  You entered: " + arguments.get(1));
         }
 
 
