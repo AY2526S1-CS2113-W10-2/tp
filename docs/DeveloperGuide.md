@@ -345,7 +345,6 @@ By allowing multiple currencies on one application, TrackStars aims to make fina
 
 ### Adding Budgets 
  * Adding budgets to a bank is a bank-specific action, and thus, the user must login to a bank account to perform this action
- * If you have yet to create a bank account, do so by using the 'addbank' command
  * First login to Bank 0 by using the command 'login 0'
  * Test Case 1: addBudget food 150 JAN
  * Expected: The programme will inform the user that this action was successful 
@@ -354,29 +353,6 @@ By allowing multiple currencies on one application, TrackStars aims to make fina
  * Expected: The programme will inform the user that this action was successful 
 
 ### Adding Transactions 
- * Adding transactions to a bank is a bank specific action, and thus, requires the user to login to aspecific bank before performing these commands
- * If you have yet to create a bank account, do so by using the 'addbank' command
- * First login to Bank 0 by using the command 'login 0'
- * Test Case 1: add food 50 15/5
- * Expected: The programme will inform the user that this transaction of amount 50, spent on 15 May in the currency of the bank was recorded. 
- * Test Case 2: add transport -200 25/1
- * Expected: The programme will inform the user that negative values for transactions are not allowed
-
 
 ### Monthly Summary 
-* The monthly summary feature is a way for a user to see aggregated monthly data in an easily digestable manner. It is important to note that the monthly summary can only display information for the current year. If you are curious about the rationale, we explain this in detail in the FAQ section of the UserGuide
-* Test Case 1: summary JAN 
-* Expected: The programme will inform the user of their total spending, categorical spending, and categorical budgets. If the user overshoots a particular budget, the summary page will inform the user.
-* Test Case 2: summary DEC JPY
-* Expected: The programme will inform the user of their total spending in Japanese Yen ONLY.
-
-### Withdrawing from a bank 
-* This withdrawing feature is bank specific, and thus requires the user to be logged into a specific bank.
-* The preparatory work of setting up bank accounts is that of other bank-specific commands.
-* Test Case 1: withdraw 500 
-* Expected: The programme will inform the user that the withdrawal was successful 
-* Test Case 2: withdraw -500 
-* Expected: The programme will inform the user that the withdrawal is unsuccessful, as the amount must be a positive number.
-* 
-### Depositing into a bank 
 
