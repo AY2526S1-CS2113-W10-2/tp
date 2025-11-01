@@ -1,12 +1,14 @@
 @startuml
 'https://plantuml.com/sequence-diagram
 
+hide footbox
 actor User as U
 
 participant ":UserInterface" as UserInterface
 participant ":Parser" as Parser
 participant ":DeleteTransactionCommand" as DeleteTransactionCommand
 participant ":User" as User
+participant ":Bank" as Bank
 participant ":Storage" as Storage
 participant ":OutputManager" as OutputManager
 
@@ -44,23 +46,31 @@ end
 Parser -> DeleteTransactionCommand : execute(...)
     activate DeleteTransactionCommand
 
-    DeleteTransactionCommand -> User : deleteTransaction(2)
+    DeleteTransactionCommand -> User : getCurrBank()
     activate User
+    User --> DeleteTransactionCommand
+    deactivate User
+    DeleteTransactionCommand -> Bank : deleteTransactionFromBank(2)
+    activate Bank
 
-    User -> User : remove(index = 2) from TransactionList
-    User --> User : confirm deletion
+    Bank -> Bank : remove(index = 2) from transactions
+    Bank --> DeleteTransactionCommand: returns Transaction
+    deactivate Bank
 
-    User -> Storage : saveTransactions(...)
-    Storage --> User
-
-    User -> OutputManager : print delete success message and balance
+    DeleteTransactionCommand -> OutputManager : prints delete success message and balance
     activate OutputManager
-
     OutputManager --> U
     deactivate OutputManager
+    DeleteTransactionCommand -> User : getStorage()
+    activate User
+    User --> DeleteTransactionCommand
     deactivate User
+    DeleteTransactionCommand -> Storage : saveTransactions(...)
+    activate Storage
+    Storage --> DeleteTransactionCommand
+    deactivate Storage
     DeleteTransactionCommand --> Parser
-    deactivate DeleteTransactionCommand
+    destroy DeleteTransactionCommand
 
 Parser --> UserInterface : return shouldExit = "false"
 deactivate Parser
