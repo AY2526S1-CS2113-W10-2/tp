@@ -30,10 +30,18 @@ alt User logged in
     create DeleteTransactionCommand
     Parser -> DeleteTransactionCommand: new DeleteTransactionCommand(...)
     activate DeleteTransactionCommand
-
     DeleteTransactionCommand --> Parser
     deactivate DeleteTransactionCommand
-    Parser -> DeleteTransactionCommand : execute(...)
+
+else User not logged in
+
+    Parser -> OutputManager : print error to prompt login
+    activate OutputManager
+    OutputManager --> U
+    deactivate OutputManager
+end
+
+Parser -> DeleteTransactionCommand : execute(...)
     activate DeleteTransactionCommand
 
     DeleteTransactionCommand -> User : deleteTransaction(2)
@@ -53,14 +61,6 @@ alt User logged in
     deactivate User
     DeleteTransactionCommand --> Parser
     deactivate DeleteTransactionCommand
-
-else User not logged in
-
-    Parser -> OutputManager : print error "Please log in first!"
-    activate OutputManager
-    OutputManager --> U
-    deactivate OutputManager
-end
 
 Parser --> UserInterface : return shouldExit = "false"
 deactivate Parser

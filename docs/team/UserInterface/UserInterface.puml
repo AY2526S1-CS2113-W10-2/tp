@@ -1,0 +1,72 @@
+@startuml
+'https://plantuml.com/class-diagram
+hide circle
+
+title UserInterface Component Diagram
+
+
+skinparam classAttributeIconSize 0
+
+class UserInterface
+class Parser {
+    + {static} parseCommand(command: String)
+    - {static} splitCommand(command: String)
+    - {static} recursiveGetCommand(command: String)
+}
+class OutputManager
+class User {
+    - banks: ArrayList<Bank>
+    - budgets: ArrayList<Budget>
+    - isLoggedIn: boolean
+    - currBank: Bank
+    - storage: Storage
+    + initialise(): void
+    + addBank(bank: Bank): void
+    + addBudget(budget: Budget): void
+    + getBanks(): ArrayList<Bank>
+    + getBudgets(): ArrayList<Budget>
+    + getCurrBank(): Bank
+    + setCurrBank(currBank: Bank): void
+    + isLoggedIn(): boolean
+    + setIsLoggedIn(isLoggedIn: boolean): void
+    + getStorage(): Storage
+    + getBudgetForBank(category: Category, month: Month, bank: Bank): Budget
+}
+class InputManager {
+    + {static} getNextCommand(scanner: Scanner) : String
+}
+interface Command <<interface>> {
+    + execute(): String
+    + shouldExit(): boolean
+}
+class Transaction {
+    -value: float
+    -category: Category
+    -date: Date
+    -currency: Currency
+    -tag: String
+}
+class Bank {
+    -id: int
+    -currency: Currency
+    -balance: float
+    -exchangeRate: float
+    -transactions: ArrayList<Transaction>
+}
+
+package commands <<Folder>> {
+    note "All classes here implement Command interface" as N
+}
+
+UserInterface --> InputManager
+UserInterface --> Parser
+
+Parser --> commands : instantiates a command
+Parser --> Command : create and executes
+commands --> User : fetch and update data
+commands --> OutputManager: outputs message
+
+User *-- Bank
+Bank *-- Transaction
+
+@enduml
