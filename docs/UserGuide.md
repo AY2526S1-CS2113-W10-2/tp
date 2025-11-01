@@ -5,8 +5,9 @@
 TrackStars is a financial tracker targeted towards incoming NUS exchangers to enable them to keep track of their finances not only in Singapore, but also while travelling around South East Asia. 
 As such, TrackStars can operate with foreign currencies that are from popular South East Asian travel destinations. 
 
-{Give steps to get started quickly}
+#### How To Get Started
 
+---
 1. Ensure that you have Java 17 or above installed.
 2. Download the latest JAR file of `TrackStars` from [here](http://link.to/duke).
 3. Copy the JAR file into an empty folder 
@@ -15,8 +16,6 @@ As such, TrackStars can operate with foreign currencies that are from popular So
 6. 'exit' will exit the program
 
 ## Features 
-
-{Give detailed description of each feature}
 
 ---
 
@@ -95,7 +94,7 @@ Format: `add TAG(optional) CATEGORY AMOUNT DATE`
 If omitted, "unnamed" will be assigned as the default tag.
 * The `CATEGORY` must be one of these: food, transport, entertainment, recreation 
 * The `AMOUNT` must be a positive real number in the currency of the bank you are logged into.
-* The `DATE` must be in the form dd/mm
+* The `DATE` must be in the form DD/MM
 
 Example of usage: 
 
@@ -254,7 +253,7 @@ Japan is not a South East Asian country, but is included since it is such a popu
 
 **Q** Why can't I input the year in my transactions? Why am I relegated to only transactions in the current year?
 
-**A** This is a reasonable question, but consider the targeted user of TrackStars. TrackStars aims to serve NUS Exchangers to aggregate financial data into a single application. The NUS academic semester is from either August - December (Sem 1) or January - May (sem 2). As such, it seemed redundant to the developers to include a year, as NUS Exchangers stay at NUS for at most, 6 months, and never crosses into a new year. Meaning, it is expected that if an NUS exchanger joins in 2025, they will leave by 2025.
+**A** This is a reasonable question, but consider the targeted user of TrackStars. TrackStars aims to serve NUS Exchangers to aggregate financial data into a single application. The NUS academic semester is from either August - December (Sem 1) or January - May (sem 2). As such, it seemed redundant to the developers to include a year, as NUS Exchangers stay at NUS for at most, 6 months, and that stint never crosses into a new year. Meaning, it is expected that if an NUS exchanger partakes in an exchange programme in 2025, they will leave by 2025.
 
 ## Command Summary
 

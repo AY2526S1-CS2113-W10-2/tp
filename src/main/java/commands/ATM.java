@@ -2,6 +2,7 @@ package commands;
 
 import bank.Bank;
 import ui.FinanceException;
+import ui.OutputManager;
 import user.User;
 
 import java.util.ArrayList;
@@ -36,7 +37,8 @@ public class ATM implements Command{
         if(this.deposit && !this.withdraw){
             newBalance = this.currBank.getBalance() + this.amount;
             this.currBank.setBalance(newBalance);
-            System.out.println("Successful deposit! Your bank balance is now: "
+
+            OutputManager.printMessage("Successful deposit! Your bank balance is now: "
                     + this.currBank.getCurrency().getSymbol()
                     + this.currBank.getBalance());
         }
@@ -47,7 +49,8 @@ public class ATM implements Command{
             }
             newBalance = this.currBank.getBalance() - this.amount;
             this.currBank.setBalance(newBalance);
-            System.out.println("Successful withdrawal! Your bank balance is now: "
+
+            OutputManager.printMessage("Successful withdrawal! Your bank balance is now: "
                     + this.currBank.getCurrency().getSymbol()
                     + this.currBank.getBalance());
         }
