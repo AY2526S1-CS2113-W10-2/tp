@@ -26,6 +26,8 @@ Storage: Reads data from, and writes data to the hard disk.
 
 #### UserInterface component
 API: UserInterface.java
+
+![UserInterface_Component_Diagram.png](team/UserInterface/UserInterface_Component_Diagram.png)
 #### Storage component
 API: Storage.java 
 ![img.png](team/Storage/img.png)
