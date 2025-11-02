@@ -1,7 +1,6 @@
 package bank;
 
 import transaction.Transaction;
-import ui.FinanceException;
 import utils.Currency;
 
 import java.util.ArrayList;

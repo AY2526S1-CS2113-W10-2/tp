@@ -35,7 +35,8 @@ public class AddBankCommand implements Command {
                 throw new FinanceException("Balance cannot be negative. You entered: " + arguments.get(0));
             }
             if (balance > Float.MAX_VALUE){
-                throw new FinanceException("Max possible value of account " + Float.MAX_VALUE + " exceeded, you entered " + balance + ". Try with a lower number.");
+                throw new FinanceException("Max possible value of account " + Float.MAX_VALUE +
+                        " exceeded, you entered " + balance + ". Try with a lower number.");
             }
         } catch (NumberFormatException e) {
             throw new FinanceException("Balance must be a valid number. You entered: " + arguments.get(0));
