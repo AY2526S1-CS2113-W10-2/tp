@@ -9,6 +9,7 @@ import utils.Category;
 import ui.OutputManager;
 import utils.Currency;
 import utils.Month;
+import logger.AppLogger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +31,8 @@ import java.util.logging.Logger;
 
 //@@author kevinlokewy
 public class Summary {
-    private static final Logger logger = Logger.getLogger(Summary.class.getName());
+    private static final Logger logger = AppLogger.getLogger();
+
 
     private final Storage storage;
 

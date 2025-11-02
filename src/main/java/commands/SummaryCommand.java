@@ -5,6 +5,7 @@ import ui.FinanceException;
 import user.User;
 import utils.Currency;
 import utils.Month;
+import logger.AppLogger;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -32,7 +33,7 @@ import java.util.logging.Logger;
 
 //@@author kevinlokewy
 public class SummaryCommand implements Command {
-    private static final Logger logger = Logger.getLogger(Summary.class.getName());
+    private static final Logger logger = AppLogger.getLogger();
     private final ArrayList<String> arguments;
 
     public SummaryCommand(ArrayList<String> arguments) {
