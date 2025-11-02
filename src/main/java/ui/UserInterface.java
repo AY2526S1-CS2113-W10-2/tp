@@ -17,6 +17,9 @@ public class UserInterface {
 
         while (!isExit) {
             String input = InputManager.getNextCommand(scanner);
+            if (input == null) {
+                break;
+            }
             try {
                 isExit = parseCommand(input);
             } catch (FinanceException e) {
