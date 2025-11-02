@@ -83,30 +83,32 @@ public class FilterCommand implements Command {
             String minStr = arguments.get(1);
             String maxStr = arguments.get(2);
 
+            float min;
+            float max;
             try {
-                float min = Float.parseFloat(minStr);
-                float max = Float.parseFloat(maxStr);
-
-                // Check if both numbers have at most 2 decimal places
-                if (!minStr.matches("\\d+(\\.\\d{1,2})?") || !maxStr.matches("\\d+(\\.\\d{1,2})?")) {
-                    throw new FinanceException("MIN and MAX must be numbers with at most 2 decimal places.");
-                }
-
-                if (min < 0 || max < 0) {
-                    throw new FinanceException("MIN and MAX values cannot be negative.");
-                }
-
-                if (max < min) {
-                    throw new FinanceException("MAX value cannot be less than MIN value.");
-                }
-
-                for (Transaction t : allTrans) {
-                    if (t.getValue() >= min && t.getValue() <= max) {
-                        filteredTrans.add(t);
-                    }
-                }
+                min = Float.parseFloat(minStr);
+                max = Float.parseFloat(maxStr);
             }  catch (NumberFormatException e) {
                 throw new FinanceException("Invalid min/max values.");
+            }
+
+            if (min < 0 || max < 0) {
+                throw new FinanceException("MIN and MAX values cannot be negative.");
+            }
+
+            // Check if both numbers have at most 2 decimal places
+            if (!minStr.matches("\\d+(\\.\\d{1,2})?") || !maxStr.matches("\\d+(\\.\\d{1,2})?")) {
+                throw new FinanceException("MIN and MAX must be numbers with at most 2 decimal places.");
+            }
+
+            if (max < min) {
+                throw new FinanceException("MAX value cannot be less than MIN value.");
+            }
+
+            for (Transaction t : allTrans) {
+                if (t.getValue() >= min && t.getValue() <= max) {
+                    filteredTrans.add(t);
+                }
             }
             break;
 
