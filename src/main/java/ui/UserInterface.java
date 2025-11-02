@@ -20,9 +20,7 @@ public class UserInterface {
         while (!isExit) {
             String input = InputManager.getNextCommand(scanner);
             try {
-                if (input != null){
-                    isExit = parseCommand(input);
-                }
+                isExit = parseCommand(input);
             } catch (FinanceException e) {
                 OutputManager.printMessage(e.getMessage());
             }
