@@ -1,0 +1,91 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+hide footbox
+actor User as U
+
+participant ":UserInterface" as UserInterface
+participant ":Parser" as Parser
+participant ":filterCommand" as filterCommand
+participant ":User" as User
+participant ":Bank" as Bank
+participant ":Storage" as Storage
+participant ":OutputManager" as OutputManager
+
+
+title filterCommand Sequence Diagram
+
+
+U -> UserInterface : Enters "filter <filterType>" command
+activate UserInterface
+
+UserInterface -> Parser : parseCommand(...)
+activate Parser
+
+Parser -> User : check LoggedIn
+activate User
+
+User --> Parser
+deactivate User
+
+alt User logged in
+    create filterCommand
+    Parser -> filterCommand: new filterCommand(...)
+    activate filterCommand
+    filterCommand --> Parser
+    deactivate filterCommand
+
+else User not logged in
+
+    Parser -> OutputManager : print error to prompt login
+    activate OutputManager
+    OutputManager --> U
+    deactivate OutputManager
+end
+
+Parser -> filterCommand : execute(...)
+    activate filterCommand
+
+    filterCommand -> User : getCurrBank()
+    activate User
+    User --> filterCommand
+    deactivate User
+    filterCommand -> Bank : getTransactions()
+    activate Bank
+    Bank --> filterCommand
+    deactivate Bank
+
+alt filterType = category
+    filterCommand -> filterCommand: find transactions that match category
+    activate filterCommand
+    filterCommand --> filterCommand
+    deactivate filterCommand
+else filterType = cost
+    filterCommand -> filterCommand: find transactions that is within cost range
+    activate filterCommand
+    filterCommand --> filterCommand
+    deactivate filterCommand
+else filterType = date
+    filterCommand -> filterCommand: find transactions that is within date range
+    activate filterCommand
+    filterCommand --> filterCommand
+    deactivate filterCommand
+end
+
+filterCommand -> OutputManager : get list of filtered transactions
+activate OutputManager
+OutputManager --> filterCommand:
+deactivate OutputManager
+
+filterCommand -> OutputManager : print list of matched transactions
+activate OutputManager
+OutputManager --> U:
+deactivate OutputManager
+
+filterCommand --> Parser
+destroy filterCommand
+Parser --> UserInterface : return shouldExit = "false"
+deactivate Parser
+deactivate UserInterface
+
+@enduml
