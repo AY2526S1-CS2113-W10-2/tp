@@ -75,6 +75,18 @@ class FilterCommandTest {
     }
 
     @Test
+    void filterCategory_caseInsensitive_returnsMatchingTransactions() throws FinanceException {
+        FilterCommand cmd = new FilterCommand(new ArrayList<>(List.of("category", "food")));
+        cmd.execute();
+
+        long count = bank0.getTransactions().stream()
+                .filter(t -> t.getCategory() == Category.FOOD)
+                .count();
+
+        assertEquals(2, count);
+    }
+
+    @Test
     void filterByCost_fiveToFifteen_returnsMatchingTransactions() throws FinanceException {
         FilterCommand cmd = new FilterCommand(new ArrayList<>(List.of("cost", "5", "15")));
         cmd.execute();
@@ -83,7 +95,7 @@ class FilterCommandTest {
                 .filter(t -> t.getValue() >= 5 && t.getValue() <= 15)
                 .count();
 
-        assertEquals(2, count); // t1=10, t3=5
+        assertEquals(2, count);
     }
 
     @Test
@@ -100,27 +112,61 @@ class FilterCommandTest {
     }
 
     @Test
-    void filterInvalidCategory_throwsFinanceException() {
+    void filterByCategory_invalidCategory_throwsFinanceException() {
         assertThrows(FinanceException.class, () ->
                 new FilterCommand(new ArrayList<>(List.of("category", "INVALID"))).execute()
         );
     }
 
     @Test
-    void filterInvalidCostValues_throwsFinanceException() {
+    void filterByCost_negativeValues_throwsFinanceException() {
         assertThrows(FinanceException.class, () ->
                 new FilterCommand(new ArrayList<>(List.of("cost", "-5", "10"))).execute()
         );
-
+    }
+    @Test
+    void filterByCost_maxLessThanMin_throwsFinanceException() {
         assertThrows(FinanceException.class, () ->
                 new FilterCommand(new ArrayList<>(List.of("cost", "10", "5"))).execute()
         );
     }
 
     @Test
-    void filterInvalidDateFormat_throwsFinanceException() {
+    void filterByCost_nonNumeric_throwsFinanceException() {
         assertThrows(FinanceException.class, () ->
-                new FilterCommand(new ArrayList<>(List.of("date", "01-01-2025", "02-01-2025"))).execute()
+                new FilterCommand(new ArrayList<>(List.of("cost", "abc", "10"))).execute()
+        );
+
+        assertThrows(FinanceException.class, () ->
+                new FilterCommand(new ArrayList<>(List.of("cost", "5", "xyz"))).execute()
+        );
+    }
+
+    @Test
+    void filterByCost_tooManyDecimals_throwsFinanceException() {
+        assertThrows(FinanceException.class, () ->
+                new FilterCommand(new ArrayList<>(List.of("cost", "5.123", "10.00"))).execute()
+        );
+
+        assertThrows(FinanceException.class, () ->
+                new FilterCommand(new ArrayList<>(List.of("cost", "5.00", "10.999"))).execute()
+        );
+    }
+
+    @Test
+    void filterByCost_noTransactions_returnsEmptyList() throws FinanceException {
+        bank0.getTransactions().clear();
+
+        FilterCommand cmd = new FilterCommand(new ArrayList<>(List.of("cost", "0", "100")));
+        cmd.execute();
+
+        assertEquals(0, bank0.getTransactions().size());
+    }
+
+    @Test
+    void filterByDate_invalidDateFormat_throwsFinanceException() {
+        assertThrows(FinanceException.class, () ->
+                new FilterCommand(new ArrayList<>(List.of("date", "01-01", "02-01"))).execute()
         );
     }
 }
