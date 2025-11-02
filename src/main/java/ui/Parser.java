@@ -15,6 +15,7 @@ import commands.SummaryCommand;
 import commands.ListRecentTransactionsCommand;
 import commands.ListBanksCommand;
 import commands.ATM;
+import commands.ChcpCommand;
 
 import user.User;
 
@@ -161,6 +162,10 @@ public class Parser {
                 logger.info("Please login to a bank to execute this command");
                 throw new FinanceException("Please login to a bank to execute this command");
             }
+            showLoggedBank = false;
+            break;
+        case "chcp":
+            cmd = new ChcpCommand();
             showLoggedBank = false;
             break;
         default:
