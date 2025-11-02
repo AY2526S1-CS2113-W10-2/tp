@@ -16,8 +16,8 @@ import static ui.OutputManager.printMessage;
  */
 public class DeleteTransactionCommand implements Command {
     private static final int REQUIRED_ARGUMENTS_LENGTH = 1;
-    private final ArrayList<String> arguments;
     private static final Logger logger = AppLogger.getLogger();
+    private final ArrayList<String> arguments;
 
     /**
      * Constructs a {@code DeleteTransactionCommand} with the given arguments.

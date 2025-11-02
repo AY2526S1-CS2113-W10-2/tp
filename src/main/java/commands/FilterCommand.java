@@ -24,8 +24,8 @@ import static ui.OutputManager.printMessage;
  */
 public class FilterCommand implements Command {
     private static final int MIN_ARGUMENTS_LENGTH = 2;
-    private final ArrayList<String> arguments;
     private static final Logger logger = AppLogger.getLogger();
+    private final ArrayList<String> arguments;
 
     /**
      * Constructs a {@code FilterCommand} with the specified arguments.

@@ -16,7 +16,7 @@ public class AppLogger {
 
     static {
         try {
-            FileHandler fileHandler = new FileHandler(LOG_FILE, false); // append mode
+            FileHandler fileHandler = new FileHandler(LOG_FILE, false);
             fileHandler.setFormatter(new SimpleFormatter());
 
             logger.addHandler(fileHandler);
