@@ -10,6 +10,9 @@ public class InputManager {
     public static String getNextCommand(Scanner scanner) {
         String input;
         while (true) {
+            if (!scanner.hasNextLine()) {
+                return null;
+            }
             input = scanner.nextLine().trim();
             if (!input.isEmpty()) {
                 break;
