@@ -377,11 +377,26 @@ By allowing multiple currencies on one application, TrackStars aims to make fina
 
 
 ## User Stories
+Priorities: High (must have) - `***`, Medium (nice to have) - `**`, Low (unlikely to have) - `*`
 
-|Version| As a ...             | I want to ...                                                       | So that I can ...                                                                  |
-|--------|----------------------|---------------------------------------------------------------------|------------------------------------------------------------------------------------|
-|v1.0| exchange student     | add transactions, bank accounts and budgets                         | easily track my finances                                                           |
-|v2.0| NUS exchange student | find, search, and summarize my spending across multiple currencies  | track my finances across multiple currencies while travelling SEA as an exchanger  |
+| Priority | As a ...               | I want to ...                                                      | So that I can ...                                                                 |
+|----------|------------------------|--------------------------------------------------------------------|-----------------------------------------------------------------------------------|
+| ***      | new user               | add food/recreation/transport budgets                              | keep track of my financial goals                                                  |
+| ***      | multi-account user     | add different banks                                                | track and manage my expenses across different banks                               |
+| ***      | user                   | enter my local balance                                             | have a holistic view of my total finance                                          |
+| ***      | financially-aware user | add every transaction that I made                                  | be informed of about my finances                                                  |
+| ***      | responsible user       | delete wrong transactions                                          | maintain a accurate record of my spending                                         |
+| ***      | busy user              | view a Summary page for spending and budget                        | see what i spent or saved altogether                                              |
+| ***      | adventurous user       | add different currencies                                           | track finances across multiple countries                                          |
+| **       | cautious user          | have my expenses automatically saved                               | avoid losing financial data                                                       |
+| **       | forgetful user         | search expenses easily                                             | quickly find specific transactions                                                |
+| **       | analytical user        | filter expenses by category, date, or amount                       | identify spending patterns and trends easily                                      |
+| **       | intermediate user      | compare spending across categorise                                 | understand which areas dominate my budget                                         |
+| **       | user                   | tag expenses with labels                                           | remember the use of the expenses                                                  |
+| *        | user                   | convert different currencies                                       | see the list expenses in one currency                                             |
+| *        | conscious user         | track my balance timely in banks                                   | prevent overspending                                                              |
+| v1.0     | exchange student       | add transactions, bank accounts and budgets                        | easily track my finances                                                          |
+| v2.0     | NUS exchange student   | find, search, and summarize my spending across multiple currencies | track my finances across multiple currencies while travelling SEA as an exchanger |
 
 ## Non-Functional Requirements
 
