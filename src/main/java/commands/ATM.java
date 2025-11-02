@@ -26,6 +26,9 @@ public class ATM implements Command{
         if (this.amount <= 0) {
             throw new FinanceException("Amount withdrawn or deposited must be a positive value");
         }
+        if ((this.amount + currBank.getBalance()) >= Float.MAX_VALUE) {
+            throw new FinanceException("Max possible value of account " + Float.MAX_VALUE + " exceeded, you attempted to set to " + this.amount + currBank.getBalance() + ". Try with a lower number.");
+        }
         this.currBank = currBank;
         this.deposit = deposit;
         this.withdraw = withdraw;
