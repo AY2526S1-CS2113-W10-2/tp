@@ -36,9 +36,12 @@ As such, TrackStars can operate with foreign currencies that are from popular So
 1. Ensure that you have Java 17 or above installed.
 2. Download the latest JAR file of `TrackStars` from [here](http://link.to/duke).
 3. Copy the JAR file into an empty folder 
-4. Open the command terminal, cd into the folder you put the JAR in, then use '-java jar TrackStars.jar' command to run the application
-5. Start typing commands into the terminal and execute it by pressing Enter
-6. 'exit' will exit the program
+4. Open the command terminal, cd into the folder you put the JAR in.
+5. Use '-java jar TrackStars.jar' command to run the application.
+6. A warning may appear depending on your terminal formatting. If the symbols do not display correctly
+consider running "chcp 65001" in cmd, then repeat step 5.
+7. Start typing commands into the terminal and execute it by pressing Enter
+8. 'exit' will exit the program
 
 ## Features
 
