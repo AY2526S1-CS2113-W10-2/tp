@@ -1,6 +1,7 @@
 package storage;
 
 import bank.Bank;
+import logger.AppLogger;
 import transaction.Transaction;
 import ui.FinanceException;
 import user.User;
@@ -28,7 +29,7 @@ public class Storage {
     public static final int TRANSACTION_DATA_LENGTH = 8;
     public static final int BUDGET_DATA_LENGTH = 5;
     public static final int BANK_DATA_LENGTH = 4;
-    private static final Logger logger = Logger.getLogger(Storage.class.getName());
+    private static final Logger logger = AppLogger.getLogger();
     private static final String TRANSACTION_FILE = "transactions.txt";
     private static final String BUDGET_FILE = "budgets.txt";
     private static final String BANK_FILE = "banks.txt";

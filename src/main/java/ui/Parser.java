@@ -17,6 +17,7 @@ import commands.ListBanksCommand;
 import commands.ATM;
 import commands.ChcpCommand;
 
+import logger.AppLogger;
 import user.User;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Parser {
-    private static final Logger logger = Logger.getLogger(Parser.class.getName());
+    private static final Logger logger = AppLogger.getLogger();
 
     /**
      * Parses the command string, and redirects control to the appropriate function to execute

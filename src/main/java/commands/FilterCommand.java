@@ -1,5 +1,6 @@
 package commands;
 
+import logger.AppLogger;
 import transaction.Transaction;
 import ui.FinanceException;
 import user.User;
@@ -7,6 +8,7 @@ import utils.Category;
 import utils.Date;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import static ui.OutputManager.listFilter;
 import static ui.OutputManager.printMessage;
@@ -22,6 +24,7 @@ import static ui.OutputManager.printMessage;
  */
 public class FilterCommand implements Command {
     private static final int MIN_ARGUMENTS_LENGTH = 2;
+    private static final Logger logger = AppLogger.getLogger();
     private final ArrayList<String> arguments;
 
     /**
@@ -31,6 +34,7 @@ public class FilterCommand implements Command {
      */
     public FilterCommand(ArrayList<String> arguments) {
         this.arguments = arguments;
+        logger.info("FilterCommand created with arguments: " + arguments);
     }
 
     /**
@@ -50,6 +54,7 @@ public class FilterCommand implements Command {
      */
     @Override
     public String execute() throws FinanceException {
+        logger.info("Executing FilterCommand...");
         if (arguments.isEmpty()) {
             throw new FinanceException("Sorry! Wrong format. Please specify a filter type: category, cost, or date.");
         }
@@ -57,6 +62,7 @@ public class FilterCommand implements Command {
         String filterType = arguments.get(0).toLowerCase();
         ArrayList<Transaction> allTrans = User.getCurrBank().getTransactions();
         ArrayList<Transaction> filteredTrans = new ArrayList<>();
+        logger.info("Total transactions retrieved: " + allTrans.size());
 
         switch (filterType) {
         case "category":
@@ -135,10 +141,12 @@ public class FilterCommand implements Command {
             break;
 
         default:
+            logger.warning("Unknown filter type: " + filterType);
             throw new FinanceException("Unknown filter type. Valid options: category, cost, date.");
         }
         String result = listFilter(filterType, filteredTrans);
         printMessage(result);
+        logger.info("FilterCommand execution completed.");
 
         return null;
     }

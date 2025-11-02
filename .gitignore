@@ -16,6 +16,7 @@ bin/
 budgets.txt
 banks.txt
 transactions.txt
+TrackStars.log
 
 /text-ui-test/ACTUAL.TXT
 text-ui-test/EXPECTED-UNIX.TXT
