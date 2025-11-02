@@ -391,6 +391,7 @@ By allowing multiple currencies on one application, TrackStars aims to make fina
 
 * *glossary item* - Definition
 * *list of supported currencies* - Malaysian Ringgit (MYR), Vietnamese Dong (VND), Thai Baht (THB), Singapore Dollar (SGD), Japanese Yen (JPY), Indonesian Rupiah (IDR).
+* *NUS Exchanger* - Refers to incoming students from other universities studying at NUS for a semester, as part of a Student Exchange Programme (SEP) agreement.
 
 ## Instructions for manual testing
 
@@ -430,7 +431,6 @@ By allowing multiple currencies on one application, TrackStars aims to make fina
  * Test Case 2: add transport -200 25/1
  * Expected: The programme will inform the user that negative values for transactions are not allowed
 
-
 ### Monthly Summary 
 * The monthly summary feature is a way for a user to see aggregated monthly data in an easily digestable manner. It is important to note that the monthly summary can only display information for the current year. If you are curious about the rationale, we explain this in detail in the FAQ section of the UserGuide
 * Test Case 1: summary JAN 
@@ -445,5 +445,4 @@ By allowing multiple currencies on one application, TrackStars aims to make fina
 * Expected: The programme will inform the user that the withdrawal was successful 
 * Test Case 2: withdraw -500 
 * Expected: The programme will inform the user that the withdrawal is unsuccessful, as the amount must be a positive number.
-### Depositing into a bank 
 
