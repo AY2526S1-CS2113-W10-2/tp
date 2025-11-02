@@ -58,12 +58,16 @@ public class Bank {
         return removed;
     }
 
-
     public void setBalance(float balance) {
+        System.out.println("Setting new balance of " + balance);
         if (balance < 0) {
-            throw new IllegalArgumentException("Balance cannot be negative");
+            throw new IllegalArgumentException("Balance cannot be negative.");
         }
-        this.balance = balance;
+        if (balance > Float.MAX_VALUE){
+            this.balance = Float.MAX_VALUE;
+        }else{
+            this.balance = balance;
+        }
     }
 
     public void setExchangeRate(float exchangeRate) {

@@ -92,7 +92,7 @@ public class AddTransactionCommand implements Command {
         } catch (FinanceException e) {
             throw e;
         } catch (Exception e) {
-            throw new FinanceException("Error deleting transaction: " + e.getMessage());
+            throw new FinanceException("Error adding transaction: " + e.getMessage() + "\n" + ERROR_INVALID_FORMAT);
         }
         return null;
     }

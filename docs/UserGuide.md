@@ -151,7 +151,7 @@ Format: `addBudget CATEGORY AMOUNT MONTH`
 
 * The `CATEGORY` must be one of these: food, transport, entertainment, recreation
 * The `AMOUNT` must be a positive real number in the currency of the bank you are logged into.
-* The `MONTH` must be the shortened three letter form of each month. For example, JAN for January, FEB for February, APR for April.
+* The `MONTH` either the full name or the shortened three letter form of each month. For example, JAN or January, FEB or February, APR or April, etc.
 
 Example of usage:
 
@@ -165,8 +165,8 @@ Lists all budgets, and their current utilisation. Used as brief summary of spend
 
 Format: `listBudget MONTH`
 
-* The `MONTH` must be the shortened three letter form of each month. For example, JAN for January, FEB for February, APR for April.
-
+* The `MONTH` either the full name or the shortened three letter form of each month. For example, JAN or January, FEB or February, APR or April, etc.
+* 
 Example of usage:
 
 `listBudget JAN` to indicate show budget utilisation for January
@@ -240,8 +240,8 @@ Example of usage:
 Prints a summary of individual transactions and total values spent on different categories in the selected month of the current year.
 
 Format: `summary MONTH`
-* The `MONTH` must be the shortened three letter form of each month. For example, JAN for January, FEB for February, APR for April.
-
+* The `MONTH` either the full name or the shortened three letter form of each month. For example, JAN or January, FEB or February, APR or April, etc.
+* 
 Example of usage:
 
 `summary FEB` to see summary from the most recent February
