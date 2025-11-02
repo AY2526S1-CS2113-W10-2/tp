@@ -26,6 +26,10 @@ Storage: Reads data from, and writes data to the hard disk.
 
 #### UserInterface component
 API: UserInterface.java
+
+The `UserInterface` class handles all console-based user interactions for TrackStars.
+
+![UserInterface_Component_Diagram.png](team/UserInterface/UserInterface_Component_Diagram.png)
 #### Storage component
 API: Storage.java 
 ![img.png](team/Storage/img.png)
@@ -39,9 +43,12 @@ API: Storage.java
 #### User component
 API: User.java
 
-### Implementation 
+## Implementation 
 
 #### Monthly Summary feature
+
+**Overview**
+
 The Monthly Summary feature enables users to view their spending and budget for each category within a specific month. It is facilitated by the Summary class in the summary package and works closely with the User, Transaction, Category, Month, and OutputManager classes.
 When the user enters a command such in the form of summary <month>, the Parser class identifies the command and delegates it to the Summary class via the static method Summary.handleSummary().
 This method validates user input, initializes a Summary instance with the user’s current Storage, and invokes Summary.showMonthlySummary(month).
@@ -82,13 +89,13 @@ The following activity diagram summarises what happens when the user executes su
 ---
 
 #### Delete Transaction Feature
+
+**Overview**
+
 The DeleteTransaction feature allows users to remove a specific transaction from their financial record.
 This command improves user flexibility by enabling correction of mistakes or removal of outdated records.  
-**Note**: The user must be logged into a bank account to use this command.
-The command follows the syntax:  
-
-`delete <transaction-id>`
-
+**Note**: The user must be logged into a bank account to use this command.  
+**Syntax:** `delete <transaction-id>`  
 Example: `delete 3`
 deletes the 3rd transaction listed under the user’s records.
 
@@ -123,7 +130,7 @@ Otherwise, a FinanceException is thrown, e.g.:
 
 **Step 5: The transaction is deleted**  
 DeleteTransactionCommand calls: `User.deleteTransaction(index)` on the currently logged-in bank account.  
-This method removes the transaction at index 2 from the user’s list. 
+This method removes the transaction at index 2 from the user’s list. At the same time, ti updates the balance of the logged-in bank account.
 It then overwrites `transactions.txt` with the updated list, ensuring persistence across sessions. 
 At the same time, The user interface then prints: `"Deleted transaction: ..."`
 
@@ -138,7 +145,7 @@ The following activity diagram summarizes what happens when a user executes a ne
 
 #### Bank Login Feature 
 
-#### Purpose
+**Overview**
 
 The bank login feature ensures that user operations (such as adding transactions, budgets, or performing account actions) are scoped to a specific bank account context. By requiring the user to log in to a bank before executing sensitive operations, the system maintains data integrity and simplifies account management. This feature allows users to interact with multiple bank accounts one at a time, with clear authorization boundaries for all financial actions. [file:3]
 
@@ -196,7 +203,7 @@ The following sequence diagram shows how various classes and methods interact to
 
 #### Deposit & Withdrawal Feature Developer Documentation
 
-**Purpose**
+**Overview**
 
 The deposit and withdrawal feature allows users to modify the balance of their selected bank account securely and accurately. All operations are strictly performed in the context of the logged-in user and their active bank account, ensuring correct tracking of account transactions and maintaining financial integrity [file:3][file:12].
 
@@ -294,6 +301,67 @@ The following class diagram shows the relationships between the various classes 
 
 The following sequence diagram shows how various classes and methods interact together throughout the adding of budget mechanism:
 ![uml_sequence_add_budget.png](team/BudgetFeature/uml_sequence_add_budget.png)
+
+---
+
+#### Searching for transaction feature
+
+**Overview**
+
+The SearchCommand allows users to search for transactions containing a specific keyword.
+The search is case-insensitive and matches keywords against transaction details. 
+This feature improves usability by enabling users to quickly find relevant transactions.  
+**Note:** The user must be logged into a bank account to use this command.  
+
+**Syntax:**`search <keyword>`  
+Example: `search food` – returns all transactions containing the word "food".
+
+The following sequence diagram shows how search operation goes through the components:
+![SearchCommand_Sequence_Diagram.png](team/CommandFeature/searchCommand/SearchCommand_Sequence_Diagram.png)
+
+*Implementation*
+
+* Command Pattern: SearchCommand implements the Command interface to integrate with the existing command execution flow.  
+* Input Validation: Ensures exactly one argument is provided; throws FinanceException otherwise.  
+* Transaction Retrieval: Fetches all transactions from the currently logged-in bank (User.getCurrBank().getTransactions()).
+* Filtering: Uses OutputManager.listSearch(keyword, transactions) to match transactions containing the keyword and display results.
+* Logging: Actions and errors are logged via AppLogger. 
+* Error Handling: Catches runtime exceptions to prevent the program from crashing, while still reporting issues to the user.
+
+*Design Rationale*  
+* Improve efficiency in pinpointing transactions when only part of the transaction is known
+
+---
+
+#### Filtering transaction feature
+
+The FilterCommand allows users to filter transactions based on category, cost, or date, 
+enabling focused analysis on subsets of transactions. This helps users make informed decisions about their finances.  
+**Note:** The user must be logged into a bank account to use this command.
+
+**Syntax:**  
+* `filter category <CATEGORY>`
+* `filter cost <MIN> <MAX>`
+* `filter date <START_DATE> <END_DATE>`
+
+The following sequence diagram shows how filter operation goes through the components:
+![filterCommand_Sequence_Diagram.png](team/CommandFeature/filterCommand/filterCommand_Sequence_Diagram.png)
+
+*Implementation*
+
+* Command Pattern: Implements Command to maintain uniformity with other commands. 
+* Input Validation:
+  * Category must match a valid enum value. 
+  * Cost must be positive and ≤ 2 decimal places; min ≤ max. 
+  * Date ranges must be chronological and in DD/MM format. 
+* Filtering: Iterates over all transactions to collect those matching the filter criteria. 
+* Logging: Logs creation, execution, and warnings via AppLogger. 
+* Output: Uses OutputManager.listFilter(filterType, filteredTrans) to display results.
+
+*Design Rationale*
+* Filtering by cost and date allows users to analyze specific spending patterns, 
+helping them understand where their money is going.
+
 
 ---
 

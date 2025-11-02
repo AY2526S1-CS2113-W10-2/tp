@@ -1,3 +1,4 @@
+Warning: If some symbols not displaying properly then your console encoding is not UTF-8, some symbols (e.g. '฿') may not display correctly. Consider running 'chcp 65001' in cmd before opening this program to ensure proper encoding and display.
   ===== SYSTEM =====
 Welcome to Finance Manager V1.0!
 You have not added any banks yet.

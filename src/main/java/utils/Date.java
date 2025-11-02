@@ -90,11 +90,6 @@ public class Date {
             int monthNum = Integer.parseInt(parts[1]);
             int year = java.time.LocalDate.now().getYear();
 
-            /*   if (year < MIN_YEAR || year > MAX_YEAR) {
-                throw new IllegalArgumentException("Year must be a 4-digit number (YYYY) " +
-                        "between " + MIN_YEAR + " and " + MAX_YEAR);
-            } */
-
             Month month = Month.fromNumber(monthNum);
             return new Date(day, month, year);
         } catch (NumberFormatException e) {
@@ -105,12 +100,6 @@ public class Date {
     }
 
     public boolean isBefore(Date other) {
-        if (this.year < other.year) {
-            return true;
-        }
-        if (this.year > other.year) {
-            return false;
-        }
         if (this.month.ordinal() < other.month.ordinal()) {
             return true;
         }
@@ -121,12 +110,6 @@ public class Date {
     }
 
     public boolean isAfter(Date other) {
-        if (this.year > other.year) {
-            return true;
-        }
-        if (this.year < other.year) {
-            return false;
-        }
         if (this.month.ordinal() > other.month.ordinal()) {
             return true;
         }

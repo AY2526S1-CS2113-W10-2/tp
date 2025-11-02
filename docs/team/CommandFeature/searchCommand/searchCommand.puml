@@ -1,0 +1,74 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+hide footbox
+actor User as U
+
+participant ":UserInterface" as UserInterface
+participant ":Parser" as Parser
+participant ":SearchCommand" as SearchCommand
+participant ":User" as User
+participant ":Bank" as Bank
+participant ":Storage" as Storage
+participant ":OutputManager" as OutputManager
+
+
+title SearchCommand Sequence Diagram
+
+
+U -> UserInterface : Enters "search milo" command
+activate UserInterface
+
+UserInterface -> Parser : parseCommand(...)
+activate Parser
+
+Parser -> User : check LoggedIn
+activate User
+
+User --> Parser
+deactivate User
+
+alt User logged in
+    create SearchCommand
+    Parser -> SearchCommand: new SearchCommand(...)
+    activate SearchCommand
+    SearchCommand --> Parser
+    deactivate SearchCommand
+
+else User not logged in
+
+    Parser -> OutputManager : print error to prompt login
+    activate OutputManager
+    OutputManager --> U
+    deactivate OutputManager
+end
+
+Parser -> SearchCommand : execute(...)
+    activate SearchCommand
+
+    SearchCommand -> User : getCurrBank()
+    activate User
+    User --> SearchCommand
+    deactivate User
+    SearchCommand -> Bank : getTransactions()
+    activate Bank
+    Bank --> SearchCommand
+    deactivate Bank
+
+    SearchCommand -> OutputManager : listSearch(...)
+    activate OutputManager
+    OutputManager --> SearchCommand: returns found List
+    deactivate OutputManager
+
+    SearchCommand -> OutputManager : print list of matched transactions
+    activate OutputManager
+    OutputManager --> U:
+    deactivate OutputManager
+    SearchCommand --> Parser
+    destroy SearchCommand
+
+Parser --> UserInterface : return shouldExit = "false"
+deactivate Parser
+deactivate UserInterface
+
+@enduml

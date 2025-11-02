@@ -1,6 +1,8 @@
 @startuml
 scale 0.4
 title Storage Architecture Diagram (Revised)
+hide circle
+skinparam classAttributeIconSize 0
 
 ' =======================
 ' USER PACKAGE
