@@ -21,11 +21,12 @@ As such, TrackStars can operate with foreign currencies that are from popular So
   - [Listing Budgets: `listBudget`](#listing-budgets-listbudget)
   - [Depositing Money: `deposit`](#depositing-money-into-current-bank-account-deposit)
   - [Withdrawing Money: `withdraw`](#withdrawing-money-from-current-bank-account-withdraw)
-  -  [Searching Transactions: `search`](#searching-transactions-search)
+  - [Searching Transactions: `search`](#searching-transactions-search)
   - [Filtering Transactions: `filter`](#filtering-transactions-filter)
   - [Viewing Summary of Recent Transactions: `summary`](#view-summary-of-recent-transactions-and-usage-summary)
   - [Exiting the Programme: `exit`](#exiting-the-programme-exit)
-  - [Saving the Data](#saving-the-data)
+  - 
+- [Saving the Data](#saving-the-data)
 - [FAQ](#faq)
 - [Command Summary](#command-summary)
 
@@ -203,7 +204,7 @@ Example of usage:
 Searches for transactions containing a specific keyword in the category or tag/description.
 Works only when logged into a bank account.
 
-Format: `search <KEYWORD>`
+Format: `search KEYWORD`
 * The `search` command is **case-insensitive**.
 
 Example of usage:
@@ -215,8 +216,8 @@ Example of usage:
 ### Filtering Transactions: `filter`
 Filters transactions by category, cost, or date range. Works only when logged into a bank account.
 
-Format: `filter <filter_type>`
-* `filter_type` includes `category`, `cost`, `date`
+Format: `filter FILTER_TYPE ...`
+* `FILTER_TYPE` includes `category`, `cost`, `date`
 * `category` filters and displays transactions based on selected category.
   * Valid categories: `FOOD`, `TRANSPORT`, `ENTERTAINMENT`, `RECREATION`.
   * Syntax: `filter category <CATEGORY>`.
@@ -225,14 +226,14 @@ Format: `filter <filter_type>`
   * `MAX` must not be smaller than `MIN`.
   * Syntax `filter cost <MIN> <MAX>`.
 * `date` filters and displays transactions between `START_DATE` and `END_DATE` (inclusive).
-  * Dates must be in the format `DD/MM/YYYY`.
-  * Syntax `filter date <start(DD/MM/YYYY)> <end(DD/MM/YYYY)>`
+  * Dates must be in the format `DD/MM`.
+  * Syntax `filter date <start(DD/MM)> <end(DD/MM)>`
 
 Example of usage:
 
 `filter category food` to filter by category  
 `filter cost 10 50` to filter by cost range  
-`filter date 01/01/2025 31/01/2025` to filter by date range  
+`filter date 01/01 31/01` to filter by date range  
 
 ---
 
@@ -240,8 +241,8 @@ Example of usage:
 Prints a summary of individual transactions and total values spent on different categories in the selected month of the current year.
 
 Format: `summary MONTH`
-* The `MONTH` either the full name or the shortened three letter form of each month. For example, JAN or January, FEB or February, APR or April, etc.
-* 
+* The `MONTH` either the full name or the shortened three letter form of each month. For example, JAN or January, FEB or February, APR or April, etc.  
+
 Example of usage:
 
 `summary FEB` to see summary from the most recent February
@@ -252,6 +253,13 @@ Example of usage:
 Exits the programme
 
 Format: `exit`
+
+---
+
+### Displaying list of commands: `help`
+Shows all the commands and formats that users can input.
+
+Format: `help`
 
 ---
 

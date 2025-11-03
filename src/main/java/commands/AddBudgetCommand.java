@@ -5,7 +5,6 @@ import ui.FinanceException;
 import user.User;
 import utils.Budget;
 import utils.Category;
-import utils.Currency;
 import utils.Month;
 
 import java.util.ArrayList;
@@ -56,10 +55,6 @@ public class AddBudgetCommand implements Command {
 
             Bank currBank = User.getCurrBank();
             var currency = currBank.getCurrency();
-
-            /*if(currency != Currency.SGD){
-                throw new FinanceException("Currency must be in SGD");
-            }*/
 
             // Create and add budget
             Budget budget = new Budget(category, amount, currBank.getCurrency(), month, currBank);

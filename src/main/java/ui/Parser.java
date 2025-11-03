@@ -7,6 +7,7 @@ import commands.AddTransactionCommand;
 import commands.DeleteTransactionCommand;
 import commands.ExitCommand;
 import commands.FilterCommand;
+import commands.HelpCommand;
 import commands.ListBudgetsCommand;
 import commands.LoginCommand;
 import commands.LogoutCommand;
@@ -53,6 +54,10 @@ public class Parser {
         Command cmd;
         boolean showLoggedBank = true;
         switch (comm){
+        case "help":
+            cmd = new HelpCommand();
+            showLoggedBank = false;
+            break;
         case "login":
             cmd = new LoginCommand(arguments);
             showLoggedBank = false;

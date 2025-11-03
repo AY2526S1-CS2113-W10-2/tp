@@ -42,15 +42,6 @@ public class User {
         storage.saveBanks(banks);
     }
 
-    /**
-     * Adds a budget to the user's record
-     */
-    public static void addBudget(Budget budget) {
-        budgets.add(budget);
-        storage.saveBudgets(budgets);
-    }
-
-
     public static ArrayList<Bank> getBanks() {
         return banks;
     }
@@ -80,11 +71,10 @@ public class User {
     }
 
     public static Budget getBudgetForBank(Category category, Month month, Bank bank) {
-        Map<Category, Budget> bank_budget = bank.getBudgets();
-        if(bank_budget.get(category) != null){
-            return bank_budget.get(category);
-        }
-        else {
+        Map<Category, Budget> bankBudgets = bank.getBudgets();
+        if(bankBudgets.get(category) != null){
+            return bankBudgets.get(category);
+        } else {
             return null;
         }
     }

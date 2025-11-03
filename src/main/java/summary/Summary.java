@@ -235,16 +235,14 @@ public class Summary {
                 if (bgt == null) {
                     continue;
                 }
-                if(isConvertAll){
-                    float budget_value = convertBudgets(bgt.getRemainingAmount(), bgt, currency);
-                    budget += budget_value;
-                }
-                else {
+                if(isConvertAll) {
+                    float budgetValue = convertBudgets(bgt.getRemainingAmount(), bgt, currency);
+                    budget += budgetValue;
+                } else {
                     budget += bgt.getRemainingAmount();
                 }
             }
-        }
-        else{
+        } else{
             Budget bgt = User.getBudgetForBank(category, monthEnum, bank);
             if (bgt != null) {
                 budget += bgt.getRemainingAmount();
