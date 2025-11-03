@@ -439,18 +439,29 @@ Priorities: High (must have) - `***`, Medium (nice to have) - `**`, Low (unlikel
 | *        | long term user         | create my own categories                     | use it more diversely                               |
 
 ## Non-Functional Requirements
+1. System Compatibility:
+   * The program should work on any mainstream operating system (Windows, macOS, Linux) that has Java 17 installed.
+2. Performance:
+   * The program should respond to user commands within one second for typical operations (`add`,`search`,`summary`, `delete`, etc.).
+   * Loading banks, transactions, and budgets at startup should not exceed two seconds.
+3. Usability:
+   * The CLI should provide clear prompts, error messages, and help menu for accessibility and ease of use.
+4. Extensibility:
+   * The system must allow new commands, currencies or categories to be added without significant changes to existing logic.
+5. Reliability and Availability
+   * Data should persist correctly to storage even after unexpected shutdowns. 
+   * All critical operations (add/delete transaction, add bank, login/logout) must handle exceptions gracefully and prevent data corruption.
 
-{Give non-functional requirements}
+### Glossary
 
-## Glossary
 
-* *glossary item* - Definition
-* *list of supported currencies* - Malaysian Ringgit (MYR), Vietnamese Dong (VND), Thai Baht (THB), Singapore Dollar (SGD), Japanese Yen (JPY), Indonesian Rupiah (IDR).
-* *NUS Exchanger* - Refers to outgoing students from NUS to other universities for a semester, as part of a Student Exchange Programme (SEP) agreement.
+* **List of supported currencies** - Malaysian Ringgit (MYR), Vietnamese Dong (VND), Thai Baht (THB), Singapore Dollar (SGD), Japanese Yen (JPY), Indonesian Rupiah (IDR).
+* **NUS Exchanger** - Refers to outgoing students from NUS to other universities for a semester, as part of a Student Exchange Programme (SEP) agreement.
+* **CLI** - A text-based interface that allows users to interact with TrackStars program by typing commands instead of using graphical menus.
+* **Data Corruption** - A state where stored data becomes inaccurate, unreadable, or inconsistent due to software errors, interrupted writes, or manual file modification, potentially causing incorrect program behaviour.
 
 ## Instructions for manual testing
 
-{Give instructions on how to do a manual product testing e.g., how to load sample data to be used for testing}
 ### Initial Launch and Shutdown 
 1. Initial Launch 
  * Download the JAR file and copy into an empty folder 

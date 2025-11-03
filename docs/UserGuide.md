@@ -25,7 +25,6 @@ As such, TrackStars can operate with foreign currencies that are from popular So
   - [Filtering Transactions: `filter`](#filtering-transactions-filter)
   - [Viewing Summary of Recent Transactions: `summary`](#view-summary-of-recent-transactions-and-usage-summary)
   - [Exiting the Programme: `exit`](#exiting-the-programme-exit)
-  - 
 - [Saving the Data](#saving-the-data)
 - [FAQ](#faq)
 - [Command Summary](#command-summary)
@@ -250,14 +249,7 @@ Format: `exit`
 
 ---
 
-### Displaying list of commands: `help`
-Shows all the commands and formats that users can input.
-
-Format: `help`
-
----
-
-### Saving the data
+## Saving the data
 TrackStars automatically stores the previously listed transactions, banks and budgets into the hard disk automatically. There is no need to manually key in a command to store data. 
 
 ---
