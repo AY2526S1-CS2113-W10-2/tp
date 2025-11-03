@@ -33,10 +33,10 @@ import java.util.logging.Logger;
 
 //@@author kevinlokewy
 public class SummaryCommand implements Command {
-    private static final Logger logger = AppLogger.getLogger();
     public static final int MAX_LENGTH_FOR_LOGGED_IN = 1;
     public static final int MAX_LENGTH_FOR_LOGGED_OUT = 2;
     public static final int LENGTH_FOR_MONTH_AND_CURRENCY = 2;
+    private static final Logger logger = AppLogger.getLogger();
     private final ArrayList<String> arguments;
 
     public SummaryCommand(ArrayList<String> arguments) {
@@ -79,7 +79,8 @@ public class SummaryCommand implements Command {
                 showMonthlySummaryForBank(summary, monthInput);
             } else {
                 if (arguments.size() > MAX_LENGTH_FOR_LOGGED_OUT) {
-                    throw new FinanceException("Logged-out users: summary accepts at most month and optional currency. Example: summary JAN USD");
+                    throw new FinanceException("Logged-out users: summary accepts at most month and " +
+                            "optional currency. Example: summary JAN USD");
                 }
                 if (arguments.size() == LENGTH_FOR_MONTH_AND_CURRENCY) {
                     // Logged out WITH currency specified → show only that currency
