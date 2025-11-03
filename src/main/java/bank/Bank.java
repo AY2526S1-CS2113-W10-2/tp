@@ -4,6 +4,7 @@ import transaction.Transaction;
 import utils.Budget;
 import utils.Category;
 import utils.Currency;
+import utils.Month;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +16,7 @@ public class Bank {
     private float balance;                  // This user's balance in this bank account
     private float exchangeRate;             // The current exchange rate from this currency to USD
     private ArrayList<Transaction> transactions;
-    private Map<Category, Budget> budgets;
+    private Map<Category, Map<Month, Budget>> budgets;
 
     public Bank(int id, Currency currency, float balance, float exchangeRate) {
         this.id = id;
@@ -47,7 +48,7 @@ public class Bank {
         return transactions;
     }
 
-    public Map<Category, Budget> getBudgets(){
+    public Map<Category, Map<Month, Budget>> getBudgets() {
         return budgets;
     }
 
@@ -55,8 +56,9 @@ public class Bank {
         this.transactions.add(transaction);
     }
 
-    public void addBudgetToBank(Budget budget){
-        this.budgets.put(budget.getCategory(), budget);
+    public void addBudgetToBank(Budget budget) {
+        budgets.computeIfAbsent(budget.getCategory(), k -> new HashMap<>())
+                .put(budget.getMonth(), budget);
     }
 
     public Transaction deleteTransactionFromBank(int index) {
@@ -91,6 +93,9 @@ public class Bank {
         }
         this.exchangeRate = exchangeRate;
     }
+
+
+
 
     @Override
     public String toString() {
