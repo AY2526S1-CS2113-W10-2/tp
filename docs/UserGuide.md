@@ -2,7 +2,7 @@
 
 ## Introduction
 
-TrackStars is a financial tracker targeted towards incoming NUS exchangers to enable them to keep track of their finances not only in Singapore, but also while travelling around South East Asia. 
+TrackStars is a financial tracker targeted towards outgoing NUS exchangers to enable them to keep track of their finances not only in Singapore, but also while travelling around South East Asia. 
 As such, TrackStars can operate with foreign currencies that are from popular South East Asian travel destinations. 
 
 ---

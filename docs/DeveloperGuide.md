@@ -393,7 +393,7 @@ The following sequence diagram shows how filter operation goes through the compo
 ## Product scope
 ### Target user profile
 
-The target user profile is incoming NUS exchangers. TrackStars is an application that will allow for easy, integrated financce tracking across multiple south east asian currencies, as 
+The target user profile is outgoing NUS exchangers. TrackStars is an application that will allow for easy, integrated financce tracking across multiple south east asian currencies, as 
 exchangers travel during their stint in Singapore
 ### Value proposition
 
@@ -431,7 +431,7 @@ Priorities: High (must have) - `***`, Medium (nice to have) - `**`, Low (unlikel
 
 * *glossary item* - Definition
 * *list of supported currencies* - Malaysian Ringgit (MYR), Vietnamese Dong (VND), Thai Baht (THB), Singapore Dollar (SGD), Japanese Yen (JPY), Indonesian Rupiah (IDR).
-* *NUS Exchanger* - Refers to incoming students from other universities studying at NUS for a semester, as part of a Student Exchange Programme (SEP) agreement.
+* *NUS Exchanger* - Refers to outgoing students from NUS to other universities for a semester, as part of a Student Exchange Programme (SEP) agreement.
 
 ## Instructions for manual testing
 

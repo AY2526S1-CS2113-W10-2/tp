@@ -1,7 +1,7 @@
 # TrackStars International Finance Manger
 
-TrackStars is a finance manager for Exchange Students at NUS heading to South East Asian countries. It uses a friendly CLI interface to track financial information across a variety of banks, countries, and currencies.  
-Additionally, there are budgeting and tracking features for personal finances by catogory, date, and tag. Individual transactions can easily reviewed with the in-built search function.
+TrackStars is a finance manager for outgoing Exchange Students at NUS heading to South East Asian countries. It uses a friendly CLI interface to track financial information across a variety of banks, countries, and currencies.  
+Additionally, there are budgeting and tracking features for personal finances by category, date, and tag. Individual transactions can easily be reviewed with the in-built search function.
 
 Useful links:
 * [User Guide](UserGuide.md)
