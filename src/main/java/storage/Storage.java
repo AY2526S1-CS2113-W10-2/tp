@@ -186,7 +186,7 @@ public class Storage {
      * @return A record containing parsed transaction date and currency information.
      */
 
-    //@@author kevinlokey
+    //@@author kevinlokewy
     private static ParsedTransactionInfo getParsedTransactionInfo(String[] parts) {
         int day = Integer.parseInt(parts[4]);
         Month month = Month.valueOf(parts[5]);
