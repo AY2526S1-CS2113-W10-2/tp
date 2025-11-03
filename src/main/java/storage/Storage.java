@@ -221,7 +221,7 @@ public class Storage {
     //@@author kevinlokey
     public ArrayList<Budget> loadBudgets() {
         File file = new File(BUDGET_FILE);
-        if (budgetFileExists(file)) {
+        if (budgetFileDoesNotExist(file)) {
             return null;
         }
 
@@ -258,7 +258,7 @@ public class Storage {
      */
 
     //@@author kevinlokewy
-    private static boolean budgetFileExists(File file) {
+    private static boolean budgetFileDoesNotExist(File file) {
         if (!file.exists()) {
             logger.log(Level.WARNING, "No budget file found. Returning null.");
             return true;
@@ -280,9 +280,13 @@ public class Storage {
         Month month = Month.valueOf(parts[2]);
         float amount = Float.parseFloat(parts[3]);
         Currency currency = Currency.valueOf(parts[4]);
-        bank.addBudgetToBank(new Budget(category, amount, currency, month, bank));
-        //budgets.add(new Budget(category, amount, currency, month, bank));
+        Budget b = new Budget(category, amount, currency, month, bank);
+        if (bank != null) {
+            bank.addBudgetToBank(b);
+        }
+        budgets.add(b);  // <- Add to list so loadBudgets() returns it
     }
+
 
 
     //@@author kevinlokey
