@@ -6,7 +6,6 @@
 
 ## Design & implementation
 
-{Describe the design and implementation of the product. Use UML diagrams and short code snippets where applicable.}
 ### Design 
 
 ### Architecture 
@@ -24,12 +23,17 @@ Parser: Takes in the command, and calls upon the commands package to execute the
 User: Serves as a central manager for a user's financial data, such as transactions, budgets and banks
 Storage: Reads data from, and writes data to the hard disk.
 
+---
+
 #### UserInterface component
 API: UserInterface.java
 
 The `UserInterface` class handles all console-based user interactions for TrackStars.
 
 ![UserInterface_Component_Diagram.png](team/UserInterface/UserInterface_Component_Diagram.png)
+
+---
+
 #### Storage component
 API: Storage.java 
 ![img.png](team/Storage/img.png)
@@ -40,8 +44,15 @@ API: Storage.java
 * Depends on classes in the Domain Model (such as Bank, Transaction, Budget, Category, and Month), because its role is to serialize and deserialize these model objects into storable formats.
 * Is used by the User component, which coordinates data loading at startup (User.initialise()) and saving whenever changes are made (e.g., adding a bank or updating budgets).
 
+---
+
 #### User component
 API: User.java
+The User component manages the user’s interaction with banks, budgets, and transactions. 
+It encapsulates user-specific data and operations.  
+![User_Component_Diagram.png](team/User/User_Component_Diagram.png)
+
+---
 
 ## Implementation 
 

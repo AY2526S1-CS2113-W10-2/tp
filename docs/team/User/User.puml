@@ -1,0 +1,88 @@
+@startuml
+'https://plantuml.com/class-diagram
+hide circle
+
+title User Component Diagram
+
+skinparam classAttributeIconSize 0
+
+class User {
+    - banks: ArrayList<Bank>
+    - budgets: ArrayList<Budget>
+    - isLoggedIn: boolean
+    - currBank: Bank
+    - storage: Storage
+    + initialise(): void
+    + addBank(bank: Bank): void
+    + addBudget(budget: Budget): void
+    + getBanks(): ArrayList<Bank>
+    + getBudgets(): ArrayList<Budget>
+    + getCurrBank(): Bank
+    + setCurrBank(currBank: Bank): void
+    + isLoggedIn(): boolean
+    + setIsLoggedIn(isLoggedIn: boolean): void
+    + getStorage(): Storage
+    + getBudgetForBank(category: Category, month: Month, bank: Bank): Budget
+}
+
+class Bank {
+    - id: int
+    - currency: Currency
+    - balance: float
+    - exchangeRate: float
+    - transactions: ArrayList<Transaction>
+    - budgets: Map<Category, Budget>
+    + Bank(id: int, currency: Currency, balance: float, exchangeRate: float)
+    + getCurrency(): Currency
+    + getId(): int
+    + getBalance(): float
+    + getExchangeRate(): float
+    + getTransactions(): ArrayList<Transaction>
+    + getBudgets(): Map<Category, Budget>
+    + addTransactionToBank(transaction: Transaction): void
+    + addBudgetToBank(budget: Budget): void
+    + deleteTransactionFromBank(index: int): Transaction
+    + setBalance(balance: float): void
+    + setExchangeRate(exchangeRate: float): void
+    + toString(): String
+}
+
+class Budget {
+    - category: Category
+    - balance: float
+    - initialAmount: float
+    - currency: Currency
+    - month: Month
+    - bank: Bank
+    + Budget(category: Category, initialAmount: float, currency: Currency, month: Month, bank: Bank)
+    + getRemainingAmount(): float
+    + getBudget(): float
+    + getMonth(): Month
+    + getBank(): Bank
+    + getCurrency(): Currency
+    + getCategory(): Category
+    + setBudget(amount: float): void
+}
+
+class Transaction {
+    - value: float
+    - category: Category
+    - date: Date
+    - currency: Currency
+    - tag: String
+    + Transaction(value: float, category: Category, date: Date, currency: Currency, tag: String)
+    + getTag(): String
+    + getValue(): float
+    + getCategory(): Category
+    + getCurrency(): Currency
+    + getDate(): Date
+    + toString(): String
+}
+
+class Date {
+}
+User "1" --> "*" Budget : has a list of
+User "1" --> "*"Bank : has a list of
+Bank "1..*" --> "*"Transaction : has a list of
+Transaction --> "1" Date : uses
+@enduml

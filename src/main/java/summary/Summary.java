@@ -236,8 +236,9 @@ public class Summary {
                 }
 
                 Budget bgt = User.getBudgetForBank(category, monthEnum, b);
-                if (bgt == null)
+                if (bgt == null) {
                     continue;
+                }
 
                 if (isConvertAll) {
                     // Convert each bank's remaining budget to displayCurrency (SGD)
