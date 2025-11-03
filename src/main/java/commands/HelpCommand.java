@@ -31,8 +31,6 @@ public class HelpCommand implements  Command {
                    → Delete a transaction by its index in the list.
                 addBudget <category> <amount> <month>
                    → Add a budget for a specific category.
-                listBudget <month>
-                   → View all existing budgets in the month.
                 filter cost <MIN> <MAX>
                     → Filter transactions within a cost range.
                 filter category <CATEGORY>

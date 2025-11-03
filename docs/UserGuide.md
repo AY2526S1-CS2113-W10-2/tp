@@ -9,8 +9,9 @@ As such, TrackStars can operate with foreign currencies that are from popular So
 #### Table of Contents
 
 - [How To Get Started](#how-to-get-started)
-- [Features](#features)
+- [Features](#features) 
   - [Adding a Bank Account: `addbank`](#adding-a-bank-account-addbank)
+  - [Getting help: `help`](#getting-help-help)
   - [Logging Into a Bank Account: `login`](#logging-into-a-bank-account-login)
   - [Logging Out of a Bank Account: `logout`](#logging-out-of-a-bank-account-logout)
   - [Listing Recent Transactions: `list`](#listing-recent-transaction-list)
@@ -59,6 +60,13 @@ For example, MYR for Malaysian Ringgit, THB for Thai Baht. Please see the Glossa
 Example of usage:  
 `addbank 5000 SGD`  
 `addbank 250000 IDR`
+
+---
+
+### Getting help: `help`
+Displays a help page of commands to the user. `help` can be used while either logged in or logged out
+
+Format: `help`
 
 ---
 
