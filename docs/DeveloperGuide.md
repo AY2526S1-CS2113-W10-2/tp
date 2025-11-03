@@ -2,7 +2,10 @@
 
 ## Acknowledgements
 
-{list here sources of all reused/adapted ideas, code, documentation, and third-party libraries -- include links to the original source as well}
+We acknowledge: 
+
+ * PlantUML for UML diagram generation 
+ * NUS CS2113 teaching team for guidance and templates 
 
 ## Design & implementation
 
@@ -181,14 +184,15 @@ The bank login feature ensures that user operations (such as adding transactions
 
 The following operations may only be performed after successful bank login, with checks for `User.isLoggedIn`:
 
-| Operation           | How It Is Performed (Command)   | Execution Logic                                                           |
-|---------------------|---------------------------------|---------------------------------------------------------------------------|
-| Add Transaction     | `add <args>`                    | Creates and executes `AddTransactionCommand`.                             |
-| Delete Transaction  | `delete <args>`                 | Creates and Executes `DeleteTransactionCommand`.                          |
-| List Budgets        | `listbudget`                    | Creates and Executes `ListBudgetsCommand` to show current bank’s budgets. |
-| Deposit Funds       | `deposit <args>`                | Creates and Executes `ATM` command in deposit mode for current bank.      |
-| Withdraw Funds      | `withdraw <args>`               | Creates and Executes `ATM` command in withdraw mode for current bank.     |
-| Summary             | `summary`                       | Creates and Executes `SummaryCommand` displaying bank-level summary.      |
+| Operation          | How It Is Performed (Command) | Execution Logic                                                                          |
+|--------------------|-------------------------------|------------------------------------------------------------------------------------------|
+| Add Transaction    | `add <args>`                  | Creates and Executes `AddTransactionCommand`.                                            |
+| Delete Transaction | `delete <args>`               | Creates and Executes `DeleteTransactionCommand`.                                         |
+| Deposit Funds      | `deposit <args>`              | Creates and Executes `ATM` command in deposit mode for current bank.                     |
+| Withdraw Funds     | `withdraw <args>`             | Creates and Executes `ATM` command in withdraw mode for current bank.                    |
+| Summary            | `summary`                     | Creates and Executes `SummaryCommand` displaying bank-level summary.                     |
+| Search             | `search <KEYWORD>`            | Creates and Executes `SearchCommand` displaying a list of transactions with that keyword |
+| Filter             | `Filter <FILTER_TYPE>`        | Creates and Executes `FilterCommand` to display transactions in that range or category          |
 
 ---
 

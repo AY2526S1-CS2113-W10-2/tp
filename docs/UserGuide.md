@@ -18,7 +18,6 @@ As such, TrackStars can operate with foreign currencies that are from popular So
   - [Adding a Transaction: `add`](#adding-a-transaction-add)
   - [Deleting a Transaction: `delete`](#deleting-a-transaction-delete)
   - [Adding a Budget: `addBudget`](#adding-a-budget-addbudget)
-  - [Listing Budgets: `listBudget`](#listing-budgets-listbudget)
   - [Depositing Money: `deposit`](#depositing-money-into-current-bank-account-deposit)
   - [Withdrawing Money: `withdraw`](#withdrawing-money-from-current-bank-account-withdraw)
   - [Searching Transactions: `search`](#searching-transactions-search)
@@ -161,19 +160,6 @@ Example of usage:
 
 ---
 
-### Listing Budgets: `listBudget`
-Lists all budgets, and their current utilisation. Used as brief summary of spending by category.
-
-Format: `listBudget MONTH`
-
-* The `MONTH` either the full name or the shortened three letter form of each month. For example, JAN or January, FEB or February, APR or April, etc.
-* 
-Example of usage:
-
-`listBudget JAN` to indicate show budget utilisation for January
-
----
-
 ### Depositing money into current bank account: `deposit`
 Adds to the balance of a current signed in account. Used to track income.
 
@@ -291,7 +277,7 @@ Japan is not a South East Asian country, but is included since it is such a popu
 
 **Q** Why can't I input the year in my transactions? Why am I relegated to only transactions in the current year?
 
-**A** This is a reasonable question, but consider the targeted user of TrackStars. TrackStars aims to serve NUS Exchangers to aggregate financial data into a single application. The NUS academic semester is from either August - December (Sem 1) or January - May (sem 2). As such, it seemed redundant to the developers to include a year, as NUS Exchangers stay at NUS for at most, 6 months, and that stint never crosses into a new year. Meaning, it is expected that if an NUS exchanger partakes in an exchange programme in 2025, they will leave by 2025.
+**A** This is a reasonable question, but consider the targeted user of TrackStars. TrackStars aims to serve outgoing NUS Exchangers to aggregate financial data into a single application. Akin to NUS' Academic Year, most Asian universities have their academic year from August - December (Sem 1) or January - May (sem 2). As such, it seemed redundant to the developers to include a year, as NUS Exchangers stay abroad for at most, 6 months, and that stint never crosses into a new year. Meaning, it is expected that if an outgoing NUS exchanger partakes in an exchange programme in 2025, they will leave by 2025.
 
 ## Command Summary
 
