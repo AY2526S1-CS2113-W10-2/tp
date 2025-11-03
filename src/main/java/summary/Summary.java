@@ -229,13 +229,26 @@ public class Summary {
                                              Currency displayCurrency, Currency currency, boolean isConvertAll) {
         float budget = 0f;
 
-        for (Bank b : User.getBanks()) {
-            Budget bgt = User.getBudgetForBank(category, monthEnum, b);
-            if (bgt == null) {
-                continue;
+        if(bank == null) {
+            for (Bank b : User.getBanks()) {
+                Budget bgt = User.getBudgetForBank(category, monthEnum, b);
+                if (bgt == null) {
+                    continue;
+                }
+                if(isConvertAll){
+                    float budget_value = convertBudgets(bgt.getRemainingAmount(), bgt, currency);
+                    budget += budget_value;
+                }
+                else {
+                    budget += bgt.getRemainingAmount();
+                }
             }
-
-            budget += calculateBudgetAmount(bgt, b, bank, displayCurrency, currency, isConvertAll);
+        }
+        else{
+            Budget bgt = User.getBudgetForBank(category, monthEnum, bank);
+            if (bgt != null) {
+                budget += bgt.getRemainingAmount();
+            }
         }
 
         return budget;

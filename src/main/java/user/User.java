@@ -7,6 +7,7 @@ import utils.Month;
 import storage.Storage;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import static ui.OutputManager.showWelcomeMessage;
 
@@ -79,11 +80,12 @@ public class User {
     }
 
     public static Budget getBudgetForBank(Category category, Month month, Bank bank) {
-        for (Budget b : budgets) {
-            if (b.getCategory() == category && b.getMonth() == month && b.getBank() == bank) {
-                return b;
-            }
+        Map<Category, Budget> bank_budget = bank.getBudgets();
+        if(bank_budget.get(category) != null){
+            return bank_budget.get(category);
         }
-        return null;
+        else {
+            return null;
+        }
     }
 }
