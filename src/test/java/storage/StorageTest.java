@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -104,17 +105,19 @@ public class StorageTest {
         User.getBanks().add(bank);
 
         Budget budget = new Budget(Category.FOOD, 200f, Currency.THB, Month.JAN, bank);
-        User.getBudgets().add(budget);
+        bank.addBudgetToBank(budget);
+        //User.getBudgets().add(budget);
 
-        storage.saveBudgets(User.getBudgets());
+        storage.saveBudgets(User.getAllBudgets());
 
         // Reset budgets to test load
-        User.getBudgets().clear();
+        bank.getBudgets().clear();
 
-        ArrayList<Budget> loaded = storage.loadBudgets();
-        assertNotNull(loaded);
+        storage.loadBudgets();
+        //assertNotNull(loaded);
+        Map<Category, Map<Month, Budget>> loaded = bank.getBudgets();
         assertEquals(1, loaded.size());
-        Budget loadedBudget = loaded.get(0);
+        Budget loadedBudget = loaded.get(Category.FOOD).get(Month.JAN);
         assertEquals(budget.getBudget(), loadedBudget.getBudget());
         assertEquals(budget.getCategory(), loadedBudget.getCategory());
         assertEquals(budget.getMonth(), loadedBudget.getMonth());

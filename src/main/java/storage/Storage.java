@@ -239,6 +239,9 @@ public class Storage {
                 int bankId = Integer.parseInt(parts[0]);
                 Bank bank = bankId == -1 ? null : User.getBanks().stream().filter(b ->
                         b.getId() == bankId).findFirst().orElse(null);
+                if(bank == null){
+                    continue;
+                }
 
                 parseBudgets(parts, budgets, bank);
             }
