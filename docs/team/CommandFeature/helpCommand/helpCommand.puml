@@ -1,0 +1,42 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+hide footbox
+actor User as U
+
+participant ":UserInterface" as UserInterface
+participant ":Parser" as Parser
+participant ":HelpCommand" as HelpCommand
+participant ":OutputManager" as OutputManager
+
+
+title HelpCommand Sequence Diagram
+
+
+U -> UserInterface : Enters "help" command
+activate UserInterface
+
+UserInterface -> Parser : parseCommand(help)
+activate Parser
+
+create HelpCommand
+Parser -> HelpCommand: new HelpCommand()
+activate HelpCommand
+HelpCommand --> Parser
+deactivate HelpCommand
+
+Parser -> HelpCommand : execute(...)
+activate HelpCommand
+
+HelpCommand -> OutputManager: print command list
+activate OutputManager
+OutputManager --> U
+deactivate OutputManager
+HelpCommand --> Parser
+destroy HelpCommand
+
+Parser --> UserInterface : return shouldExit = "false"
+deactivate Parser
+deactivate UserInterface
+
+@enduml

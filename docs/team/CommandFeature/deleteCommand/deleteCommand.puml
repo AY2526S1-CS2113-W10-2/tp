@@ -7,7 +7,7 @@ actor User as U
 participant ":UserInterface" as UserInterface
 participant ":Parser" as Parser
 participant ":DeleteTransactionCommand" as DeleteTransactionCommand
-participant ":User" as User
+participant "<<class>>\n:User" as User
 participant ":Bank" as Bank
 participant ":Storage" as Storage
 participant ":OutputManager" as OutputManager

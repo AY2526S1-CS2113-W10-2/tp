@@ -80,7 +80,7 @@ public class Bank {
         }
         if (balance > Float.MAX_VALUE){
             this.balance = Float.MAX_VALUE;
-        }else{
+        } else {
             this.balance = balance;
         }
     }

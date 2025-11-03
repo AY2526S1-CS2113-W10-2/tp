@@ -365,6 +365,31 @@ helping them understand where their money is going.
 
 ---
 
+#### Help feature
+
+The Help feature provides users with a quick reference to all available commands in the application.
+It is designed to improve usability by allowing users to easily recall command formats 
+and their functions.
+
+**Syntax:** `help`
+
+The following sequence diagram shows how filter operation goes through the components:
+![HelpCommand_Sequence_Diagram.png](team/CommandFeature/helpCommand/HelpCommand_Sequence_Diagram.png)
+
+*Implementation*
+
+* Command Pattern: Implements Command to maintain uniformity with other commands.
+  * Input Validation: The `HelpCommand` does not require arguments. If any extra parameters are provided (eg. `help abc`),
+  system will run as `help` as usual.
+* Logging: Logs executions recorded via AppLogger.
+* Output: Uses OutputManager.printMessage(...) to display command list.
+
+*Design Rationale*
+* Providing an in-program reference helps reduce user friction, 
+  so that users don’t need to consult external documentation.
+
+---
+
 ## Product scope
 ### Target user profile
 
@@ -379,24 +404,24 @@ By allowing multiple currencies on one application, TrackStars aims to make fina
 ## User Stories
 Priorities: High (must have) - `***`, Medium (nice to have) - `**`, Low (unlikely to have) - `*`
 
-| Priority | As a ...               | I want to ...                                                      | So that I can ...                                                                 |
-|----------|------------------------|--------------------------------------------------------------------|-----------------------------------------------------------------------------------|
-| ***      | new user               | add food/recreation/transport budgets                              | keep track of my financial goals                                                  |
-| ***      | multi-account user     | add different banks                                                | track and manage my expenses across different banks                               |
-| ***      | user                   | enter my local balance                                             | have a holistic view of my total finance                                          |
-| ***      | financially-aware user | add every transaction that I made                                  | be informed of about my finances                                                  |
-| ***      | responsible user       | delete wrong transactions                                          | maintain a accurate record of my spending                                         |
-| ***      | busy user              | view a Summary page for spending and budget                        | see what i spent or saved altogether                                              |
-| ***      | adventurous user       | add different currencies                                           | track finances across multiple countries                                          |
-| **       | cautious user          | have my expenses automatically saved                               | avoid losing financial data                                                       |
-| **       | forgetful user         | search expenses easily                                             | quickly find specific transactions                                                |
-| **       | analytical user        | filter expenses by category, date, or amount                       | identify spending patterns and trends easily                                      |
-| **       | intermediate user      | compare spending across categorise                                 | understand which areas dominate my budget                                         |
-| **       | user                   | tag expenses with labels                                           | remember the use of the expenses                                                  |
-| *        | user                   | convert different currencies                                       | see the list expenses in one currency                                             |
-| *        | conscious user         | track my balance timely in banks                                   | prevent overspending                                                              |
-| v1.0     | exchange student       | add transactions, bank accounts and budgets                        | easily track my finances                                                          |
-| v2.0     | NUS exchange student   | find, search, and summarize my spending across multiple currencies | track my finances across multiple currencies while travelling SEA as an exchanger |
+| Priority | As a ...               | I want to ...                                | So that I can ...                                   |
+|----------|------------------------|----------------------------------------------|-----------------------------------------------------|
+| ***      | new user               | add food/recreation/transport budgets        | keep track of my financial goals                    |
+| ***      | new user               | see all available commands                   | understand what actions can I perform               |
+| ***      | multi-account user     | add different banks                          | track and manage my expenses across different banks |
+| ***      | user                   | enter my local balance                       | have a holistic view of my total finance            |
+| ***      | financially-aware user | add every transaction that I made            | be informed of about my finances                    |
+| ***      | responsible user       | delete wrong transactions                    | maintain a accurate record of my spending           |
+| ***      | busy user              | view a Summary page for spending and budget  | see what i spent or saved altogether                |
+| ***      | adventurous user       | add different currencies                     | track finances across multiple countries            |
+| **       | cautious user          | have my expenses automatically saved         | avoid losing financial data                         |
+| **       | forgetful user         | search expenses easily                       | quickly find specific transactions                  |
+| **       | analytical user        | filter expenses by category, date, or amount | identify spending patterns and trends easily        |
+| **       | intermediate user      | compare spending across categorise           | understand which areas dominate my budget           |
+| **       | user                   | tag expenses with labels                     | remember the use of the expenses                    |
+| *        | user                   | convert different currencies                 | see the list expenses in one currency               |
+| *        | conscious user         | track my balance timely in banks             | prevent overspending                                |
+| *        | long term user         | create my own categories                     | use it more diversely                               |
 
 ## Non-Functional Requirements
 

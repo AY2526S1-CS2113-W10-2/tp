@@ -8,7 +8,9 @@ import user.User;
 import utils.Category;
 import utils.Currency;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -211,4 +213,33 @@ public class ParserTest {
         assertThrows(FinanceException.class, () ->
                 Parser.parseCommand("addBank Fake_Input"));
     }
+
+    @Test
+    public void parseCommand_helpCommand_displaysHelpMenu() throws FinanceException {
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        PrintStream originalOut = System.out;
+        System.setOut(new PrintStream(outContent));
+
+        try {
+            // Execute help command through parser
+            boolean result = Parser.parseCommand("help");
+
+            // Help command should not exit the program
+            assertFalse(result, "Help command should not trigger program exit");
+
+            String output = outContent.toString();
+
+            // Verify some key help text parts
+            assertTrue(output.contains("HELP MENU"), "Help menu header should appear.");
+            assertTrue(output.contains("Available commands:"), "Should list available commands.");
+            assertTrue(output.contains("login <bank_index>"), "Should include login command.");
+            assertTrue(output.contains("filter cost <MIN> <MAX>"), "Should include filter command.");
+            assertTrue(output.contains("exit"), "Should include exit command.");
+
+        } finally {
+            // Restore original output
+            System.setOut(originalOut);
+        }
+    }
+
 }
