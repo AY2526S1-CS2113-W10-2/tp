@@ -14,23 +14,16 @@ class Parser {
     - {static} recursiveGetCommand(command: String)
 }
 class OutputManager
-class User {
-    - banks: ArrayList<Bank>
-    - budgets: ArrayList<Budget>
-    - isLoggedIn: boolean
-    - currBank: Bank
-    - storage: Storage
-    + initialise(): void
-    + addBank(bank: Bank): void
-    + addBudget(budget: Budget): void
-    + getBanks(): ArrayList<Bank>
-    + getBudgets(): ArrayList<Budget>
-    + getCurrBank(): Bank
-    + setCurrBank(currBank: Bank): void
-    + isLoggedIn(): boolean
-    + setIsLoggedIn(isLoggedIn: boolean): void
-    + getStorage(): Storage
-    + getBudgetForBank(category: Category, month: Month, bank: Bank): Budget
+
+package "Model" {
+    class User {
+    }
+    class Transaction {
+    }
+    class Bank {
+    }
+    class Budget {
+    }
 }
 class InputManager {
     + {static} getNextCommand(scanner: Scanner) : String
@@ -38,20 +31,6 @@ class InputManager {
 interface Command <<interface>> {
     + execute(): String
     + shouldExit(): boolean
-}
-class Transaction {
-    -value: float
-    -category: Category
-    -date: Date
-    -currency: Currency
-    -tag: String
-}
-class Bank {
-    -id: int
-    -currency: Currency
-    -balance: float
-    -exchangeRate: float
-    -transactions: ArrayList<Transaction>
 }
 
 package commands <<Folder>> {
@@ -66,7 +45,8 @@ Parser --> Command : create and executes
 commands --> User : fetch and update data
 commands --> OutputManager: outputs message
 
-User *-- Bank
-Bank *-- Transaction
+User --> Budget : has a list of
+User --> Bank : has a list of
+Bank --> Transaction : has a list of
 
 @enduml

@@ -8,7 +8,6 @@ import utils.Category;
 import utils.Month;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import static ui.OutputManager.printMessage;
 

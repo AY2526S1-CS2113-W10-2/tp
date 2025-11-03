@@ -127,7 +127,12 @@ public class Parser {
             break;
         case "listbudget":
             logger.info("Executing 'listbudget' command");
-            cmd = new ListBudgetsCommand(arguments);
+            if (User.isLoggedIn()) {
+                cmd = new ListBudgetsCommand(arguments);
+            } else {
+                logger.info("Please login to a bank to execute this command");
+                throw new FinanceException("Please login to a bank to execute this command");
+            }
             showLoggedBank = false;
             break;
         case "deposit":
