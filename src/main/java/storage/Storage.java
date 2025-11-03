@@ -280,8 +280,8 @@ public class Storage {
         Month month = Month.valueOf(parts[2]);
         float amount = Float.parseFloat(parts[3]);
         Currency currency = Currency.valueOf(parts[4]);
-
-        budgets.add(new Budget(category, amount, currency, month, bank));
+        bank.addBudgetToBank(new Budget(category, amount, currency, month, bank));
+        //budgets.add(new Budget(category, amount, currency, month, bank));
     }
 
 

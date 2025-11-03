@@ -1,9 +1,13 @@
 package bank;
 
 import transaction.Transaction;
+import utils.Budget;
+import utils.Category;
 import utils.Currency;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Bank {
     private final int id;
@@ -11,6 +15,7 @@ public class Bank {
     private float balance;                  // This user's balance in this bank account
     private float exchangeRate;             // The current exchange rate from this currency to USD
     private ArrayList<Transaction> transactions;
+    private Map<Category, Budget> budgets;
 
     public Bank(int id, Currency currency, float balance, float exchangeRate) {
         this.id = id;
@@ -18,6 +23,8 @@ public class Bank {
         this.setBalance(balance);
         this.setExchangeRate(exchangeRate);
         this.transactions = new ArrayList<>();
+        this.budgets = new HashMap<>(); {
+        };
     }
 
     public Currency getCurrency() {
@@ -40,8 +47,16 @@ public class Bank {
         return transactions;
     }
 
+    public Map<Category, Budget> getBudgets(){
+        return budgets;
+    }
+
     public void addTransactionToBank(Transaction transaction) {
         this.transactions.add(transaction);
+    }
+
+    public void addBudgetToBank(Budget budget){
+        this.budgets.put(budget.getCategory(), budget);
     }
 
     public Transaction deleteTransactionFromBank(int index) {
@@ -57,7 +72,6 @@ public class Bank {
 
         return removed;
     }
-
 
     public void setBalance(float balance) {
         if (balance < 0) {
