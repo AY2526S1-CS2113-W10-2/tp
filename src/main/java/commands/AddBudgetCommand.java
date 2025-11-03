@@ -8,6 +8,7 @@ import utils.Category;
 import utils.Month;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import static ui.OutputManager.printMessage;
 
@@ -59,7 +60,8 @@ public class AddBudgetCommand implements Command {
             // Create and add budget
             Budget budget = new Budget(category, amount, currBank.getCurrency(), month, currBank);
             User.getCurrBank().addBudgetToBank(budget);
-            User.getStorage().saveBudgets(User.getBudgets());
+            ArrayList<Budget> allBudgets = User.getAllBudgets();
+            User.getStorage().saveBudgets(User.getAllBudgets());
             User.getStorage().saveBanks(User.getBanks());
             printMessage("Added budget of " + amount + " " + currency.getSymbol() +
                     " for " + category + " in " + month);

@@ -229,16 +229,20 @@ public class Summary {
                                              Currency displayCurrency, Currency currency, boolean isConvertAll) {
         float budget = 0f;
 
-        if(bank == null) {
+        if (bank == null) {  // logged out, multiple banks
             for (Bank b : User.getBanks()) {
-                Budget bgt = User.getBudgetForBank(category, monthEnum, b);
-                if (bgt == null) {
-                    continue;
+                if (!isConvertAll && b.getCurrency() != currency) {
+                    continue; // skip banks that don't match the requested currency
                 }
-                if(isConvertAll) {
-                    float budgetValue = convertBudgets(bgt.getRemainingAmount(), bgt, currency);
-                    budget += budgetValue;
+
+                Budget bgt = User.getBudgetForBank(category, monthEnum, b);
+                if (bgt == null) continue;
+
+                if (isConvertAll) {
+                    // Convert each bank's remaining budget to displayCurrency (SGD)
+                    budget += convertBudgets(bgt.getRemainingAmount(), bgt, displayCurrency);
                 } else {
+                    // If currency-specific, add remaining budget only for matching currency banks
                     budget += bgt.getRemainingAmount();
                 }
             }
@@ -316,9 +320,8 @@ public class Summary {
     }
 
     //@@author kevinlokewy
-    private static float convertBudgets(float budget, Budget bgt, Currency displayCurrency) {
-        budget += bgt.getBudget() * Currency.getExchangeRateToSGD(bgt.getCurrency())
+    private static float convertBudgets(float remainingAmount, Budget bgt, Currency displayCurrency) {
+        return remainingAmount * Currency.getExchangeRateToSGD(bgt.getCurrency())
                 / Currency.getExchangeRateToSGD(displayCurrency);
-        return budget;
     }
 }

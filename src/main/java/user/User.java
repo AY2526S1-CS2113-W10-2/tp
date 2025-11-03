@@ -71,11 +71,22 @@ public class User {
     }
 
     public static Budget getBudgetForBank(Category category, Month month, Bank bank) {
-        Map<Category, Budget> bankBudgets = bank.getBudgets();
-        if(bankBudgets.get(category) != null){
-            return bankBudgets.get(category);
-        } else {
-            return null;
+        Map<Category, Map<Month, Budget>> bankBudgets = bank.getBudgets();
+        if (bankBudgets.containsKey(category)) {
+            return bankBudgets.get(category).get(month);
         }
+        return null;
     }
+
+    public static ArrayList<Budget> getAllBudgets() {
+        ArrayList<Budget> allBudgets = new ArrayList<>();
+        for (Bank b : getBanks()) { // assumes User.getBanks() returns all banks
+            for (Map<Month, Budget> monthMap : b.getBudgets().values()) {
+                allBudgets.addAll(monthMap.values());
+            }
+        }
+        return allBudgets;
+    }
+
+
 }
