@@ -34,13 +34,16 @@ public class LoginCommand implements Command {
             throw new FinanceException("There are no banks in the system. Please add a bank first.");
         }
 
-        if (bankId >= banks.size() || banks.get(bankId).getId() != bankId) {
-            throw new FinanceException("Bank not found. Try bank with index 0 - " + (banks.size() - 1));
-        }
+        Bank currBank = banks.stream()
+                .filter(b -> b.getId() == bankId)
+                .findFirst()
+                .orElseThrow(() -> new FinanceException(
+                        "Bank not found. Try a valid bank ID."
+                ));
 
-        Bank currBank = banks.get(bankId);
-        User.setCurrBank(banks.get(bankId));
+        User.setCurrBank(currBank);
         User.setIsLoggedIn(true);
+
         String message = String.format(
                 "Successfully logged into bank %d | Current balance: %s%.2f",
                 currBank.getId(),
