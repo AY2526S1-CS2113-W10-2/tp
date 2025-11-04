@@ -34,7 +34,7 @@ As such, TrackStars can operate with foreign currencies that are from popular So
 
 ---
 1. Ensure that you have Java 17 or above installed.
-2. Download the latest JAR file of `TrackStars` from [here](http://link.to/duke).
+2. Download the latest JAR file of `TrackStars` from [here](https://github.com/AY2526S1-CS2113-W10-2/tp/releases).
 3. Copy the JAR file into an empty folder 
 4. Open the command terminal, cd into the folder you put the JAR in.
 5. Use '-java jar TrackStars.jar' command to run the application.
@@ -277,7 +277,7 @@ Japan is not a South East Asian country, but is included since it is such a popu
 
 **Q** Why can't I input the year in my transactions? Why am I relegated to only transactions in the current year?
 
-**A** This is a reasonable question, but consider the targeted user of TrackStars. TrackStars aims to serve outgoing NUS Exchangers to aggregate financial data into a single application. Akin to NUS' Academic Year, most Asian universities have their academic year from August - December (Sem 1) or January - May (sem 2). As such, it seemed redundant to the developers to include a year, as NUS Exchangers stay abroad for at most, 6 months, and that stint never crosses into a new year. Meaning, it is expected that if an outgoing NUS exchanger partakes in an exchange programme in 2025, they will leave by 2025.
+**A** This is a reasonable question, but consider the targeted user of TrackStars. TrackStars aims to serve outgoing NUS Exchangers to aggregate financial data into a single application. Akin to NUS' Academic Year, most Asian universities have their academic year from August - December (Sem 1) or January - May (sem 2). As such, it seemed redundant to the developers to include the option to change the year, as NUS Exchangers stay abroad for at most, 6 months, and that stint never crosses into a new year. Meaning, it is expected that if an outgoing NUS exchanger partakes in an exchange programme in 2025, they will leave by 2025.
 
 ## Command Summary
 

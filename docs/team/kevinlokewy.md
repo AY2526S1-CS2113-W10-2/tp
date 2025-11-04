@@ -2,20 +2,26 @@
 
 ### Project: TrackStars
 
-TrackStars is a desktop finance tracker application that intends to serve as an integrated application for NUS Exchange Students to track their finances across multiple currencies. The user interacts with the programme through the CLI.
+TrackStars is a financial tracker app aimed at outbound NUS exchange student to the South East Asia region.
+It makes tracking savings and spendings across a number of bank accounts in a variety of currencies easy.
 
 Given below are my contributions to the project: 
 
 #### New Feature: Monthly Summary
 
 What it does: This allows the user to see a monthly summary of their spending. 
+
 Justification: This feature improves significantly the convenience of managing finances across many currencies, because spending data can be aggregated into an easily understood format
+
 Highlights: The same Monthly Summary feature can function in 3 ways, depending on the user input. If the user is logged out, they have the choice to see total spending across all bank accounts, or spending tied to a specific currency. If the user is logged in, the summary page will show only the spending tied to that bank account. 
 
 #### New Feature: Storage 
 What it does: Storage allows the user to save the budgeting, transactions and bank data that they have keyed in prior to exiting the programme 
+
 Justification: This feature helps to make the application less inconvenient and a smoother experience of the user. 
-Highlights:
+
+Highlights: This feature gives users convenience when using the application, and allows them to continue tracking their finances from where they left off.
+
 Code contributed: https://nus-cs2113-ay2526s1.github.io/tp-dashboard/?search=kevinlokewy&breakdown=true&sort=groupTitle%20dsc&sortWithin=title&since=2025-09-19T00%3A00%3A00&timeframe=commit&mergegroup=&groupSelect=groupByRepos&checkedFileTypes=docs~functional-code~test-code~other&filteredFileName=
 
 #### Project Management:
