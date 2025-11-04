@@ -45,14 +45,14 @@ and generating summaries efficiently.
 
 
 * **Enhancements to existing features**
-  * Added more robust **JUnit tests** for core components such as `Parser` and `Command` classes, improving code reliability and test coverage. (Pull Request #60, #75)
-  * Integrated centralized `AppLogger` to unify logging and suppress console output. (Pull Request #158)
+  * Added more robust **JUnit tests** for core components such as `Parser` and `Command` classes, improving code reliability and test coverage. ([#60](https://github.com/AY2526S1-CS2113-W10-2/tp/pull/60), [#75](https://github.com/AY2526S1-CS2113-W10-2/tp/pull/75))
+  * Integrated centralized `AppLogger` to unify logging and suppress console output. ([#158](https://github.com/AY2526S1-CS2113-W10-2/tp/pull/158))
 
 
 * **Documentation**
   * UserGuide
-    * Added sections for `filter`, and `search` commands and fix cosmetics for existing feature documentations. #77
-    * Added Table of Content for better navigability. #151
+    * Added sections for `filter`, and `search` commands and fix cosmetics for existing feature documentations. [#77](https://github.com/AY2526S1-CS2113-W10-2/tp/pull/77)
+    * Added Table of Content for better navigability. [#151](https://github.com/AY2526S1-CS2113-W10-2/tp/pull/151)
   * DeveloperGuide
     * Added implementation for the `deleteTransactionCommand`, `searchCommand`, `filterCommand`,`helpCommand`.
     * Added **class diagram for the `UserInterface` and `User` API** to illustrate command flow and component interactions.
