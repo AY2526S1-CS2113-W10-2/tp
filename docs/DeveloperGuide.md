@@ -22,8 +22,11 @@ The Architecture Diagram given above explains the high-level design of the App. 
 The bulk of the work done by the app is from these four components: 
 
 UserInterface: Is the class from which the programme runs.
+
 Parser: Takes in the command, and calls upon the commands package to execute the commands
+
 User: Serves as a central manager for a user's financial data, such as transactions, budgets and banks
+
 Storage: Reads data from, and writes data to the hard disk.
 
 ---
@@ -38,7 +41,9 @@ The `UserInterface` class handles all console-based user interactions for TrackS
 ---
 
 #### Storage component
+
 API: Storage.java 
+
 ![img.png](team/Storage/img.png)
 
 * The Storage component is responsible for saving and loading user financial data, including banks, budgets, and transactions, from text files.
@@ -97,7 +102,7 @@ The computed totals are passed to OutputManager.printSummary() to format the out
 The following sequence diagram shows how the summary command goes through the relevant components to display the output to the user.  
 ![img.png](team/SummaryFeature/img_2.png)
 
-The following activity diagram summarises what happens when the user executes summary JAN  
+The following activity diagram summarises what happens when the user executes `summary JAN`
 ![img_3.png](team/SummaryFeature/img_3.png)
 
 ---
