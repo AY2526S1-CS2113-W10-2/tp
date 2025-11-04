@@ -217,7 +217,7 @@ The following class diagram shows the relationships between the various classes 
 ![uml_class_login.png](team/LoginFeature/uml_class_login.png)
 
 The following sequence diagram shows how various classes and methods interact together throughout the user login mechanism:
-![uml_sequence_login.png](team/LoginFeature/uml_sequence_login.png)
+![uml_sequence_login.png](team/LoginFeature/uml_seq_login.png)
 
 ---
 
@@ -266,11 +266,11 @@ The deposit and withdrawal feature allows users to modify the balance of their s
 
 ---
 
-The following class diagram shows the relationships between the various classes involved in the adding of budgets:
+The following class diagram shows the relationships between the various classes involved in the deposit/withdrawal process:
 ![uml_class_atm.png](team/ATMFeature/uml_class_atm.png)
 
-The following sequence diagram shows how various classes and methods interact together throughout the adding of budget mechanism:
-![uml_sequence_atm.png](team/ATMFeature/uml_sequence_atm.png)
+The following sequence diagram shows how various classes and methods interact together throughout the deposit/withdrawal process:
+![uml_sequence_atm.png](team/ATMFeature/uml_atm_seq.png)
 
 ---
 
@@ -306,21 +306,21 @@ An instance of the `AddBudgetCommand` class is created with the parsed arguments
 
 **Budget Object Creation**: Using the validated inputs and the currency from the currently logged-in bank, a new Budget object is initialized.
 
-**Budget Addition**: The new budget is added to the user's budget list through User.addBudget(), which also triggers persistent storage saving.
+**Budget Addition**: The new budget is added to the user's current bank that they are logged into, through `bank.addBudgetToBank()` which also triggers persistent storage saving.
 
 **User Feedback**: Upon success, the user is notified with a message specifying the budget amount, currency, category, and month set.
 
 **4. Data Persistence and State Update**:
 
-The budget is stored in an internal list as `budgets` attribute in the `User` class and saved to persistent storage (text file named `budgets.txt`) to maintain state across sessions.
+The budget is stored in a `Map<Category, Map<Month, Budget>>` as `budgets` attribute in the `Bank` class and saved to persistent storage (text file named `budgets.txt`) to maintain state across sessions.
 
 ***This modular, error-checked approach ensures that budget entries are valid, tied to a bank context, and immediately available for the user to manage their finances effectively***.
 
 The following class diagram shows the relationships between the various classes involved in the adding of budgets:
-![uml_class_add_budget.png](team/BudgetFeature/uml_class_add_budget.png)
+![uml_add_budget_cls.png](team/BudgetFeature/uml_add_budget_cls.png)
 
 The following sequence diagram shows how various classes and methods interact together throughout the adding of budget mechanism:
-![uml_sequence_add_budget.png](team/BudgetFeature/uml_sequence_add_budget.png)
+![uml_add_budget_seq.png](team/BudgetFeature/uml_add_budget_seq.png)
 
 ---
 
