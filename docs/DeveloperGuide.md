@@ -479,41 +479,64 @@ Priorities: High (must have) - `***`, Medium (nice to have) - `**`, Low (unlikel
 ### Adding Bank Accounts 
  * Add bank accounts to the application via the command 'addbank a/AMOUNT c/CURRENCY'
  * Test Case 1: addbank 5000 SGD 
- * Expected: The programme will inform the user that this bank account with deposit of $5000 SGD is identified as Bank 0
+ * **Expected**: The programme will inform the user that this bank account with deposit of $5000 SGD is identified as Bank 0
  * Test Case 2: addbank 12000 THB
- * Expected: The programme will inform the user that this bank account with deposit of ฿12000 THB is identified as Bank 1
+ * **Expected**: The programme will inform the user that this bank account with deposit of ฿12000 THB is identified as Bank 1
 
 ### Adding Budgets 
  * Adding budgets to a bank is a bank-specific action, and thus, the user must login to a bank account to perform this action
  * If you have yet to create a bank account, do so by using the 'addbank' command
  * First login to Bank 0 by using the command 'login 0'
  * Test Case 1: addBudget food 150 JAN
- * Expected: The programme will inform the user that this action was successful 
+ * **Expected**: The programme will inform the user that this action was successful 
  * Then logout via command 'logout', and login to bank 1 through the command 'login 1'
  * Test Case 2: addBudget transport 1500 JAN
- * Expected: The programme will inform the user that this action was successful 
+ * **Expected**: The programme will inform the user that this action was successful 
 
 ### Adding Transactions 
  * Adding transactions to a bank is a bank specific action, and thus, requires the user to login to aspecific bank before performing these commands
  * If you have yet to create a bank account, do so by using the 'addbank' command
  * First login to Bank 0 by using the command 'login 0'
  * Test Case 1: add food 50 15/5
- * Expected: The programme will inform the user that this transaction of amount 50, spent on 15 May in the currency of the bank was recorded. 
+ * **Expected**: The programme will inform the user that this transaction of amount 50, spent on 15 May in the currency of the bank was recorded. 
  * Test Case 2: add transport -200 25/1
- * Expected: The programme will inform the user that negative values for transactions are not allowed
+ * **Expected**: The programme will inform the user that negative values for transactions are not allowed
 
 ### Monthly Summary 
 * The monthly summary feature is a way for a user to see aggregated monthly data in an easily digestable manner. It is important to note that the monthly summary can only display information for the current year. If you are curious about the rationale, we explain this in detail in the FAQ section of the UserGuide
 * Test Case 1: summary JAN 
-* Expected: The programme will inform the user of their total spending, categorical spending, and categorical budgets. If the user overshoots a particular budget, the summary page will inform the user.
+* **Expected**: The programme will inform the user of their total spending, categorical spending, and categorical budgets. If the user overshoots a particular budget, the summary page will inform the user.
 * Test Case 2: summary DEC JPY
-* Expected: The programme will inform the user of their total spending in Japanese Yen ONLY.
+* **Expected**: The programme will inform the user of their total spending in Japanese Yen ONLY.
 
 ### Withdrawing from a bank
 * This withdrawing feature is bank specific, and thus requires the user to be logged into a specific bank.
 * The preparatory work of setting up bank accounts is that of other bank-specific commands.
 * Test Case 1: withdraw 500 
-* Expected: The programme will inform the user that the withdrawal was successful 
+* **Expected**: The programme will inform the user that the withdrawal was successful 
 * Test Case 2: withdraw -500 
-* Expected: The programme will inform the user that the withdrawal is unsuccessful, as the amount must be a positive number.
+* **Expected**: The programme will inform the user that the withdrawal is unsuccessful, as the amount must be a positive number.
 
+### Depositing to a bank
+* Test Case 1: deposit 500
+* **Expected**: The programme will inform the user that the withdrawal was successful
+* Test Case 2: deposit abc
+* **Expected**: The programme will inform the user that the deposit is unsuccessful, as amount must be a valid number.
+
+### Listing all banks
+* Test Case 1: listBanks
+* **Expected**: The programme will inform the user that the listBanks was successful and should display the list of banks available.
+
+### Searching for transactions
+* Test Case 1: search food
+* **Expected**: The programme will inform the user that the search was successful and shows the list of transactions which contains food (including category).
+
+### Filtering transactions
+* Test Case 1: filter category food
+* **Expected**: The programme will inform the user that the filter was successful, showing the transactions in FOOD category.
+* Test Case 2: filter cost 0.5 10
+* **Expected**: The programme will inform the user that the filter was successful, showing transactions in cost range \$0.50 to \$10.00.
+
+### Deleting transactions
+* Test Case 1: delete 1
+* **Expected**: The programme will inform the user that the filter was successful, and displaying the deleted transaction.
